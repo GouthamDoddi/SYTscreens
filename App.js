@@ -1,25 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
+import { AppRegistry } from 'react-native';
+// import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import allReducers from './app/Redux/reducers/index';
+import { name as SYTscreens } from './app.json';
+import Routes from './app/Route/Routes';
+
+const store = createStore(
+  allReducers,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+);
+
 
 export default function App () {
-  let x = 1;
-
-  console.log('excuted');
-
   return (
-    <View style={styles.container}>
-      <Text>Hi there this is goutham!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store = { store }>
+      <Routes />
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+AppRegistry.registerComponent(SYTscreens, () => App);
