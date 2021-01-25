@@ -1,12 +1,10 @@
-/* eslint-disable no-undef */
 import React from 'react';
-import { View, Text, StyleSheet, Icon, TextInput } from 'react-native';
-import * as Font from 'expo-font';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { ArialMT } from 'expo-font';
 
-
-const Input = formData => {
-  const { label, placeholder, touched, error, onChangeText,
-    disabled, restInput } = formData;
+// creating a custom hook called useInput
+const Input = ({ componentData }) => {
+  const { label, placeholder, updateValue, touched, restInput, disabled } = componentData;
 
   return (
     <View style={styles.inputHeader}>
@@ -17,7 +15,7 @@ const Input = formData => {
         placeholder={placeholder}
         errorStyle={{ color: 'red' }}
         errorMessage={touched && error}
-        onChangeText={onChangeText}
+        onChangeText={ text => updateValue(text) }
         disabled={disabled}
         {...restInput}
         inputStyle={{ color: 'black' }}
@@ -30,7 +28,7 @@ const Input = formData => {
 const styles = StyleSheet.create({
   labelContainer: {
     color: '#FFFFFF',
-    fontFamily: Font.ArialMT,
+    fontFamily: ArialMT,
     fontSize: 10,
     lineHeight: 11,
     letterSpacing: 0.29,
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 23,
     letterSpacing: 0,
-    fontFamily: Font.ArialMT,
+    fontFamily: ArialMT,
     marginTop: '0.6%',
     marginBottom: '0.6%',
   },

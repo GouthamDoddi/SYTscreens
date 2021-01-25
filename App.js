@@ -7,6 +7,7 @@ import allReducers from './app/Redux/reducers/index';
 import { name as SYTscreens } from './app.json';
 import Routes from './app/Route/Routes';
 
+
 const store = createStore(
   allReducers,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),

@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import * as Font from 'expo-font';
 
 
 const styles = StyleSheet.create({
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: Font.PTSans,
+    fontFamily: 'Poppins_400Regular',
     marginTop: '22%',
     marginBottom: '3%',
     textAlign: 'center',
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: Font.PTSans,
+    fontFamily: 'Poppins_400Regular',
     marginTop: '22%',
     marginBottom: '3%',
     textAlign: 'center',
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: Font.PTSans,
+    fontFamily: 'Poppins_400Regular',
     marginTop: '22%',
     marginBottom: '3%',
     textAlign: 'center',
