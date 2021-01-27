@@ -41,3 +41,14 @@ export const CustomerOtp = (state = '', action) => {
       return state;
   }
 };
+
+export const CustomerToken = (state = '', action) => {
+  switch (action.type) {
+    case 'Token':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

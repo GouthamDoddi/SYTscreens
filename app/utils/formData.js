@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { customerFirstName,
-  customerLastName, customerMobileNum } from '../../Redux/actions/customerInfo';
+  customerLastName, customerMobileNum } from '../Redux/actions/customerInfo';
 
 // data for components
 

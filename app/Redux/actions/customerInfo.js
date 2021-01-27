@@ -17,3 +17,8 @@ export const customerOtp = otp => ({
   type: 'OTP',
   data: otp,
 });
+
+export const customerToken = token => ({
+  type: 'Token',
+  data: token,
+});

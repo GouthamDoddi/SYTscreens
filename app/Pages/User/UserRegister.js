@@ -2,18 +2,24 @@ import React from 'react';
 import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import Input from '../../Component/input';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch, state } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import axios from 'axios';
-import { firstNameData, lastNameData, mobileNumData } from '../../utils/formData';
+import qs from 'querystring';
+import { customerFirstName,
+  customerLastName, customerMobileNum, customerOtp, customerToken } from '../../Redux/actions/customerInfo';
 
 
 const CustomerRegister = ({ navigation }) => {
+  // useing dispatch
+
+  const dispatch = useDispatch();
+
   // using selectors
-  const customerFirstName = useSelector(state => state.CustomerFirstName);
-  const customerLastName = useSelector(state => state.CustomerLastName);
-  const customerMobileNum = useSelector(state => state.CustomerMobileNum);
+  const customerFirstNameSelector = useSelector(state => state.CustomerFirstName);
+  const customerLastNameSelector = useSelector(state => state.CustomerLastName);
+  const customerMobileNumSelector = useSelector(state => state.CustomerMobileNum);
 
   // functions
   const backPage = () => navigation.navigate('Welcome');
@@ -28,16 +34,62 @@ const CustomerRegister = ({ navigation }) => {
   };
 
   const onSubmit = async () => {
-    await axios.post('http://localhost:3000/customerRegister', qs.stringify({
-      firstName: customerFirstName,
-      lastName: customerLastName,
-      mobileNum: customerMobileNum,
-    }), config)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => console.log(error));
+    try {
+      await axios.post('http://sut.basservices.in/customerRegister', qs.stringify({
+        firstName: customerFirstNameSelector,
+        lastName: customerLastNameSelector,
+        mobileNum: customerMobileNumSelector,
+      }), config)
+        .then(() => {
+          // if register worked then we will call smslogin for otp and token.
+          axios.post('http://sut.basservices.in/SMSLogin', qs.stringify({
+            mobileNum: customerMobileNumSelector,
+          }), config)
+            .then(response => {
+              console.log(response);
+              console.log(state);
+              dispatch(customerOtp(response.data.otp));
+              console.log(state);
+              dispatch(customerToken(response.data.token));
+              navigation.navigate('CustomerOtp');
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(error => console.log(error));
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // form data
+
+  const firstNameData = {
+    label: 'First Name',
+    placeholder: 'First Name',
+    updateValue: e => dispatch(customerFirstName(e)),
+    touched: '',
+    restInput: '',
+    disabled: false,
+  };
+  const lastNameData = {
+    label: 'Last Name',
+    placeholder: 'Last Name',
+    updateValue: e => dispatch(customerLastName(e)),
+    touched: '',
+    restInput: '',
+    disabled: false,
+  };
+  const mobileNumData = {
+    label: 'Mobile Number',
+    placeholder: 'mobile number',
+    updateValue: e => dispatch(customerMobileNum(e)),
+    touched: '',
+    restInput: '',
+    disabled: false,
+  };
+
 
   // loading fonts
   const [ isLoaded ] = useFonts({
@@ -47,6 +99,7 @@ const CustomerRegister = ({ navigation }) => {
   if (!isLoaded)
     return <AppLoading />;
 
+  // code for the page
 
   return (
     <SafeAreaView style={styles.container}>
