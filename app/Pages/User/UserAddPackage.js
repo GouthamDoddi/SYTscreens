@@ -1,28 +1,159 @@
-import React from 'react';
-import { Text, View, Image, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Image, StyleSheet,
+  TouchableOpacity, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import CheckBox from '@react-native-community/checkbox';
+// import axios from 'axios';
+import qs from 'querystring';
 
 import Header from '../../Component/Header';
 import DropDown from '../../Component/DropDown';
 import Input2 from '../../Component/Input2';
-import Date from '../../Component/DataPicker';
+import DatePicker from '../../Component/DataPicker';
 
 import { pickUp, drop, pickUpDate, packageWeight,
   packageSpace, entireTruck, receivingPersonName,
   receivingPersonNum } from '../../Redux/actions/packageDetails';
-import { CustomerFirstName, CustomerLastName } from '../../Redux/reducers/customerInfo';
+import { allTripIdsNTruckNos, noOfTripsFound, allTruckDetails, allTruckSpaceNWeight } from '../../Redux/actions/tripsAvailable';
+import { getListOfTruckIds } from '../../utils/formData';
+import { axios, configToken } from '../../utils/axios';
 
 
-const UserAddPackage = () => {
+const CustomerAddPackage = ({ navigation }) => {
   // vars and redux
-  const dispatch = useDispatch();
+  const pickUpPointSelector = useSelector(state => state.PickUp);
+  const dropPointSelector = useSelector(state => state.Drop);
+  const dateSelector = useSelector(state => state.PickUpDate);
+  const entireTruckSelector = useSelector(state => state.EntireTruck);
+  const receivingPersonNameSelector = useSelector(state => state.ReceivingPersonName);
+  const packageSpaceSelector = useSelector(state => state.PackageSpace);
+  const packageWeightSelector = useSelector(state => state.PackageWeight);
+  const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
+  const customerTokenSelector = useSelector(state => state.CustomerToken);
+  const allTruckDetailsSelector = useSelector(state => state.AllTruckDetails);
+  const noOfTripsSelector = useSelector(state => state.NoOfTrips);
+  const allTripDataSelector = useSelector(state => state.AllTripIdsNTruckNos);
 
+
+  const dispatch = useDispatch();
   const CustomerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
 
-  // functions
-  const onSubmit = () => console.log('onSubmit called');
+  // intigrating API
 
-  const fulltruck = () => console.log('full truck called');
+  const params = `${qs.stringify({
+    pickUpPoint: pickUpPointSelector,
+    dropPoint: dropPointSelector,
+    entireTruck: entireTruckSelector,
+    receivingPersonName: receivingPersonNameSelector,
+    receivingPersonNo: receivingPersonNumSelector,
+    packageSpace: packageSpaceSelector,
+    packageWeight: packageWeightSelector,
+  })}&date=${dateSelector}`;
+
+  const params2 = `${qs.stringify({
+    source: pickUpPointSelector,
+    destination: dropPointSelector,
+  })}&startDate=${dateSelector}`;
+
+  const onSubmit = async () => {
+    console.log(params);
+    console.log(dateSelector);
+    const truckSpaceNWeight = [];
+    const truckDetails = [];
+
+    // some mean logic here below!
+    try {
+      // first call register the package
+      await axios.post('/addPackage', params, configToken(customerTokenSelector))
+        .then(async response => {
+          console.log(response.data);
+
+          // get trips wich match that of the package details
+          await axios.post('/getTrip', params2, configToken(customerTokenSelector))
+            .then(async res => {
+              if (res.data.statusCode === 400) {
+                console.log(`2nd api call failed ${JSON.stringify(res.data)}`);
+                dispatch(noOfTripsFound(0));
+
+                return res.data;
+              }
+              console.log(`inside 2nd api call. trips = ${res.data.message.numberOfTrip}`);
+              dispatch(noOfTripsFound(res.data.message.numberOfTrip));
+              const listOfData = getListOfTruckIds(res.data.message.tripDetails);
+
+              dispatch(allTripIdsNTruckNos(listOfData));
+
+              console.log(`listOfData = ${listOfData}`);
+              // since the data is dispatched we can use it
+              // in the next page to render trips details
+
+
+              // loop through each of the trip found in the earlier api call
+              // then get the details of the truck involved in the trip
+
+              for (const truck of listOfData) {
+                console.log(`this is truckNo = ${truck.truckNo}`);
+                const { truckNo } = truck;
+                const x = await axios.post('/getTruck', qs.stringify({ truckNo }), configToken(customerTokenSelector))
+                  .then(res => {
+                    const y = res.data.message[0];
+                    const { rc, license, ...details } = y;
+
+                    return details;
+                  })
+                  .catch(error => console.log(error));
+
+                truckDetails.push(x);
+              }
+              dispatch(allTruckDetails(truckDetails));
+
+              // loop through each trip in the total trips that matched.
+              // then take the truck no from the trip details and get
+              // info about the space and weight available in the truck
+              for (const truck of listOfData) {
+                console.log(`this is truckNo = ${truck.truckNo}`);
+                const { truckNo } = truck;
+                const x = await axios.post('/getAvailableSpace', qs.stringify({ truckNo }), configToken(customerTokenSelector))
+                  .then(res => {
+                    const y = res.data;
+                    const { ipAddress, statsCode, ...details } = y;
+
+                    return details;
+                  })
+                  .catch(error => console.log(error));
+
+                truckSpaceNWeight.push(x);
+              }
+              dispatch(allTruckSpaceNWeight(truckSpaceNWeight));
+              console.log(`truck space is ${JSON.stringify(truckSpaceNWeight)}`);
+
+              navigation.navigate('CustomerTruckAvailable');
+
+              return 1;
+            })
+            .catch(error => console.log(`this error accured in getTrips API call ${error}`));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // functions
+
+  const fulltruck = () => {
+    dispatch(entireTruck());
+  };
+
+  const addDate = date => {
+    console.log('addDate called');
+    dispatch(pickUpDate(date));
+  };
+
+  const pickUpDispatch = data => dispatch(pickUp(data));
+  const dropDispatch = data => dispatch(drop(data));
 
   // form data
   const PackageWeightInput = {
@@ -77,9 +208,9 @@ const UserAddPackage = () => {
             />
           </View>
           <View style={{ marginVertical: '1.2%', marginHorizontal: '2.7%' }}>
-            <DropDown />
-            <DropDown />
-            <Date />
+            <DropDown action={pickUpDispatch}/>
+            <DropDown action={dropDispatch}/>
+            <DatePicker action={ addDate } />
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: '10%' }}>
               <View style={{ width: '48.8%', marginRight: '1.2%' }}>
                 <Input2 data={PackageSpacetInput} />
@@ -89,10 +220,10 @@ const UserAddPackage = () => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', marginTop: '2.1%', marginLeft: '2.7%' }}>
-              <View style={styles.box}/>
-              <TouchableOpacity onPress={fulltruck}>
-                <Text style={styles.book}>Book Entire Truck</Text>
-              </TouchableOpacity>
+              <CheckBox
+                onValueChange={fulltruck}
+              />
+              <Text style={styles.book}>Book Entire Truck</Text>
             </View>
             <Input2 data={ReceivingPersonNameInput} />
             <Input2 data={ReceivingPersonNumInput} />
@@ -105,22 +236,36 @@ const UserAddPackage = () => {
     </View>);
 };
 
-
-export default UserAddPackage;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
     height: '100%',
     width: '100%',
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
 
   },
-  //   responsiveBox: {
-  //     width: wp('100%'),
-  //     height: hp('100%'),
-  //   },
+  backarrow2: {
+    color: '#000000',
+    fontSize: 16,
+    lineHeight: 45,
+    marginTop: '1.6%',
+    marginLeft: '2.8%',
+  },
+  img2: {
+    width: 35,
+    height: 35,
+    marginTop: '-13.2%',
+    marginLeft: '28%',
+  },
+  container2: {
+    borderColor: '#000000',
+    borderRadius: 3,
+    borderStyle: 'solid',
+    borderWidth: 0.5,
+    alignItems: 'flex-start',
+    paddingBottom: 5,
+  },
   block: {
     paddingHorizontal: '6.1%',
   },
@@ -203,7 +348,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   book: {
-    marginTop: '0.4%',
+    marginTop: '2.4%',
     color: '#141414',
     fontSize: 14,
     lineHeight: 16,
@@ -229,3 +374,4 @@ const styles = StyleSheet.create({
   },
 });
 
+export default CustomerAddPackage;

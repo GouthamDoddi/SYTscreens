@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 
 
-const DropDown = () => {
+const DropDown = ({action}) => {
   const [ selectedValue, setSelectedValue ] = useState('Hyderabad');
 
   return (
@@ -11,7 +11,11 @@ const DropDown = () => {
       <Picker
         selectedValue={selectedValue}
         style={{ color: '#000000', fontSize: 14, lineHeight: 16, letterSpacing: 0 }}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+        onValueChange={(itemValue, itemIndex) => {
+          setSelectedValue(itemValue);
+          action(itemValue);
+          console.log(itemValue);
+        }}
       >
         <Picker.Item label="Hyderabad" value="Hyderabad" />
         <Picker.Item label="Bengulur" value="Bengulur" />

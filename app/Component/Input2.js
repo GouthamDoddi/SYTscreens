@@ -28,7 +28,7 @@ function Input2 ({ data }) {
         onChangeText={onChangeText}
         disabled={disabled}
         {...restInput}
-        inputStyle={{ color: 'black' }}
+        inputStyle={{ color: '#000000' }}
         placeholderTextColor="#C7C7C7"
       />
       <Text style={{ color: 'red', marginTop: 5 }}>{touched && error}</Text>
@@ -48,7 +48,7 @@ const style = StyleSheet.create({
     marginTop: '1%',
   },
   input: {
-    color: '#C7C7C7',
+    color: '#000000',
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,

@@ -23,7 +23,7 @@ export const Drop = (state = '', action) => {
 export const PickUpDate = (state = '', action) => {
   switch (action.type) {
     case 'PickUpDate':
-      state = action.pickUpData;
+      state = action.data;
 
       return state;
     default:

@@ -9,6 +9,7 @@ import CustomerRegister from '../Pages/User/UserRegister';
 import CustomerOtp from '../Pages/User/UserOtp';
 import CustomerWelcome from '../Pages/User/UserWelcome';
 import CustomerAddPackage from '../Pages/User/UserAddPackage';
+import CustomerTruckAvailable from '../Pages/User/UserTruckAvailable';
 
 
 enableScreens();
@@ -32,6 +33,8 @@ const Routes = () =>
         options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerAddPackage" component={CustomerAddPackage}
         options={{ headerShown: false }}/>
+      <Stack.Screen name="CustomerTruckAvailable" component={CustomerTruckAvailable}
+        options={{ headerShown: true }}/>
     </Stack.Navigator>
   </NavigationContainer>;
 

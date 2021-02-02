@@ -1,32 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { customerFirstName,
-  customerLastName, customerMobileNum } from '../Redux/actions/customerInfo';
+export function getListOfTruckIds (data) {
+  const listOfData = [];
 
-// data for components
+  for (const tripinfo of data) {
+    const tripDetails = {
+      truckNo: tripinfo.truck_no,
+      tripId: tripinfo.trip_id,
+    };
 
-const dispatch = useDispatch();
+    listOfData.push(tripDetails);
+  }
+  console.log(`list of data = ${JSON.stringify(listOfData)}`);
 
-export const firstNameData = {
-  label: 'First Name',
-  placeholder: 'First Name',
-  updateValue: e => dispatch(customerFirstName(e)),
-  touched: '',
-  restInput: '',
-  disabled: false,
-};
-export const lastNameData = {
-  label: 'Last Name',
-  placeholder: 'Last Name',
-  updateValue: e => dispatch(customerLastName(e)),
-  touched: '',
-  restInput: '',
-  disabled: false,
-};
-export const mobileNumData = {
-  label: 'Mobile Number',
-  placeholder: 'mobile number',
-  updateValue: e => dispatch(customerMobileNum(e)),
-  touched: '',
-  restInput: '',
-  disabled: false,
-};
+  return listOfData;
+}

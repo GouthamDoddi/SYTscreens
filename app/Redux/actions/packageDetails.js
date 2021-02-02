@@ -8,9 +8,9 @@ export const drop = drop => ({
   data: drop,
 });
 
-export const pickUpDate = date => ({
+export const pickUpDate = pickUpDate => ({
   type: 'PickUpDate',
-  data: date,
+  data: pickUpDate,
 });
 
 export const packageWeight = packageWeight => ({

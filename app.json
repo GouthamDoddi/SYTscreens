@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.gouthamdoddi.SYTscreens"
     },
     "web": {
       "favicon": "./app/images/favicon.png"

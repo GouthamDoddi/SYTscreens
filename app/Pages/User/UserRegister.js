@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import Input from '../../Component/input';
-import { useSelector, useDispatch, state } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import axios from 'axios';
@@ -20,6 +20,7 @@ const CustomerRegister = ({ navigation }) => {
   const customerFirstNameSelector = useSelector(state => state.CustomerFirstName);
   const customerLastNameSelector = useSelector(state => state.CustomerLastName);
   const customerMobileNumSelector = useSelector(state => state.CustomerMobileNum);
+
 
   // functions
   const backPage = () => navigation.navigate('Welcome');
@@ -47,9 +48,7 @@ const CustomerRegister = ({ navigation }) => {
           }), config)
             .then(response => {
               console.log(response);
-              console.log(state);
               dispatch(customerOtp(response.data.otp));
-              console.log(state);
               dispatch(customerToken(response.data.token));
               navigation.navigate('CustomerOtp');
             })
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff8200',
     height: '100%',
     width: '100%',
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
   },
   leftarrowing: {
     tintColor: '#FFFFFF',

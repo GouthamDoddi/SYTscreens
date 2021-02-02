@@ -1,56 +1,103 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import DatePicker from 'react-native-datepicker';
+import { Text, View, Button, Platform, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-const App = () => {
-  const [ date, setDate ] = useState('09-10-2020');
+export const DatePicker = ({ action }) => {
+  const [ date, setDate ] = useState(new Date(1598051730000));
+  const [ mode, setMode ] = useState('date');
+  const [ show, setShow ] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    console.log(date);
+    action(JSON.stringify(date));
+  };
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
       <View style={styles.container}>
-        <DatePicker
-          style={styles.datePickerStyle}
-          date={date} // Initial date from state
-          mode="date" // The enum of date, datetime and time
-          placeholder="select date"
-          format="DD-MM-YYYY"
-          minDate="01-10-2020"
-          maxDate="01-01-2030"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          customStyles={{
-            dateIcon: {
-              // display: 'none',
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              marginLeft: 36,
-            },
-          }}
-          onDateChange={e => {
-            setDate(e);
-          }}
-        />
+        <TouchableOpacity onPress={showDatepicker}>
+          <Text style={styles.backarrow}>Date Time</Text>
+          <Image
+            style={styles.img}
+            source={require('../Images/calender.jpg')}
+          />
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      {show &&
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={
+            onChange}
+        />
+      }
+    </View>
   );
 };
 
-export default App;
+export default DatePicker;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // padding: 10,
-    justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  datePickerStyle: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 0.5,
-    borderColor: '#979797',
-  },
-});
+const styles = StyleSheet.create({ backarrow: {
+  color: '#000000',
+  fontSize: 16,
+  lineHeight: 45,
+  marginTop: '1.6%',
+  marginLeft: '2.8%',
+},
+img: {
+  width: 35,
+  height: 35,
+  marginTop: '-13.2%',
+  marginLeft: '28%',
+},
+container: {
+  borderColor: '#000000',
+  borderRadius: 3,
+  borderStyle: 'solid',
+  borderWidth: 0.5,
+  alignItems: 'flex-start',
+  paddingBottom: 5,
+} });
+
+
+//     {/* date */}
+//     <View>
+//       <View style={styles.container2}>
+//         <TouchableOpacity onPress={showDatepicker}>
+//           <Text style={styles.backarrow2}>Date Time</Text>
+//           <Image
+//             style={styles.img2}
+//             source={require('../../Images/calender.jpg')}
+//           />
+//         </TouchableOpacity>
+//       </View>
+//       {show &&
+// <DateTimePicker
+//   testID="dateTimePicker"
+//   value={date}
+//   mode={mode}
+//   is24Hour={true}
+//   display="default"
+//   onChange={onChange}
+// />
+//       }
+
+//     </View>
+
+//     {/* date */}
