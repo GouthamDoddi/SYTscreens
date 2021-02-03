@@ -62,6 +62,8 @@ const CustomerRegister = ({ navigation }) => {
     }
   };
 
+  const loginRedirect = () => navigation.navigate('CustomerLogin');
+
   // form data
 
   const firstNameData = {
@@ -118,7 +120,7 @@ const CustomerRegister = ({ navigation }) => {
           <Text style={styles.headText}>(or) <Text style={styles.bold}>Recive </Text>Package?</Text>
           <View>
             <Text style={styles.mainText}>Register</Text>
-            <TouchableOpacity onPress={onSubmit}>
+            <TouchableOpacity onPress={loginRedirect}>
               <Text style={styles.loginText}>Already registered? Please <Text
                 style={styles.underline}>Login</Text></Text>
             </TouchableOpacity>
@@ -143,7 +145,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff8200',
     height: '100%',
     width: '100%',
-    // marginTop: StatusBar.currentHeight,
   },
   leftarrowing: {
     tintColor: '#FFFFFF',

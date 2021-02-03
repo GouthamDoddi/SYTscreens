@@ -3,12 +3,31 @@ import { Text, SafeAreaView, Image, TouchableOpacity, View } from 'react-native'
 import styles from './welcomePageStyles';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { useDispatch, useSelector } from 'react-redux';
+import qs from 'querystring';
+
+import { loginFailed } from '../../Redux/actions/other';
+import { axios, configToken } from '../../utils/axios';
 
 
 const WelcomePage = ({ navigation }) => {
-  const onCustomer = () => navigation.navigate('CustomerRegister');
+  const dispatch = useDispatch();
+  const LoginFailed = useSelector(state => state.LoginFailed);
+  // const Token = useSelector(state => state.Token);
+
+  const onCustomer = async () => {
+    // console.log(Token);
+    // if (Token) {
+    //   await axios.post('//getTruckRating', qs.stringify({ truckNo: 'AP31EJ700' }), configToken(Token))
+    //     .then(response => console.log(response.data));
+    // }
+    navigation.navigate('CustomerRegister');
+  };
   const onTruck = () => { /* navigate to truck owner page */ };
   const onTransport = () => { /* navigate to transport company page */ };
+
+  if (LoginFailed)
+    dispatch(loginFailed());
 
   const [ isLoaded ] = useFonts({
     Poppins_400Regular,

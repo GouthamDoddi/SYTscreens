@@ -13,7 +13,7 @@ import { AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 import TruckComponet from '../../Component/truckComponet';
 
-function CustomerTruckAvailable () {
+function CustomerTruckAvailable ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
   const allTruckDetailsSelector = useSelector(state => state.AllTruckDetails);
@@ -29,7 +29,7 @@ function CustomerTruckAvailable () {
 
   // functions
 
-  const onSubmit = () => console.log('onSubmit called!');
+  const onSubmit = () => navigation.navigate('CustomerTruckBooking');
 
   // formData
 

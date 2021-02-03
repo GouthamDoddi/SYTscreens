@@ -1,3 +1,8 @@
+export const packageId = data => ({
+  type: 'PackageId',
+  data,
+});
+
 export const pickUp = pickUp => ({
   type: 'PickUp',
   data: pickUp,

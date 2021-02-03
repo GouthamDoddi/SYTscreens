@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Text, View, SafeAreaView, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { StatusBar, Text, View, SafeAreaView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 import { useSelector } from 'react-redux';
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F1F1',
     height: '100%',
     width: '100%',
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
   },
   block: {
     marginLeft: '6.1%',

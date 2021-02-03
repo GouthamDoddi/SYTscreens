@@ -1,3 +1,14 @@
+export const PackageId = (state = '', action) => {
+  switch (action.type) {
+    case 'PackageId':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};
+
 export const PickUp = (state = '', action) => {
   switch (action.type) {
     case 'PickUp':

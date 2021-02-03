@@ -18,3 +18,8 @@ export const allTruckSpaceNWeight = data => ({
   type: 'AllTruckSpaceNWeight',
   data,
 });
+
+export const selectedTruckData = data => ({
+  type: 'SelectedTruckData',
+  data,
+});

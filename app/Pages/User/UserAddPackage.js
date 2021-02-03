@@ -17,6 +17,7 @@ import { pickUp, drop, pickUpDate, packageWeight,
 import { allTripIdsNTruckNos, noOfTripsFound, allTruckDetails, allTruckSpaceNWeight } from '../../Redux/actions/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 import { axios, configToken } from '../../utils/axios';
+import AppStatusBar from '../../Component/StatusBar';
 
 
 const CustomerAddPackage = ({ navigation }) => {
@@ -64,78 +65,71 @@ const CustomerAddPackage = ({ navigation }) => {
     // some mean logic here below!
     try {
       // first call register the package
-      await axios.post('/addPackage', params, configToken(customerTokenSelector))
-        .then(async response => {
-          console.log(response.data);
 
-          // get trips wich match that of the package details
-          await axios.post('/getTrip', params2, configToken(customerTokenSelector))
-            .then(async res => {
-              if (res.data.statusCode === 400) {
-                console.log(`2nd api call failed ${JSON.stringify(res.data)}`);
-                dispatch(noOfTripsFound(0));
+      // get trips wich match that of the package details
+      await axios.post('/getTrip', params2, configToken(customerTokenSelector))
+        .then(async res => {
+          if (res.data.statusCode === 400) {
+            console.log(`2nd api call failed ${JSON.stringify(res.data)}`);
+            dispatch(noOfTripsFound(0));
 
-                return res.data;
-              }
-              console.log(`inside 2nd api call. trips = ${res.data.message.numberOfTrip}`);
-              dispatch(noOfTripsFound(res.data.message.numberOfTrip));
-              const listOfData = getListOfTruckIds(res.data.message.tripDetails);
+            return res.data;
+          }
+          console.log(`inside 2nd api call. trips = ${res.data.message.numberOfTrip}`);
+          dispatch(noOfTripsFound(res.data.message.numberOfTrip));
+          const listOfData = getListOfTruckIds(res.data.message.tripDetails);
 
-              dispatch(allTripIdsNTruckNos(listOfData));
+          dispatch(allTripIdsNTruckNos(listOfData));
 
-              console.log(`listOfData = ${listOfData}`);
-              // since the data is dispatched we can use it
-              // in the next page to render trips details
+          console.log(`listOfData = ${listOfData}`);
+          // since the data is dispatched we can use it
+          // in the next page to render trips details
 
 
-              // loop through each of the trip found in the earlier api call
-              // then get the details of the truck involved in the trip
+          // loop through each of the trip found in the earlier api call
+          // then get the details of the truck involved in the trip
 
-              for (const truck of listOfData) {
-                console.log(`this is truckNo = ${truck.truckNo}`);
-                const { truckNo } = truck;
-                const x = await axios.post('/getTruck', qs.stringify({ truckNo }), configToken(customerTokenSelector))
-                  .then(res => {
-                    const y = res.data.message[0];
-                    const { rc, license, ...details } = y;
+          for (const truck of listOfData) {
+            console.log(`this is truckNo = ${truck.truckNo}`);
+            const { truckNo } = truck;
+            const x = await axios.post('/getTruck', qs.stringify({ truckNo }), configToken(customerTokenSelector))
+              .then(res => {
+                const y = res.data.message[0];
+                const { rc, license, ...details } = y;
 
-                    return details;
-                  })
-                  .catch(error => console.log(error));
+                return details;
+              })
+              .catch(error => console.log(error));
 
-                truckDetails.push(x);
-              }
-              dispatch(allTruckDetails(truckDetails));
+            truckDetails.push(x);
+          }
+          dispatch(allTruckDetails(truckDetails));
 
-              // loop through each trip in the total trips that matched.
-              // then take the truck no from the trip details and get
-              // info about the space and weight available in the truck
-              for (const truck of listOfData) {
-                console.log(`this is truckNo = ${truck.truckNo}`);
-                const { truckNo } = truck;
-                const x = await axios.post('/getAvailableSpace', qs.stringify({ truckNo }), configToken(customerTokenSelector))
-                  .then(res => {
-                    const y = res.data;
-                    const { ipAddress, statsCode, ...details } = y;
+          // loop through each trip in the total trips that matched.
+          // then take the truck no from the trip details and get
+          // info about the space and weight available in the truck
+          for (const truck of listOfData) {
+            console.log(`this is truckNo = ${truck.truckNo}`);
+            const { truckNo } = truck;
+            const x = await axios.post('/getAvailableSpace', qs.stringify({ truckNo }), configToken(customerTokenSelector))
+              .then(res => {
+                const y = res.data;
+                const { ipAddress, statsCode, ...details } = y;
 
-                    return details;
-                  })
-                  .catch(error => console.log(error));
+                return details;
+              })
+              .catch(error => console.log(error));
 
-                truckSpaceNWeight.push(x);
-              }
-              dispatch(allTruckSpaceNWeight(truckSpaceNWeight));
-              console.log(`truck space is ${JSON.stringify(truckSpaceNWeight)}`);
+            truckSpaceNWeight.push(x);
+          }
+          dispatch(allTruckSpaceNWeight(truckSpaceNWeight));
+          console.log(`truck space is ${JSON.stringify(truckSpaceNWeight)}`);
 
-              navigation.navigate('CustomerTruckAvailable');
+          navigation.navigate('CustomerTruckAvailable');
 
-              return 1;
-            })
-            .catch(error => console.log(`this error accured in getTrips API call ${error}`));
+          return 1;
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(error => console.log(`this error accured in getTrips API call ${error}`));
     } catch (err) {
       console.log(err);
     }

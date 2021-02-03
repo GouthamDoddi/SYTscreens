@@ -1,8 +1,13 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet }
   from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
-function TruckComponet ({ allData, pickUp, drop, onSubmit }) {
+import { selectedTruckData } from '../Redux/actions/tripsAvailable';
+
+function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
+  const dispatch = useDispatch();
+
   return (
     <View>
       {allData.map((data, index) => {
@@ -69,7 +74,20 @@ function TruckComponet ({ allData, pickUp, drop, onSubmit }) {
                   <Text style={styles.loctext}>Barakhamba Road</Text>
                   <Text style={styles.loctext}>4th May, 9:30 PM</Text>
                 </View>
-                <TouchableOpacity style={styles.but} onPress={onSubmit}>
+                <TouchableOpacity style={styles.but} onPress={() => {
+                  const selectedTruck = {
+                    truckNo: data[1].truck_no,
+                    model: data[1].truck_model,
+                    pickUp,
+                    drop,
+                    availableSpace: data[2].availableSpace,
+                    availableWeight: data[2].availableWeight,
+                  };
+
+                  dispatch(selectedTruckData(selectedTruck));
+
+                  onSubmit();
+                }}>
                   <Text style={styles.buttext}>Book Truck</Text>
                 </TouchableOpacity>
               </View>

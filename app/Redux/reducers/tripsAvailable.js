@@ -47,3 +47,14 @@ export const AllTruckSpaceNWeight = (state = '', action) => {
       return state;
   }
 };
+
+export const SelectedTruckData = (state = '', action) => {
+  switch (action.type) {
+    case 'SelectedTruckData':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

@@ -4,7 +4,7 @@ import { ArialMT } from 'expo-font';
 
 // creating a custom hook called useInput
 const Input = ({ componentData }) => {
-  const { label, placeholder, updateValue, touched, restInput, disabled } = componentData;
+  const { label, placeholder, updateValue, touched, restInput, disabled, defaultValue } = componentData;
 
   return (
     <View style={styles.inputHeader}>
@@ -15,6 +15,7 @@ const Input = ({ componentData }) => {
         placeholder={placeholder}
         errorStyle={{ color: 'red' }}
         errorMessage={touched && error}
+        value={defaultValue}
         onChangeText={ text => updateValue(text) }
         disabled={disabled}
         {...restInput}
