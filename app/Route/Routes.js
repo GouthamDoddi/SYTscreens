@@ -43,7 +43,7 @@ const Routes = () =>
       <Stack.Screen name="CustomerTruckBooking" component={CustomerTruckBooking}
         options={{ headerShown: true }}/>
       <Stack.Screen name="Tracking" component={Tracking}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
     </Stack.Navigator>
   </NavigationContainer>;
 

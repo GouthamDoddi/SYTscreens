@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { StatusBar, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 
 function Header ({ data }) {
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     height: '11.1%',
     backgroundColor: '#ff8f00',
     flexDirection: 'row',
+    width: '100%',
   },
   img: {
     width: 25.7,

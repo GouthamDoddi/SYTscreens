@@ -3,12 +3,12 @@ import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
-import axios from 'axios';
+// import axios from 'axios';
 
 
 import { customerMobileNum, customerOtp, customerToken } from '../../Redux/actions/customerInfo';
 import { loginFailed } from '../../Redux/actions/other';
-// import { axios } from '../../utils/axios';
+import { axios } from '../../utils/axios';
 import Input from '../../Component/input';
 import AppStatusBar from '../../Component/StatusBar';
 
@@ -41,7 +41,7 @@ function CustomerLogin ({ navigation }) {
     };
 
     // api call
-    await axios.post('http://localhost:3000/SMSLogin', qs.stringify({
+    await axios.post('/SMSLogin', qs.stringify({
       mobileNum: CustomerMobileNum,
     }), config)
       .then(response => {
