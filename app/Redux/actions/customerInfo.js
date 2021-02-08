@@ -22,4 +22,3 @@ export const customerToken = token => ({
   type: 'Token',
   data: token,
 });
-

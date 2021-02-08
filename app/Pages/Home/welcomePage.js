@@ -23,7 +23,7 @@ const WelcomePage = ({ navigation }) => {
     // }
     navigation.navigate('CustomerRegister');
   };
-  const onTruck = () => { /* navigate to truck owner page */ };
+  const onTruck = () => navigation.navigate('OwnerRegister');
   const onTransport = () => { /* navigate to transport company page */ };
 
   if (LoginFailed)

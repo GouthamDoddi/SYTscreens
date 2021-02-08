@@ -6,18 +6,16 @@ import qs from 'querystring';
 // import axios from 'axios';
 
 
-import { customerMobileNum, customerOtp, customerToken } from '../../Redux/actions/customerInfo';
+import { ownerToken, ownerOtp, ownerMobileNum } from '../../Redux/actions/ownerInfo';
 import { loginFailed } from '../../Redux/actions/other';
 import { axios } from '../../utils/axios';
 import Input from '../../Component/input';
-import AppStatusBar from '../../Component/StatusBar';
-
 
 function CustomerLogin ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
 
-  const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
+  const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
   const LoginFailed = useSelector(state => state.LoginFailed);
 
 
@@ -42,7 +40,7 @@ function CustomerLogin ({ navigation }) {
 
     // api call
     await axios.post('/SMSLogin', qs.stringify({
-      mobileNum: CustomerMobileNum,
+      mobileNum: OwnerMobileNum,
     }), config)
       .then(response => {
         if (response.data.message === 'Error! User is not found.') {
@@ -51,9 +49,9 @@ function CustomerLogin ({ navigation }) {
         }
 
         console.log(response.data.rows);
-        dispatch(customerOtp(response.data.otp));
-        dispatch(customerToken(response.data.token));
-        navigation.navigate('CustomerOtp');
+        dispatch(ownerOtp(response.data.otp));
+        dispatch(ownerToken(response.data.token));
+        navigation.navigate('OwnerOtp');
       })
       .catch(err => {
         console.log(err);
@@ -64,8 +62,7 @@ function CustomerLogin ({ navigation }) {
   const MobileNumData = {
     label: 'Mobile Number',
     placeholder: 'Mobile Number',
-    updateValue: e => dispatch(customerMobileNum(e)),
-    defaultValue: CustomerMobileNum,
+    updateValue: () => '',
     touched: '',
     restInput: '',
     disabled: false,

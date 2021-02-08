@@ -7,6 +7,8 @@ import { PickUp, Drop, PickUpDate, EntireTruck,
 import { NoOfTripsFound, AllTripIdsNTruckNos, AllTruckDetails,
   AllTruckSpaceNWeight, SelectedTruckData } from './tripsAvailable';
 import { LoginFailed } from './other';
+import * as OwnerInfo from './TruckOwner';
+import * as ownerTruckInfo from './ownerTruckInfo';
 
 const allReducers = combineReducers({
   CustomerFirstName,
@@ -29,6 +31,8 @@ const allReducers = combineReducers({
   AllTruckDetails,
   AllTruckSpaceNWeight,
   SelectedTruckData,
+  OwnerInfo,
+  ownerTruckInfo,
 });
 
 export default allReducers;

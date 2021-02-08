@@ -14,6 +14,8 @@ import CustomerTruckBooking from '../Pages/User/UserTruckBooking';
 import CustomerLogin from '../Pages/User/UserLogin';
 import Tracking from '../Pages/User/Tracking';
 
+import OwnerRegister from '../Pages/TruckOwner/OwnerRegister';
+
 
 enableScreens();
 
@@ -27,22 +29,24 @@ const Routes = () =>
         stackPresentation: 'modal',
       }}>
       <Stack.Screen name="Welcome" component={Welcome}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerRegister" component={CustomerRegister}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerLogin" component={CustomerLogin}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerOtp" component={CustomerOtp}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerWelcome" component={CustomerWelcome}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerAddPackage" component={CustomerAddPackage}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerTruckAvailable" component={CustomerTruckAvailable}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="CustomerTruckBooking" component={CustomerTruckBooking}
-        options={{ headerShown: true }}/>
+        options={{ headerShown: false }}/>
       <Stack.Screen name="Tracking" component={Tracking}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="OwnerRegister" component={OwnerRegister}
         options={{ headerShown: false }}/>
     </Stack.Navigator>
   </NavigationContainer>;
