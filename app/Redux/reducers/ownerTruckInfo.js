@@ -21,24 +21,28 @@ export const TruckModel = (state = '', action) => {
 };
 
 
-export const TotalSapce = (state = '', action) => {
+export const TotalSpace = (state = 0, action) => {
   switch (action.type) {
     case 'TotalSpace':
       state = action.data;
 
       return state;
     default:
+      state = 0;
+
       return state;
   }
 };
 
-export const TotalWeight = (state = '', action) => {
+export const TotalWeight = (state, action) => {
   switch (action.type) {
     case 'TotalWeight':
       state = action.data;
 
       return state;
     default:
+      state = 0;
+
       return state;
   }
 };

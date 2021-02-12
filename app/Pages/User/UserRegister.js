@@ -7,8 +7,10 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import axios from 'axios';
 import qs from 'querystring';
-import { customerFirstName,
-  customerLastName, customerMobileNum, customerOtp, customerToken } from '../../Redux/actions/customerInfo';
+
+import AppStatusBar from '../../Component/StatusBar';
+import { customerFirstName, customerLastName, customerMobileNum,
+  customerOtp, customerToken } from '../../Redux/actions/customerInfo';
 
 
 const CustomerRegister = ({ navigation }) => {
@@ -41,22 +43,16 @@ const CustomerRegister = ({ navigation }) => {
         lastName: customerLastNameSelector,
         mobileNum: customerMobileNumSelector,
       }), config)
-        .then(() => {
-          // if register worked then we will call smslogin for otp and token.
-          axios.post('http://sut.basservices.in/SMSLogin', qs.stringify({
-            mobileNum: customerMobileNumSelector,
-          }), config)
-            .then(response => {
+        .then(response => {
+          // if register worked then we will call smslogin for otp and token
               console.log(response);
-              dispatch(customerOtp(response.data.otp));
-              dispatch(customerToken(response.data.token));
+              dispatch(customerOtp(response.data.details[0]));
+              dispatch(customerToken(response.data.details[1]));
               navigation.navigate('CustomerOtp');
             })
             .catch(err => {
               console.log(err);
-            });
-        })
-        .catch(error => console.log(error));
+            })
     } catch (err) {
       console.log(err);
     }
@@ -104,6 +100,7 @@ const CustomerRegister = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppStatusBar />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image

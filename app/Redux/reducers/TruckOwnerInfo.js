@@ -1,6 +1,6 @@
 export const OwnerFullName = (state = '', action) => {
   switch (action.type) {
-    case 'FirstName':
+    case 'FullName':
       state = action.data;
 
       return state;
@@ -11,7 +11,7 @@ export const OwnerFullName = (state = '', action) => {
 
 export const OwnerMobileNum = (state = '', action) => {
   switch (action.type) {
-    case 'MobileNum':
+    case 'MobileNum2':
       state = action.data;
 
       return state;
@@ -22,7 +22,7 @@ export const OwnerMobileNum = (state = '', action) => {
 
 export const OwnerOtp = (state = '', action) => {
   switch (action.type) {
-    case 'OTP':
+    case 'OTP2':
       state = action.data;
 
       return state;
@@ -33,7 +33,7 @@ export const OwnerOtp = (state = '', action) => {
 
 export const OwnerToken = (state = '', action) => {
   switch (action.type) {
-    case 'Token':
+    case 'Token2':
       state = action.data;
 
       return state;

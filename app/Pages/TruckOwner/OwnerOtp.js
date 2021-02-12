@@ -7,7 +7,7 @@ import AppLoading from 'expo-app-loading';
 import Input from '../../Component/input';
 
 
-function CustomerOtp ({ navigation }) {
+function OwnerOTP ({ navigation }) {
   const [ input, setInput ] = useState('');
 
   const OwnerOtp = useSelector(state => state.OwnerOtp);
@@ -147,4 +147,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default CustomerOtp;
+export default OwnerOTP;

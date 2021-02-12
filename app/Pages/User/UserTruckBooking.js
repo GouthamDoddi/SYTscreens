@@ -6,6 +6,8 @@ import qs from 'querystring';
 
 
 import Header from '../../Component/Header';
+import AppStatusBar from '../../Component/StatusBar';
+
 import { axios, configToken } from '../../utils/axios';
 import { packageId } from '../../Redux/actions/packageDetails';
 

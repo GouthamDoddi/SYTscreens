@@ -1,20 +1,20 @@
 export const ownerFullName = firstName => ({
-  type: 'FirstName',
+  type: 'FullName',
   data: firstName,
 });
 
 export const ownerMobileNum = mobileNum => ({
-  type: 'MobileNum',
+  type: 'MobileNum2',
   data: mobileNum,
 });
 
 export const ownerOtp = otp => ({
-  type: 'OTP',
+  type: 'OTP2',
   data: otp,
 });
 
 export const ownerToken = token => ({
-  type: 'Token',
+  type: 'Token2',
   data: token,
 });
 

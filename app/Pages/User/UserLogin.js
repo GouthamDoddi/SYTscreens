@@ -73,6 +73,7 @@ function CustomerLogin ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppStatusBar />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image

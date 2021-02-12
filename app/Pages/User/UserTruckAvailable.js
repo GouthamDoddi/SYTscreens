@@ -7,11 +7,15 @@ import qs from 'querystring';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../../Component/Header';
+import TruckComponet from '../../Component/truckComponet';
+import AppStatusBar from '../../Component/StatusBar';
+
 import { allTripIdsNTruckNos, allTruckDetails, noOfTripsFound } from '../../Redux/actions/tripsAvailable';
 import { axios, fetchURL, configToken } from '../../utils/axios';
 import { AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
-import TruckComponet from '../../Component/truckComponet';
+
+
 
 function CustomerTruckAvailable ({ navigation }) {
   // vars and selectors

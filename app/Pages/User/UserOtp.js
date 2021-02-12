@@ -5,6 +5,7 @@ import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 
 import Input from '../../Component/input';
+import AppStatusBar from '../../Component/StatusBar';
 
 
 function CustomerOtp ({ navigation }) {
@@ -59,6 +60,7 @@ function CustomerOtp ({ navigation }) {
   return (
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
+      <AppStatusBar />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Text style={styles.backarrow}>&#x2190;</Text>

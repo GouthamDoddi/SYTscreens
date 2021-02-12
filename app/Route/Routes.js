@@ -15,6 +15,9 @@ import CustomerLogin from '../Pages/User/UserLogin';
 import Tracking from '../Pages/User/Tracking';
 
 import OwnerRegister from '../Pages/TruckOwner/OwnerRegister';
+import OwnerOtp from '../Pages/TruckOwner/OwnerOtp';
+import OwnerLogin from '../Pages/TruckOwner/OwnerLogIn';
+import OwnerTripRegister from '../Pages/TruckOwner/OwnerTripRegister';
 
 
 enableScreens();
@@ -47,6 +50,12 @@ const Routes = () =>
       <Stack.Screen name="Tracking" component={Tracking}
         options={{ headerShown: false }}/>
       <Stack.Screen name="OwnerRegister" component={OwnerRegister}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="OwnerOtp" component={OwnerOtp}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="OwnerLogin" component={OwnerLogin}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="OwnerTripRegister" component={OwnerTripRegister}
         options={{ headerShown: false }}/>
     </Stack.Navigator>
   </NavigationContainer>;

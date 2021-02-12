@@ -1,19 +1,19 @@
-export const truckNo = data => ({
+export const truckN0 = data => ({
   type: 'TruckNo',
   data,
 });
 
-export const truckModel = data => ({
+export const truckM0del = data => ({
   type: 'TruckModel',
   data,
 });
 
 export const totalWeight = data => ({
-  type: 'TruckWeight',
+  type: 'TotalWeight',
   data,
 });
 
 export const totalSpace = data => ({
-  type: 'TruckSpace',
+  type: 'TotalSpace',
   data,
 });

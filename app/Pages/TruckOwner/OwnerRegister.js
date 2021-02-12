@@ -5,11 +5,16 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'querystring';
+import * as DocumentPicker from 'expo-document-picker';
+import FormData from 'form-data';
+
 
 import Input from '../../Component/input';
 import { ownerFullName, ownerToken, ownerOtp, ownerMobileNum } from '../../Redux/actions/ownerInfo';
-import { truckModel, truckNo, totalSpace, totalWeight } from '../../Redux/actions/ownerTruckInfo';
-import { axios, config } from '../../utils/axios';
+import { truckM0del, truckN0, totalSpace, totalWeight } from '../../Redux/actions/ownerTruckInfo';
+import { truckRegisterFailed } from '../../Redux/actions/other';
+import { axios, config, configToken, localAxios, localAxiosToken } from '../../utils/axios';
+import AppStatusBar from '../../Component/StatusBar';
 
 function OwnerRegister ({ navigation }) {
   // vars and selectors
@@ -17,41 +22,112 @@ function OwnerRegister ({ navigation }) {
   const dispatch = useDispatch();
   const OwnerFulName = useSelector(state => state.OwnerFulName);
   const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
-  const TruckNo = useSelector(state => state.TruckNo);
-  const TruckModel = useSelector(state => state.TruckModel);
-  const TotalSpace = useSelector(state => state.TotalSpace);
-  const TotalWeight = useSelector(state => state.TotalWeight);
+  const truckNo = useSelector(state => state.TruckNo);
+  const truckModel = useSelector(state => state.TruckModel);
+  const capacityInSpace = useSelector(state => state.TotalSpace);
+  const capacityInKgs = useSelector(state => state.TotalWeight);
+  const TruckRegisterFailed = useSelector(state => state.TruckRegisterFailed);
+  let rc = '';
+  let licence = '';
+
+
+  const truckOwnerData = qs.stringify({
+    fullName: OwnerFulName,
+    mobileNum: OwnerMobileNum,
+  });
+
+  const formdata = new FormData();
+
+  formdata.append(truckNo, truckModel, capacityInKgs, capacityInSpace);
+  formdata.append('document', rc);
+  formdata.append('document', licence);
+
+  // const truckData = qs.stringify({
+  //   truckModel: TruckModel,
+  //   truckNo: TruckNo,
+  //   capacityInKgs: TotalSpace,
+  //   capacityInSpace: TotalWeight,
+  //   document: rc,
+  //   // eslint-disable-next-line no-dupe-keys
+  //   document: licence,
+  // });
 
   // functions
 
-  const backPage = () => console.log('backPage');
-  const onSubmit = async () => {
-    try {
-      await axios.post('/truckownerRegister', qs.stringify({
-        fullName: OwnerFulName,
-        mobileNum: OwnerMobileNum,
-      }), config)
-        .then(() => {
-        // if register worked then we will call smslogin for otp and token.
-          axios.post('/SMSLogin', qs.stringify({
-            mobileNum: OwnerMobileNum,
-          }), config)
-            .then(response => {
-              console.log(response);
-              dispatch(ownerOtp(response.data.otp));
-              dispatch(ownerToken(response.data.token));
-              navigation.navigate('CustomerOtp');
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(error => console.log(error));
-    } catch (err) {
-      console.log(err);
-    }
+  const getRC = async () => {
+    // function to get rc document
+    rc = await DocumentPicker.getDocumentAsync();
   };
-  const otp = () => console.log('otp called');
+
+  const getLicence = async () => {
+    // function to get licence
+    licence = await DocumentPicker.getDocumentAsync();
+
+    console.log(licence);
+  };
+
+  const backPage = () => navigation.navigate('Welcome');
+
+  const onSubmit = () => {
+    console.log('Onsubmit called!');
+
+    // navigation.navigate('OwnerTripRegister');
+    // await localAxios.post('/truckOwnerRegister', truckOwnerData)
+    //   .then(async resp => {
+    //     console.log(resp);
+    //     if (resp.data.statusCode === 200)
+    //       console.log('post failed');
+    //
+    //     // if register worked then we will call smslogin for otp and token.
+    //     console.log('SMSlogin called')
+    //     await localAxios.post('/SMSLogin', qs.stringify({
+    //       mobileNum: OwnerMobileNum,
+    //     }))
+    //       .then(async response => {
+    //         console.log(`login data here ${JSON.stringify(response.data)}`);
+    //         dispatch(ownerOtp(response.data.otp));
+    //         dispatch(ownerToken(response.data.token));
+    //
+    //         const token = response.data.token;
+    //         // truck register
+    //
+    //         await localAxiosToken.post('/truckRegister', formdata, token)
+    //           .then(res => {
+    //             console.log(res)
+    //             if (res.data.statusCode !== 200) {
+    //               dispatch(truckRegisterFailed());
+    //               console.log(`register failed ${JSON.stringify(res)}`);
+    //             }
+    //             navigation.navigate('OwnerOtp');
+    //             console.log(JSON.stringify(response.data));
+    //           });
+    //
+    //       })
+    //       .catch(err => {
+    //         console.log(err);
+    //       });
+    //   })
+    //   .catch(error => console.log(error));
+
+    const config = {
+      method: 'post',
+      url: 'http://localhost:3000/TruckOwnerRegister',
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Nzc3ODc1NTU1IiwiaWF0IjoxNjEyODQ4NjYzLCJleHAiOjE2MTI5MzUwNjN9.XPV36Nak8jRp0mRpwlGb_rA0ylfLAwbCC3NwQDwFOJU',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: truckOwnerData,
+    };
+
+    axios(config)
+      .then(response => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const loginRedirect = () => navigation.navigate('OwnerLogin');
 
   // form data
 
@@ -76,7 +152,7 @@ function OwnerRegister ({ navigation }) {
   const vechileName = {
     // label: 'Vechile Name',
     placeholder: 'Vechile Name',
-    updateValue: e => dispatch(truckModel(e)),
+    updateValue: e => dispatch(truckM0del(e)),
     touched: '',
     restInput: '',
     disabled: false,
@@ -85,7 +161,7 @@ function OwnerRegister ({ navigation }) {
   const truckNoField = {
     // label: 'Register plate Number',
     placeholder: 'Register plate Number',
-    updateValue: e => dispatch(truckNo(e)),
+    updateValue: e => dispatch(truckN0(e)),
     touched: '',
     restInput: '',
     disabled: false,
@@ -121,6 +197,7 @@ function OwnerRegister ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppStatusBar />
       <ScrollView>
         <View style={styles.box}>
           <TouchableOpacity onPress={backPage}>
@@ -136,7 +213,7 @@ function OwnerRegister ({ navigation }) {
           <Text style={styles.headText}>Want to be an <Text style={styles.bold}>Individual Delivery Partner?</Text></Text>
           <View>
             <Text style={styles.mainText}>Register</Text>
-            <TouchableOpacity onPress={onSubmit}>
+            <TouchableOpacity onPress={loginRedirect}>
               <Text style={styles.loginText}>Already registered? Please <Text style={styles.underline}>Login</Text></Text>
             </TouchableOpacity>
             <Input componentData={fullName} />
@@ -167,7 +244,7 @@ function OwnerRegister ({ navigation }) {
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                 <Text style={styles.attachText}>Attach RC</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={getRC}>
                   <Image
                     style={styles.link}
                     source={require('../../Images/link.jpg')}
@@ -176,7 +253,7 @@ function OwnerRegister ({ navigation }) {
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                 <Text style={styles.attachText}>Attach Licence</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={getLicence}>
                   <Image
                     style={styles.link}
                     source={require('../../Images/link.jpg')}
@@ -185,11 +262,15 @@ function OwnerRegister ({ navigation }) {
               </View>
             </View>
           </View>
+          { TruckRegisterFailed
+            ? <Text>Truck registration failed.</Text>
+            : <Text></Text>
+          }
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: '50%', height: 100 }}/>
             <View style={{ width: '50%', height: 100 }}/>
           </View>
-          <TouchableOpacity onPress={otp}>
+          <TouchableOpacity onPress={onSubmit}>
             <Image
               style={styles.arrow}
               source={require('../../Images/right-arrow.png')}

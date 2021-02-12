@@ -3,13 +3,14 @@ import { Text, View, Image, StyleSheet,
   TouchableOpacity, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckBox from '@react-native-community/checkbox';
-// import axios from 'axios';
 import qs from 'querystring';
 
 import Header from '../../Component/Header';
 import DropDown from '../../Component/DropDown';
 import Input2 from '../../Component/Input2';
 import DatePicker from '../../Component/DataPicker';
+import AppStatusBar from '../../Component/StatusBar';
+
 
 import { pickUp, drop, pickUpDate, packageWeight,
   packageSpace, entireTruck, receivingPersonName,
@@ -17,7 +18,6 @@ import { pickUp, drop, pickUpDate, packageWeight,
 import { allTripIdsNTruckNos, noOfTripsFound, allTruckDetails, allTruckSpaceNWeight } from '../../Redux/actions/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 import { axios, configToken } from '../../utils/axios';
-import AppStatusBar from '../../Component/StatusBar';
 
 
 const CustomerAddPackage = ({ navigation }) => {

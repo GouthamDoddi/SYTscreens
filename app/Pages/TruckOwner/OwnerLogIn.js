@@ -1,15 +1,16 @@
 import React from 'react';
-import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
+import { SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
-// import axios from 'axios';
-
+import axios from 'axios'
 
 import { ownerToken, ownerOtp, ownerMobileNum } from '../../Redux/actions/ownerInfo';
 import { loginFailed } from '../../Redux/actions/other';
-import { axios } from '../../utils/axios';
+import { localAxios } from '../../utils/axios';
 import Input from '../../Component/input';
+import AppStatusBar from '../../Component/StatusBar';
+
 
 function CustomerLogin ({ navigation }) {
   // vars and selectors
@@ -29,19 +30,8 @@ function CustomerLogin ({ navigation }) {
 
 
   const onSubmit = async () => {
-    const config = {
-      mode: 'cors',
-      crossDomain: true,
-      'Access-Control-Allow-Origin': 'http://localhost:3000/SMSLogin',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-      },
-    };
-
     // api call
-    await axios.post('/SMSLogin', qs.stringify({
-      mobileNum: OwnerMobileNum,
-    }), config)
+    await axios(localAxios('/SMSLogin', OwnerMobileNum))
       .then(response => {
         if (response.data.message === 'Error! User is not found.') {
           console.log(response.data);
@@ -62,7 +52,7 @@ function CustomerLogin ({ navigation }) {
   const MobileNumData = {
     label: 'Mobile Number',
     placeholder: 'Mobile Number',
-    updateValue: () => '',
+    updateValue: e => dispatch(ownerMobileNum(e)),
     touched: '',
     restInput: '',
     disabled: false,
@@ -70,6 +60,7 @@ function CustomerLogin ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppStatusBar />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image

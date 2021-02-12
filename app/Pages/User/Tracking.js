@@ -4,6 +4,8 @@ import { StyleSheet, View, Dimensions,
   TouchableOpacity, Image, Text } from 'react-native';
 
 import Header from '../../Component/Header';
+import AppStatusBar from '../../Component/StatusBar';
+
 
 export default function Tracking ({ navigation }) {
   const headerData = () => console.log('Header clicked!');
