@@ -1,23 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'querystring';
-import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
+import axios from 'axios';
+import { Buffer } from 'buffer';
 
-
-import Input from '../../Component/input';
 import { ownerFullName, ownerToken, ownerOtp, ownerMobileNum } from '../../Redux/actions/ownerInfo';
 import { truckM0del, truckN0, totalSpace, totalWeight } from '../../Redux/actions/ownerTruckInfo';
 import { truckRegisterFailed } from '../../Redux/actions/other';
-import { axios, config, configToken, localAxios, localAxiosToken } from '../../utils/axios';
+
+// import { getImgBlob } from '../../utils/formData';
+import { localAxios, localAxiosFormData, localAxiosToken } from '../../utils/axios';
 import AppStatusBar from '../../Component/StatusBar';
+import Input from '../../Component/input';
 
 function OwnerRegister ({ navigation }) {
   // vars and selectors
+
+  const [ rc, setrc ] = useState(0);
+  const [ lc, setlc ] = useState(0);
+
+  let login = true;
 
   const dispatch = useDispatch();
   const OwnerFulName = useSelector(state => state.OwnerFulName);
@@ -27,8 +35,6 @@ function OwnerRegister ({ navigation }) {
   const capacityInSpace = useSelector(state => state.TotalSpace);
   const capacityInKgs = useSelector(state => state.TotalWeight);
   const TruckRegisterFailed = useSelector(state => state.TruckRegisterFailed);
-  let rc = '';
-  let licence = '';
 
 
   const truckOwnerData = qs.stringify({
@@ -38,94 +44,128 @@ function OwnerRegister ({ navigation }) {
 
   const formdata = new FormData();
 
-  formdata.append(truckNo, truckModel, capacityInKgs, capacityInSpace);
-  formdata.append('document', rc);
-  formdata.append('document', licence);
-
-  // const truckData = qs.stringify({
-  //   truckModel: TruckModel,
-  //   truckNo: TruckNo,
-  //   capacityInKgs: TotalSpace,
-  //   capacityInSpace: TotalWeight,
-  //   document: rc,
-  //   // eslint-disable-next-line no-dupe-keys
-  //   document: licence,
-  // });
 
   // functions
 
   const getRC = async () => {
     // function to get rc document
-    rc = await DocumentPicker.getDocumentAsync();
+    const rce = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [ 4, 3 ],
+      // base64: true,
+      quality: 1,
+    });
+
+    if (rce.uri) {
+      // const rcByte = Buffer.from(rce.base64, 'base64');
+      const localUri = rce.uri;
+      const filename = localUri.split('/').pop();
+      // Infer the type of the image
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match
+        ? `image/${match[1]}`
+        : 'image';
+
+      setrc({ uri: localUri, name: filename, type });
+    }
   };
 
   const getLicence = async () => {
     // function to get licence
-    licence = await DocumentPicker.getDocumentAsync();
+    const lce = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [ 4, 3 ],
+      // base64: true,
+      quality: 1,
+    });
 
-    console.log(licence);
+    if (lce.uri) {
+      // const lcByte = Buffer.from(lce.base64, 'base64');
+
+      const localUri = lce.uri;
+      const filename = localUri.split('/').pop();
+      // Infer the type of the image
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match
+        ? `image/${match[1]}`
+        : 'image';
+
+      setlc({ uri: localUri, name: filename, type });
+    }
   };
 
   const backPage = () => navigation.navigate('Welcome');
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     console.log('Onsubmit called!');
+    // const path = rc.uri.replace('file://', '');
 
-    // navigation.navigate('OwnerTripRegister');
-    // await localAxios.post('/truckOwnerRegister', truckOwnerData)
-    //   .then(async resp => {
-    //     console.log(resp);
-    //     if (resp.data.statusCode === 200)
-    //       console.log('post failed');
-    //
-    //     // if register worked then we will call smslogin for otp and token.
-    //     console.log('SMSlogin called')
-    //     await localAxios.post('/SMSLogin', qs.stringify({
-    //       mobileNum: OwnerMobileNum,
-    //     }))
-    //       .then(async response => {
-    //         console.log(`login data here ${JSON.stringify(response.data)}`);
-    //         dispatch(ownerOtp(response.data.otp));
-    //         dispatch(ownerToken(response.data.token));
-    //
-    //         const token = response.data.token;
-    //         // truck register
-    //
-    //         await localAxiosToken.post('/truckRegister', formdata, token)
-    //           .then(res => {
-    //             console.log(res)
-    //             if (res.data.statusCode !== 200) {
-    //               dispatch(truckRegisterFailed());
-    //               console.log(`register failed ${JSON.stringify(res)}`);
-    //             }
-    //             navigation.navigate('OwnerOtp');
-    //             console.log(JSON.stringify(response.data));
-    //           });
-    //
-    //       })
-    //       .catch(err => {
-    //         console.log(err);
-    //       });
-    //   })
-    //   .catch(error => console.log(error));
+    // const path2 = lc.uri.replace('file://', '');
 
-    const config = {
-      method: 'post',
-      url: 'http://localhost:3000/TruckOwnerRegister',
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Nzc3ODc1NTU1IiwiaWF0IjoxNjEyODQ4NjYzLCJleHAiOjE2MTI5MzUwNjN9.XPV36Nak8jRp0mRpwlGb_rA0ylfLAwbCC3NwQDwFOJU',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      data: truckOwnerData,
-    };
 
-    axios(config)
-      .then(response => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // const rcBlob = {
+    //   name: 'rc',
+    //   filename: `${OwnerFulName}/rc.jpg`,
+    //   buffer: rc.base64,
+    // };
+    // const lcBlob = {
+    //   name: 'licence',
+    //   filename: `${OwnerFulName}/licence.jpg`,
+    //   buffer: lc.base64,
+    // };
+
+    formdata.append('truckNo', truckNo);
+    formdata.append('truckModel', truckModel);
+    formdata.append('capacityInKgs', capacityInKgs);
+    formdata.append('capacityInSpace', capacityInSpace);
+    formdata.append('document', rc);
+    formdata.append('document', lc);
+    formdata.append('mobileNum', OwnerMobileNum);
+
+    // formdata.append('image', rc.base64);
+
+    try {
+      await axios(localAxios('/truckOwnerRegister', truckOwnerData))
+        .then(async resp => {
+          if (resp.data.statusCode !== 201) {
+            console.log(`login faild data here ${JSON.stringify(resp.data)}`);
+            // using login since the register send's otp anyway. So no need to login again.
+            // dispatch(loginFailed('Failed'));
+            login = false;
+
+            return 0;
+          }
+
+          console.log(`register data here ${JSON.stringify(resp.data)}`);
+          dispatch(ownerOtp(resp.data.otp));
+          dispatch(ownerToken(resp.data.token));
+
+          const { token } = resp.data;
+
+          login = true;
+          // truck register
+
+          await axios(localAxiosFormData('/truckRegister', formdata, token))
+            .then(res => {
+              console.log(res);
+              if (res.data.statusCode !== 200) {
+                dispatch(truckRegisterFailed('Failed'));
+                console.log(`register failed ${JSON.stringify(res)}`);
+              }
+              navigation.navigate('OwnerOtp');
+              console.log(JSON.stringify(res.data));
+            })
+            .catch(err => {
+              console.log(err);
+              dispatch(truckRegisterFailed('Failed'));
+            });
+        })
+        .catch(err => console.log(err));
+    } catch (err) {
+      console.log(err);
+    }
   };
   const loginRedirect = () => navigation.navigate('OwnerLogin');
 
@@ -266,6 +306,14 @@ function OwnerRegister ({ navigation }) {
             ? <Text>Truck registration failed.</Text>
             : <Text></Text>
           }
+          { login
+            ? <Text></Text>
+            : <Text>Truck registration failed.</Text>
+          }
+          {/* { image
+            ? <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+            : <View></View>
+          } */}
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: '50%', height: 100 }}/>
             <View style={{ width: '50%', height: 100 }}/>
@@ -281,6 +329,7 @@ function OwnerRegister ({ navigation }) {
     </SafeAreaView>
   );
 }
+
 
 export default OwnerRegister;
 

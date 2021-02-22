@@ -3,10 +3,11 @@ import { SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
-import axios from 'axios'
+import axios from 'axios';
 
-import { ownerToken, ownerOtp, ownerMobileNum } from '../../Redux/actions/ownerInfo';
-import { loginFailed } from '../../Redux/actions/other';
+import { ownerToken, ownerOtp, ownerMobileNum, ownerFullName } from '../../Redux/actions/ownerInfo';
+import { truckN0 } from '../../Redux/actions/ownerTruckInfo';
+// import { loginFailed } from '../../Redux/actions/other';
 import { localAxios } from '../../utils/axios';
 import Input from '../../Component/input';
 import AppStatusBar from '../../Component/StatusBar';
@@ -16,9 +17,11 @@ function CustomerLogin ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
 
-  const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
-  const LoginFailed = useSelector(state => state.LoginFailed);
+  let login = true;
 
+  const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
+  // const LoginFailed = useSelector(state => state.LoginFailed);
+  const OwnerToken = useSelector(state => state.OwnerToken);
 
   // functions
 
@@ -30,22 +33,66 @@ function CustomerLogin ({ navigation }) {
 
 
   const onSubmit = async () => {
-    // api call
-    await axios(localAxios('/SMSLogin', OwnerMobileNum))
-      .then(response => {
-        if (response.data.message === 'Error! User is not found.') {
-          console.log(response.data);
-          dispatch(loginFailed());
-        }
+    console.log('login called!');
+    const loginData = qs.stringify({ mobileNum: OwnerMobileNum });
 
-        console.log(response.data.rows);
-        dispatch(ownerOtp(response.data.otp));
-        dispatch(ownerToken(response.data.token));
-        navigation.navigate('OwnerOtp');
+    // api call
+    await axios(localAxios('/SMSLogin', loginData))
+      .then(response => {
+        console.log(`respose data here ${JSON.stringify(response.data)}`);
+        if (response.data.statusCode !== 400) {
+          if (response.data.truckOwner) {
+            console.log(response.data);
+            // eslint-disable-next-line function-call-argument-newline
+            dispatch(ownerOtp(response.data.otp));
+            dispatch(ownerMobileNum(response.data.truckOwner[0].mobile_num));
+            dispatch(ownerToken(response.data.token));
+            dispatch(ownerFullName(response.data.truckOwner[0].full_name));
+            dispatch(truckN0(response.data.truckDetails[0].truck_no));
+            // dispatch(loginFailed(false));
+            login = true;
+            navigation.navigate('OwnerOtp');
+          }
+          login = false;
+        }
+        // dispatch(loginFailed('Failed'));
+        login = false;
+
+        return 0;
       })
       .catch(err => {
         console.log(err);
       });
+
+    console.log(`login = ${login}`);
+
+    // const config = {
+    //   mode: 'cors',
+    //   crossDomain: true,
+    //   'Access-Control-Allow-Origin': 'http://192.168.2.4:3000/SMSLogin',
+    //   headers: {
+    //     'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+    //   },
+    // };
+
+    // // api call
+    // await axios.post('http://192.168.2.4:3000/SMSLogin', qs.stringify({
+    //   mobileNum: OwnerMobileNum,
+    // }), config)
+    //   .then(response => {
+    //     if (response.data.message === 'Error! User is not found.') {
+    //       console.log(response.data);
+    //       dispatch(loginFailed());
+    //     }
+
+    //     console.log(response.data);
+    //     // dispatch(ownerOtp(response.data.otp));
+    //     // dispatch(ownerToken(response.data.token));
+    //     // navigation.navigate('OwnerOtp');
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
   };
 
   // from data
@@ -87,12 +134,13 @@ function CustomerLogin ({ navigation }) {
             <TouchableOpacity onPress={onSubmit}>
               <Text style={styles.arrow}>&#x2794;</Text>
             </TouchableOpacity>
-            <View>
-              { LoginFailed
-                ? <Text style={styles.error}>The number you have entered is not registered yet! Please Register first.</Text>
-                : <Text></Text>
-              }
-            </View>
+          </View>
+          <View>
+            { login
+              ? <Text></Text>
+
+              : <Text style={styles.error}>The number you have entered is not registered yet! Please Register first.</Text>
+            }
           </View>
         </View>
       </ScrollView>

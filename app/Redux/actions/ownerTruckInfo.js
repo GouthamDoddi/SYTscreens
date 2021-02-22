@@ -17,3 +17,8 @@ export const totalSpace = data => ({
   type: 'TotalSpace',
   data,
 });
+
+export const tripHistory = data => ({
+  type: 'TripHistory',
+  data,
+});

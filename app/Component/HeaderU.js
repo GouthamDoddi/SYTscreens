@@ -8,7 +8,7 @@ function HeaderU ({ data }) {
 
   return (
     <View style={styles.header}>
-      <StatusBar backgroundColor='#000000' />
+      <StatusBar backgroundColor='#FF8200' />
       <Image
         style={styles.img}
         source={require('../Images/logowhite.jpg')}
@@ -20,7 +20,7 @@ function HeaderU ({ data }) {
       <TouchableOpacity style={styles.side} onPress={onSubmit}>
         <Image
           style={styles.img2}
-          source={require('../Images/profileblack.png')}
+          source={require('../Images/profile.jpg')}
         />
       </TouchableOpacity>
     </View>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
   header: {
     height: '11.1%',
-    backgroundColor: '#000000',
+    backgroundColor: '#FF8200',
     flexDirection: 'row',
   },
   img: {

@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import qs from 'querystring';
 
 
 export const axios = Axios.create({
@@ -24,23 +23,39 @@ export function configToken (token) {
     } };
 }
 
-export const localAxiosToken = (url, data, token) => ({
+export const localAxiosToken = (url, data, token) => {
+  console.log('local axios called!');
+
+  return {
+    method: 'post',
+    url: `http://192.168.2.5:3000${url}`,
+    // url: `http://localhost:3000${url}`,
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${token}`,
+    },
+    data,
+  };
+};
+
+export const localAxios = (url, data) => ({
   method: 'post',
-  url: `http://localhost:3000${url}`,
+  url: `http://192.168.2.5:3000${url}`,
+  // url: `http://localhost:3000${url}`,
   headers: {
     Accept: '*/*',
-    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/x-www-form-urlencoded',
   },
   data,
 });
 
-export const localAxios = (url, data) => ({
+export const localAxiosFormData = (url, data, token) => ({
   method: 'post',
-  url: `http://localhost:3000${url}`,
+  url: `http://192.168.2.5:3000${url}`,
   headers: {
-    Accept: '*/*',
-    'Content-Type': 'application/x-www-form-urlencoded',
+    Authorization: `Bearer ${token}`,
+    'content-type': 'multipart/form-data',
   },
-  data: qs.stringify(data),
+  data,
 });

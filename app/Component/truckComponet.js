@@ -10,7 +10,7 @@ function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
 
   return (
     <View>
-      {allData.map((data, index) => {
+      { allData.map((data, index) => {
         console.log(`index = ${index}`);
         console.log(`allData = ${data}`);
         console.log(`data = ${JSON.stringify(data[index])}`);

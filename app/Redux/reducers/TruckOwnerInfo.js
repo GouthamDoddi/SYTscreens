@@ -1,10 +1,11 @@
-export const OwnerFullName = (state = '', action) => {
+export const OwnerFullName = (state='', action) => {
   switch (action.type) {
     case 'FullName':
       state = action.data;
 
       return state;
     default:
+
       return state;
   }
 };

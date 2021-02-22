@@ -16,7 +16,6 @@ import { AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 
 
-
 function CustomerTruckAvailable ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();

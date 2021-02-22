@@ -45,14 +45,14 @@ const CustomerRegister = ({ navigation }) => {
       }), config)
         .then(response => {
           // if register worked then we will call smslogin for otp and token
-              console.log(response);
-              dispatch(customerOtp(response.data.details[0]));
-              dispatch(customerToken(response.data.details[1]));
-              navigation.navigate('CustomerOtp');
-            })
-            .catch(err => {
-              console.log(err);
-            })
+          console.log(response);
+          dispatch(customerOtp(response.data.details[0]));
+          dispatch(customerToken(response.data.details[1]));
+          navigation.navigate('CustomerOtp');
+        })
+        .catch(err => {
+          console.log(err);
+        });
     } catch (err) {
       console.log(err);
     }

@@ -46,3 +46,15 @@ export const TotalWeight = (state, action) => {
       return state;
   }
 };
+
+export const TripHistory = (state=0, action) => {
+  switch (action.type) {
+    case 'TripHistory':
+      state = action.data;
+
+      return state;
+    default:
+
+      return state;
+  }
+};

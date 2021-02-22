@@ -23,3 +23,8 @@ export const selectedTruckData = data => ({
   type: 'SelectedTruckData',
   data,
 });
+
+export const deliveryRequests = data => ({
+  type: 'DeliveryRequests',
+  data,
+});

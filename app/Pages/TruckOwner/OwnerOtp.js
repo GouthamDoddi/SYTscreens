@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
+import qs from 'querystring';
+import axios from 'axios';
 
 import Input from '../../Component/input';
+import { localAxios, localAxiosToken } from '../../utils/axios';
+import { tripHistory } from '../../Redux/actions/ownerTruckInfo';
 
 
 function OwnerOTP ({ navigation }) {
+  let TruckNo = useSelector(state => state.TruckNo);
+  const OwnerToken = useSelector(state => state.OwnerToken);
   const [ input, setInput ] = useState('');
+
+  const dispatch = useDispatch();
 
   const OwnerOtp = useSelector(state => state.OwnerOtp);
 
@@ -20,7 +28,25 @@ function OwnerOTP ({ navigation }) {
     if (input === OwnerOtp) {
       // logged in
       console.log(`${OwnerOtp} == ${input}`);
-      navigation.navigate('CustomerWelcome');
+
+      // TruckNo = 'AP31EJ700';
+      const data = qs.stringify({ truckNo: TruckNo });
+
+      console.log(`token = ${OwnerToken}`);
+
+      axios(localAxiosToken('/getTripByTruckNo', data, OwnerToken))
+        .then(resp => {
+          console.log(resp.data);
+          const tripDetails = resp.data.message.tripDetails
+            ? resp.data.message.tripDetails
+            : 0;
+
+          console.log(`my condolences ${JSON.stringify(tripDetails)}`);
+
+          dispatch(tripHistory(tripDetails));
+        })
+        .catch(err => console.log(err));
+      navigation.navigate('OwnerTripRegister');
       console.log('logged in');
     } else {
       console.log("'didn't match");
@@ -29,7 +55,7 @@ function OwnerOTP ({ navigation }) {
 
 
   const backPage = () => {
-    navigation.navigate('CustomerRegister');
+    navigation.navigate('OwnerRegister');
   };
 
   // formData

@@ -1,6 +1,6 @@
-export const ownerFullName = firstName => ({
+export const ownerFullName = data => ({
   type: 'FullName',
-  data: firstName,
+  data,
 });
 
 export const ownerMobileNum = mobileNum => ({

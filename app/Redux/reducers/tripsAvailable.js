@@ -58,3 +58,14 @@ export const SelectedTruckData = (state = '', action) => {
       return state;
   }
 };
+
+export const DeliveryRequests = (state = '', action) => {
+  switch (action.type) {
+    case 'DeliveryRequests':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};
