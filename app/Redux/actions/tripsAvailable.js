@@ -28,3 +28,8 @@ export const deliveryRequests = data => ({
   type: 'DeliveryRequests',
   data,
 });
+
+export const tripDetails = data => ({
+  type: 'TripDetails',
+  data,
+});

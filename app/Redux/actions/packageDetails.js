@@ -42,3 +42,13 @@ export const receivingPersonNum = receivingPersonNum => ({
   type: 'ReceivingPersonNum',
   data: receivingPersonNum,
 });
+
+export const dropPersonName = data => ({
+  type: 'DropPersonName',
+  data,
+});
+
+export const dropPersonNum = data => ({
+  type: 'DropPersonNum',
+  data,
+});

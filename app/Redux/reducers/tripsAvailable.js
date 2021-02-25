@@ -69,3 +69,14 @@ export const DeliveryRequests = (state = '', action) => {
       return state;
   }
 };
+
+export const TripDetails = (state = '', action) => {
+  switch (action.type) {
+    case 'TripDetails':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

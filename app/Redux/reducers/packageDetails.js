@@ -96,3 +96,25 @@ export const ReceivingPersonNum = (state = '', action) => {
       return state;
   }
 };
+
+export const DropPersonName = (state = '', action) => {
+  switch (action.type) {
+    case 'DropPersonName':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};
+
+export const DropPersonNum = (state = '', action) => {
+  switch (action.type) {
+    case 'DropPersonNum':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

@@ -1,25 +1,38 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import qs from 'querystring';
 
+import { localAxiosToken } from '../../utils/axios';
 import HeaderU from '../../Component/HeaderU';
-
 
 function OwnerDeliveryRequests ({ navigation }) {
   // vars and selectors
 
   const DeliveryRequests = useSelector(state => state.DeliveryRequests);
   const OwnerFullName = useSelector(state => state.OwnerFullName);
-
-  // console.log(DeliveryRequests);
-
+  const TripDetails = useSelector(state => state.TripDetails);
+  const OwnerToken = useSelector(state => state.OwnerToken);
 
   // functions
 
+  const onSubmit = () => console.log('header clicked');
+
   const goBack = () => navigation.navigate('OwnerTripRegister');
 
-  const onSubmit = () => {
-    console.log('on submirt called!');
+  const params2 = mappingId => qs.stringify({
+    delivered: false,
+    status: 'Accepted',
+    mappingId,
+  });
+
+  const mapPackageToTruck = mappingId => {
+    axios(localAxiosToken('/updatePackageMapping', params2(mappingId), OwnerToken))
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => console.log(error));
   };
 
   return (
@@ -62,18 +75,18 @@ function OwnerDeliveryRequests ({ navigation }) {
                   <View style={styles.weightsubrow}>
                     <View>
                       <Text style={styles.avail}>Package Weight</Text>
-                      <Text style={styles.avail2}>{data.package_weight}. KG</Text>
+                      <Text style={styles.avail2}>{data[0].package_weight}. KG</Text>
                     </View>
                     <View>
                       <Text style={styles.avail}>Package Space</Text>
-                      <Text style={styles.avail2}>{data.package_space}. FT</Text>
+                      <Text style={styles.avail2}>{data[0].package_space}. FT</Text>
                     </View>
-                    <Text style={styles.avail3}>RS {data.package_space * 20}</Text>
+                    <Text style={styles.avail3}>RS {data[0].package_space * 20}</Text>
                   </View>
                   <View style={styles.location}>
                     <View style={styles.locationsub}>
                       <Text style={styles.dropt3}>Drop Location</Text>
-                      <Text style={styles.dropt}>{data.drop_point}</Text>
+                      <Text style={styles.dropt}>{data[0].drop_point}</Text>
                       <Text style={styles.dropt3}>Customer Name</Text>
                       <Text style={styles.dropt}>{ 'Print Name' || data.customer_name }</Text>
                       <View style={{ flexDirection: 'row' }}>
@@ -83,14 +96,14 @@ function OwnerDeliveryRequests ({ navigation }) {
                             source={require('../../Images/phone.png')}
                           />
                         </TouchableOpacity>
-                        <Text style={styles.dropt3}>{data.customer_mobile_num}</Text>
+                        <Text style={styles.dropt3}>{data[0].customer_mobile_num}</Text>
                       </View>
                     </View>
                     <View style={styles.locationsub}>
                       <Text style={styles.dropt3}>Pickup Location</Text>
-                      <Text style={styles.dropt}>{data.pickup_point}</Text>
+                      <Text style={styles.dropt}>{data[0].pickup_point}</Text>
                       <Text style={styles.dropt3}>Receiving person Name</Text>
-                      <Text style={styles.dropt}>{data.package_receiving_person}</Text>
+                      <Text style={styles.dropt}>{data[0].package_receiving_person}</Text>
                       <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity>
                           <Image
@@ -98,22 +111,36 @@ function OwnerDeliveryRequests ({ navigation }) {
                             source={require('../../Images/phone.png')}
                           />
                         </TouchableOpacity>
-                        <Text style={styles.dropt3}>{data.receiving_person_mobile_no}</Text>
+                        <Text style={styles.dropt3}>{data[0].receiving_person_mobile_no}</Text>
                       </View>
                     </View>
                   </View>
-                  <View style={styles.delivery}>
-                    <TouchableOpacity style={styles.deliverysub}>
-                      <Text style={styles.last1}>Cancel Deliver</Text>
-                      <Image
-                        style={styles.deimg}
-                        source={require('../../Images/dustbin.png')}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.last} onPress={onSubmit}>
-                      <Text style={styles.last2}>Accept Delivery</Text>
-                    </TouchableOpacity>
-                  </View>
+                  { data[1].status === 'Accepted'
+                    ? <View style={styles.delivery}>
+                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[1].mapping_id) }>
+                        <Text style={styles.last2}>Delivery Done</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.deliverysub}>
+                        <Text style={styles.last1}>Cancel Deliver</Text>
+                        <Image
+                          style={styles.deimg}
+                          source={require('../../Images/dustbin.png')}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    : <View style={styles.delivery}>
+                      <TouchableOpacity style={styles.deliverysub}>
+                        <Text style={styles.last1}>Cancel Deliver</Text>
+                        <Image
+                          style={styles.deimg}
+                          source={require('../../Images/dustbin.png')}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[1].mapping_id) }>
+                        <Text style={styles.last2}>Accept Delivery</Text>
+                      </TouchableOpacity>
+                    </View>
+                  }
                 </View>
               </View>)}
           </ScrollView>

@@ -43,6 +43,7 @@ function CustomerLogin ({ navigation }) {
         if (response.data.statusCode !== 400) {
           if (response.data.truckOwner) {
             console.log(response.data);
+            console.log(response.data.truckDetails[0].truck_no);
             // eslint-disable-next-line function-call-argument-newline
             dispatch(ownerOtp(response.data.otp));
             dispatch(ownerMobileNum(response.data.truckOwner[0].mobile_num));

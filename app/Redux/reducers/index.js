@@ -3,9 +3,9 @@ import { CustomerFirstName, CustomerLastName,
   CustomerMobileNum, CustomerOtp, CustomerToken } from './customerInfo';
 import { PickUp, Drop, PickUpDate, EntireTruck,
   PackageWeight, PackageSpace, ReceivingPersonName,
-  ReceivingPersonNum, PackageId } from './packageDetails';
+  ReceivingPersonNum, PackageId, DropPersonName, DropPersonNum } from './packageDetails';
 import { NoOfTripsFound, AllTripIdsNTruckNos, AllTruckDetails,
-  AllTruckSpaceNWeight, SelectedTruckData, DeliveryRequests } from './tripsAvailable';
+  AllTruckSpaceNWeight, SelectedTruckData, DeliveryRequests, TripDetails } from './tripsAvailable';
 import { TruckRegisterFailed } from './other';
 import { OwnerFullName, OwnerOtp, OwnerToken, OwnerMobileNum } from './TruckOwnerInfo';
 import { TruckNo, TruckModel, TotalWeight, TotalSpace
@@ -25,6 +25,8 @@ const allReducers = combineReducers({
   PackageSpace,
   ReceivingPersonNum,
   ReceivingPersonName,
+  DropPersonNum,
+  DropPersonName,
   CustomerToken,
   NoOfTripsFound,
   AllTripIdsNTruckNos,
@@ -43,6 +45,7 @@ const allReducers = combineReducers({
   TruckRegisterFailed,
   TripHistory,
   DeliveryRequests,
+  TripDetails,
 });
 
 export default allReducers;

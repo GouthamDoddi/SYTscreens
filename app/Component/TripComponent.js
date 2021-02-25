@@ -1,31 +1,38 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxiosToken } from '../utils/axios';
-import { deliveryRequests } from '../Redux/actions/tripsAvailable';
+import { deliveryRequests, tripDetails } from '../Redux/actions/tripsAvailable';
 
 
 function TripComponent ({ TripHistory, navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
   const OwnerToken = useSelector(state => state.OwnerToken);
+  const TruckNo = useSelector(state => state.TruckNo);
 
   // functions
   const realDate = date => JSON.stringify(date).slice(1, 11);
 
-  const addTrip = () => navigation.navigate('OwnerAddDelivery');
+  const addTrip = (tripId, truckNo, startDate) => {
+    dispatch(tripDetails({ tripId,
+      truckNo,
+      startDate }));
 
-  const onClickDR = (destination, source, date) => {
-    const data = qs.stringify({ dropPoint: destination, pickUpPoint: source, date: realDate(date) });
+    navigation.navigate('OwnerAddDelivery');
+  };
+
+  const onClickDR = () => {
+    const data = qs.stringify({ truckNo: TruckNo });
 
     console.log(data);
 
-    axios(localAxiosToken('/getPackageByRoute', data, OwnerToken))
+    axios(localAxiosToken('/getPackageByTruckNo', data, OwnerToken))
       .then(res => {
         console.log(res.data.packageDetails);
         dispatch(deliveryRequests(res.data.packageDetails));
@@ -92,7 +99,7 @@ function TripComponent ({ TripHistory, navigation }) {
               <View style={styles.search}>
                 <Text style={styles.searchT}>Trip {totalTrips - index}</Text>
                 <View style={styles.search2}>
-                  <Text style={styles.searchD}>Miximize</Text>
+                  <Text style={styles.searchD}>Miximise</Text>
                   <TouchableOpacity >
                     <Image
                       style={styles.searchM}
@@ -121,7 +128,11 @@ function TripComponent ({ TripHistory, navigation }) {
                   <Text style={styles.sea}>Delivered</Text>
                   <Text style={styles.sea}>Packages</Text>
                   <Text style={styles.number}>{data.delivered_packages}</Text>
-                  <View style={{ flexDirection: 'row' }}>
+                </View>
+              </View>
+              {
+                data.trip_duration_in_hours
+                  ? <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.searchDelete}>Delete Trip</Text>
                     <TouchableOpacity>
                       <Image
@@ -130,18 +141,14 @@ function TripComponent ({ TripHistory, navigation }) {
                       />
                     </TouchableOpacity>
                   </View>
-                </View>
-              </View>
-              {
-                data.trip_duration_in_hours
-                  ? <Text style={styles.searchDs}>Trip done</Text>
                   : <View>
-                    <TouchableOpacity onPress={addTrip}>
+                    <TouchableOpacity onPress={checkList}>
+                      <Text style={styles.checkList}>Check List</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => addTrip(data.trip_id, data.truck_no, data.start_date)}>
                       <Text>+ Add Delivery</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.last1} onPress={ () => {
-                      onClickDR(data.destination, data.source, data.start_date);
-                    }}>
+                    <TouchableOpacity style={styles.last1} onPress={onClickDR} >
                       <Text style={styles.deliveryRequest}>Delevery Requests &#62;</Text>
                     </TouchableOpacity>
                   </View>
@@ -315,6 +322,9 @@ const styles = StyleSheet.create({
     marginTop: '-5%',
   },
   deliveryRequest: {
+    color: '#FF8200',
+  },
+  checkList: {
     color: '#FF8200',
   },
 });

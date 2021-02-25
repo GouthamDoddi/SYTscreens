@@ -9,7 +9,7 @@ import qs from 'querystring';
 
 import { packageWeight,
   packageSpace, entireTruck, receivingPersonName,
-  receivingPersonNum } from '../../Redux/actions/packageDetails';
+  receivingPersonNum, dropPersonName, dropPersonNum } from '../../Redux/actions/packageDetails';
 import { allTripIdsNTruckNos, noOfTripsFound, allTruckDetails, allTruckSpaceNWeight } from '../../Redux/actions/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 import { configToken } from '../../utils/axios';
@@ -19,16 +19,14 @@ import DropDown from '../../Component/DropDown';
 import DatePicker2 from '../../Component/DatePicker2';
 import Input2 from '../../Component/Input2';
 
-function OwnerAddDelivery ({navigation }) {
-  const onClick = console.log('button clicked!');
-  const TripHistory = useSelector(state => state.TripHistory);
-  const OwnerFullName = useSelector(state => state.OwnerFullName);
-  const TruckNo = useSelector(state => state.TruckNo);
-  const PickUpDate = useSelector(state => state.PickUpDate);
-  const PickUpSelector = useSelector(state => state.PickUp);
-  const Drop = useSelector(state => state.Drop);
-  const OwnerToken = useSelector(state => state.OwnerToken);
+function OwnerAddDelivery ({ navigation }) {
+  // vars and selectors
+
   const dispatch = useDispatch();
+  const onClick = console.log('button clicked!');
+  const OwnerFullName = useSelector(state => state.OwnerFullName);
+  const OwnerToken = useSelector(state => state.OwnerToken);
+  const TruckNo = useSelector(state => state.TruckNo);
 
   const pickUpPointSelector = useSelector(state => state.PickUp);
   const dropPointSelector = useSelector(state => state.Drop);
@@ -38,13 +36,9 @@ function OwnerAddDelivery ({navigation }) {
   const packageSpaceSelector = useSelector(state => state.PackageSpace);
   const packageWeightSelector = useSelector(state => state.PackageWeight);
   const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
-  const customerTokenSelector = useSelector(state => state.CustomerToken);
-  const allTruckDetailsSelector = useSelector(state => state.AllTruckDetails);
-  const noOfTripsSelector = useSelector(state => state.NoOfTrips);
-  const allTripDataSelector = useSelector(state => state.AllTripIdsNTruckNos);
-
-
-  const CustomerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
+  const DropPersonName = useSelector(state => state.DropPersonName);
+  const DropPersonNum = useSelector(state => state.DropPersonNum);
+  const TripDetails = useSelector(state => state.TripDetails);
 
   // intigrating API
 
@@ -56,7 +50,30 @@ function OwnerAddDelivery ({navigation }) {
     receivingPersonNo: receivingPersonNumSelector,
     packageSpace: packageSpaceSelector,
     packageWeight: packageWeightSelector,
-  })}&date=${dateSelector}`;
+    customerName: DropPersonName,
+    mobileNum: DropPersonNum,
+  })}&date=${TripDetails.startDate}`;
+
+  const params2 = packageId => `${qs.stringify({
+    truckNo: TripDetails.truckNo,
+    tripId: TripDetails.tripId,
+    packageId,
+  })}&date=${TripDetails.startDate}`;
+
+  const onSubmit = () => {
+    axios(localAxiosToken('/addPackage', params, OwnerToken))
+      .then(res => {
+        console.log(res.data);
+        axios(localAxiosToken('/assignPackage', params2(res.data.details[0].package_id), OwnerToken))
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   // form data
 
@@ -69,7 +86,21 @@ function OwnerAddDelivery ({navigation }) {
       dispatch(packageWeight(e));
     },
   };
-  const PackageSpacetInput = {
+  const dropCustomer = {
+    label: '',
+    placeholder: 'Drop Customer Name',
+    onChangeText (e) {
+      dispatch(dropPersonName(e));
+    },
+  };
+  const mobileNumber = {
+    label: '',
+    placeholder: 'Mobile Number',
+    onChangeText (e) {
+      dispatch(dropPersonNum(e));
+    },
+  };
+  const PackageSpaceInput = {
     label: '',
     placeholder: 'Package Space (.Ft)',
     onChangeText (e) {
@@ -92,8 +123,6 @@ function OwnerAddDelivery ({navigation }) {
   };
 
   // function
-
-  const onSubmit = () => console.log('clicked on submit');
   const lastPage = () => navigation.navigate('OwnerTripRegister');
 
   return (
@@ -122,19 +151,19 @@ function OwnerAddDelivery ({navigation }) {
           <View style={styles.searchin}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '2.7%' }}>
               <View style={{ width: '49%', marginRight: '1%' }}>
-                <Input2 data={PackageSpacetInput} />
+                <Input2 data={ PackageWeightInput } />
               </View>
               <View style={{ width: '49%', marginLeft: '1%' }}>
-                <Input2 data={PackageWeightInput} />
+                <Input2 data={ PackageSpaceInput } />
               </View>
             </View>
-            <DropDown action={pickUpDispatch}/>
+            <DropDown action={pickUpDispatch} />
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4.4%' }}>
               <View style={{ width: '59%', marginRight: '1%' }}>
-                <Input2 data={PackageSpacetInput} />
+                <Input2 data={ dropCustomer } />
               </View>
               <View style={{ width: '39%', marginLeft: '1%' }}>
-                <Input2 data={PackageWeightInput} />
+                <Input2 data={ mobileNumber } />
               </View>
             </View>
             <DropDown action={dropDispatch}/>
