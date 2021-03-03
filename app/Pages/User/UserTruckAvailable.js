@@ -12,7 +12,7 @@ import AppStatusBar from '../../Component/StatusBar';
 
 import { allTripIdsNTruckNos, allTruckDetails, noOfTripsFound } from '../../Redux/actions/tripsAvailable';
 import { axios, fetchURL, configToken } from '../../utils/axios';
-import { AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
+import { AllTruckDetails, AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 
 
@@ -23,8 +23,6 @@ function CustomerTruckAvailable ({ navigation }) {
   const allTruckSpaceNWeightSelector = useSelector(state => state.AllTruckSpaceNWeight);
 
   console.log(`this is the selector ${allTruckSpaceNWeightSelector}`);
-  const noOfTripsSelector = useSelector(state => state.NoOfTripsFound);
-  const allTripDataSelector = useSelector(state => state.AllTripIdsNTruckNos);
   const pickUpPointSelector = useSelector(state => state.PickUp);
   const dropPointSelector = useSelector(state => state.Drop);
   const customerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
@@ -44,33 +42,13 @@ function CustomerTruckAvailable ({ navigation }) {
 
   // functions
 
-  console.log(`in render ${JSON.stringify(allTripDataSelector)}`);
   console.log(`render ${JSON.stringify(allTruckDetailsSelector)}`);
 
 
-  function getData () {
-    const allData = [];
-
-    for (let n = 0; n < noOfTripsSelector; n++) {
-      const data = [];
-
-      data.push(allTripDataSelector[n]);
-      data.push(allTruckDetailsSelector[n]);
-      // console.log(`space = ${allTruckSpaceNWeightSelector[0]}`);
-      data.push(allTruckSpaceNWeightSelector[n]);
-
-      allData.push(data);
-
-      console.log(`data inside loop ${data}`);
-    }
-
-    return allData;
-  }
-
   // console.log(`spaceNweight = ${allTruckSpaceNWeightSelector}`);
-  console.log(` allData is = ${JSON.stringify(getData())}`);
+  // console.log(` allData is = ${JSON.stringify(getData())}`);
 
-  console.log(`no of trips = ${allTripDataSelector.length}`);
+  console.log(`no of trips = ${allTruckDetailsSelector.length}`);
 
   return (
     <View style={styles.container}>
@@ -79,8 +57,8 @@ function CustomerTruckAvailable ({ navigation }) {
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{customerFullName} !</Text></Text>
           <Text style={styles.add}>Available Trucks</Text>
-          { allTripDataSelector.length
-            ? <TruckComponet allData={getData()} pickUp={pickUpPointSelector}
+          { allTruckDetailsSelector.length
+            ? <TruckComponet allData={allTruckDetailsSelector} pickUp={pickUpPointSelector}
               drop={dropPointSelector} onSubmit={onSubmit} />
             : <Text> We couldnt find any matching truck in your route. </Text>
           }

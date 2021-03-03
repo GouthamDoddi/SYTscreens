@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import HeaderU from '../../Component/HeaderU';
 import TripComponent from '../../Component/TripComponent';
@@ -22,6 +22,8 @@ function OwnerTripRegister ({ navigation }) {
   const Drop = useSelector(state => state.Drop);
   const OwnerToken = useSelector(state => state.OwnerToken);
   const dispatch = useDispatch();
+  const [ addTripButton, setAddTripButton ] = useState(false);
+
 
   // const PickUpDate = useSelector(state => state.PickUpDate);
 
@@ -41,23 +43,22 @@ function OwnerTripRegister ({ navigation }) {
       truckNo: TruckNo,
     })}&startDate=${PickUpDate}`;
 
-    console.log(TripHistory);
-    console.log(typeof TripHistory);
-
 
     axios(localAxiosToken('/addTrip', formData, OwnerToken))
       .then(res => {
         console.log(res.data.details[0]);
 
-        // if (TripHistory) {
+        if (TripHistory === 0) {
+          const tripDetails2 = [ res.data.details[0] ];
+
+          dispatch(tripHistory(tripDetails2));
+        }
+
         const tripDetails = [ ...TripHistory, res.data.details[0] ];
 
-        console.log(`trip history = ${tripDetails}`);
-
         dispatch(tripHistory(tripDetails));
-        // }
 
-        // dispatch(tripHistory(res.data.details));
+        console.log(`trip history = ${tripDetails}`);
       })
       .catch(err => console.log(err));
   };
@@ -65,13 +66,12 @@ function OwnerTripRegister ({ navigation }) {
   const PickUp = data => dispatch(pickUp(data));
   const destination = data => dispatch(drop(data));
 
-  const addTrip = () => console.log('addTrip called');
+  const addTrip = () => {
+    setAddTripButton(!addTripButton);
+  };
 
   // async function getTrips () {
   // }
-
-  console.log(`his ${JSON.stringify(TripHistory)}`);
-
   return (
     <View style={styles.container}>
       {/* <AppStatusBarU /> */}
@@ -79,31 +79,38 @@ function OwnerTripRegister ({ navigation }) {
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>Vehicle Owner Name !</Text></Text>
         <Text style={styles.ntext}><Text style={{ fontWeight: 'bold' }}>Driver Name : </Text>{ OwnerFullName }</Text>
-        <TouchableOpacity onPress={addTrip}>
-          <Text style={styles.add}>Add Trip +</Text>
-        </TouchableOpacity>
-        <View style={{ marginTop: '1.1%', marginLeft: '2.7%', marginRight: '2.1%' }}>
-          <Dropdown action={PickUp}/>
+        { addTripButton
+          ? <View>
+            <TouchableOpacity onPress={addTrip}>
+              <Text style={styles.add}>Add Trip +</Text>
+            </TouchableOpacity>
+            <View style={{ marginTop: '1.1%', marginLeft: '2.7%', marginRight: '2.1%' }}>
+              <Dropdown action={PickUp}/>
 
-          <Dropdown action={destination}/>
-          <View style={{ flexDirection: 'row', height: 40 }}>
-            <View style={{ width: '50%' }}>
-              <DatePicker2 />
-            </View>
-            <View style={styles.calender}>
-              <Text style={styles.dropt}>{ realDate }</Text>
-              <TouchableOpacity>
-                <Image
-                  style={styles.calimg}
-                  source={require('../../Images/time.jpg')}
-                />
+              <Dropdown action={destination}/>
+              <View style={{ flexDirection: 'row', height: 40 }}>
+                <View style={{ width: '50%' }}>
+                  <DatePicker2 />
+                </View>
+                <View style={styles.calender}>
+                  <Text style={styles.dropt}>{ realDate }</Text>
+                  <TouchableOpacity>
+                    <Image
+                      style={styles.calimg}
+                      source={require('../../Images/time.jpg')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <TouchableOpacity onPress={tripRegister} style={styles.searchtruck}>
+                <Text style={styles.searchtruckt}>Save Details</Text>
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity onPress={tripRegister} style={styles.searchtruck}>
-            <Text style={styles.searchtruckt}>Save Details</Text>
+          : <TouchableOpacity onPress={addTrip}>
+            <Text style={styles.add}>Add Trip +</Text>
           </TouchableOpacity>
-        </View>
+        }
         <View style={{ backgroundColor: '#FFFFFF', marginBottom: '2.1%', borderWidth: 0.3 }}>
           <TripComponent TripHistory={useSelector(state => state.TripHistory)} navigation={navigation} />
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: '2.2%' }}>

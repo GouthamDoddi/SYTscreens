@@ -42,3 +42,14 @@ export const OwnerToken = (state = '', action) => {
       return state;
   }
 };
+
+export const OwnerCheckList = (state = '', action) => {
+  switch (action.type) {
+    case 'CheckList':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

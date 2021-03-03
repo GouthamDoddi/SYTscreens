@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { Text, View, Button, Platform, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useDispatch } from 'react-redux';
+
+import { pickUpDate } from '../Redux/actions/packageDetails';
 
 export const DatePicker = ({ action }) => {
   const [ date, setDate ] = useState(new Date(1598051730000));
   const [ mode, setMode ] = useState('date');
   const [ show, setShow ] = useState(false);
 
+  const dispatch = useDispatch();
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
 
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    console.log(date);
-    action(JSON.stringify(currentDate));
+    console.log(currentDate);
+    dispatch(pickUpDate(JSON.stringify(currentDate)));
   };
 
   const showMode = currentMode => {

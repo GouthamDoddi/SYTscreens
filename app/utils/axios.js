@@ -28,7 +28,7 @@ export const localAxiosToken = (url, data, token) => {
 
   return {
     method: 'post',
-    url: `http://192.168.2.5:3000${url}`,
+    url: `https://syt-backend.herokuapp.com${url}`,
     // url: `http://localhost:3000${url}`,
     headers: {
       Accept: '*/*',
@@ -41,7 +41,7 @@ export const localAxiosToken = (url, data, token) => {
 
 export const localAxios = (url, data) => ({
   method: 'post',
-  url: `http://192.168.2.5:3000${url}`,
+  url: `https://syt-backend.herokuapp.com${url}`,
   // url: `http://localhost:3000${url}`,
   headers: {
     Accept: '*/*',
@@ -52,7 +52,7 @@ export const localAxios = (url, data) => ({
 
 export const localAxiosFormData = (url, data, token) => ({
   method: 'post',
-  url: `http://192.168.2.5:3000${url}`,
+  url: `https://syt-backend.herokuapp.com${url}`,
   headers: {
     Authorization: `Bearer ${token}`,
     'content-type': 'multipart/form-data',

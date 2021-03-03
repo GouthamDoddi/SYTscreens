@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxiosToken } from '../utils/axios';
-import { deliveryRequests, tripDetails } from '../Redux/actions/tripsAvailable';
+import { allTripIdsNTruckNos, deliveryRequests, tripDetails } from '../Redux/actions/tripsAvailable';
 
 
 function TripComponent ({ TripHistory, navigation }) {
@@ -27,6 +27,20 @@ function TripComponent ({ TripHistory, navigation }) {
     navigation.navigate('OwnerAddDelivery');
   };
 
+  function tripPacakages (tripId) {
+    const params = qs.stringify({ tripId });
+
+    axios(localAxiosToken('/getTripPackages', params, OwnerToken))
+      .then(res => {
+        console.log(params);
+
+        console.log(res.data);
+
+      // const checklist = res.data;
+      })
+      .catch(err => console.log(err));
+  }
+
   const onClickDR = () => {
     const data = qs.stringify({ truckNo: TruckNo });
 
@@ -34,9 +48,11 @@ function TripComponent ({ TripHistory, navigation }) {
 
     axios(localAxiosToken('/getPackageByTruckNo', data, OwnerToken))
       .then(res => {
-        console.log(res.data.packageDetails);
-        dispatch(deliveryRequests(res.data.packageDetails));
-        navigation.navigate('OwnerDeliveryRequests');
+        console.log(res.data);
+        if (res.data.statusCode !== 400) {
+          dispatch(deliveryRequests(res.data.packageDetails));
+          navigation.navigate('OwnerDeliveryRequests');
+        }
       })
       .catch(error => console.log(error));
   };
@@ -44,6 +60,16 @@ function TripComponent ({ TripHistory, navigation }) {
   // const viewTrip = index => {
   //   listOfButtons[index] = !listOfButtons[index];
   // };
+
+  const checkList = tripId => {
+    console.log('checklist called');
+
+    dispatch(allTripIdsNTruckNos(tripId));
+
+    tripPacakages(tripId);
+
+    navigation.navigate('OwnerCheckList');
+  };
 
   if (TripHistory) {
     const totalTrips = TripHistory.length;
@@ -142,7 +168,7 @@ function TripComponent ({ TripHistory, navigation }) {
                     </TouchableOpacity>
                   </View>
                   : <View>
-                    <TouchableOpacity onPress={checkList}>
+                    <TouchableOpacity onPress={() => checkList(data.trip_id)}>
                       <Text style={styles.checkList}>Check List</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={ () => addTrip(data.trip_id, data.truck_no, data.start_date)}>

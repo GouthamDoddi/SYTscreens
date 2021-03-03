@@ -3,13 +3,13 @@ import { Text, View, Image, TouchableOpacity, StyleSheet }
   from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
+import axios from 'axios';
 
 
 import Header from '../../Component/Header';
 import AppStatusBar from '../../Component/StatusBar';
 
-import { axios, configToken } from '../../utils/axios';
-import { packageId } from '../../Redux/actions/packageDetails';
+import { localAxiosToken } from '../../utils/axios';
 
 function CustomerTruckBooking ({ navigation }) {
   // vars and selectors
@@ -24,7 +24,7 @@ function CustomerTruckBooking ({ navigation }) {
   const packageWeightSelector = useSelector(state => state.PackageWeight);
   const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
   const customerTokenSelector = useSelector(state => state.CustomerToken);
-  const PackageId = useSelector(state => state.PackageId);
+  // const PackageId = useSelector(state => state.PackageId);
 
   const SelectedTruckData = useSelector(state => state.SelectedTruckData);
 
@@ -40,14 +40,19 @@ function CustomerTruckBooking ({ navigation }) {
     })}&date=${dateSelector}`;
 
     try {
-      await axios.post('/addPackage', params, configToken(customerTokenSelector))
+      await axios(localAxiosToken('/addPackage', params, customerTokenSelector))
         .then(async response => {
-          dispatch(packageId(response.data.details[0].package_id));
+          console.log(response.data);
+          console.log(params);
+          // dispatch(packageId(response.data.details[0].package_id));
 
-          console.log(PackageId, SelectedTruckData.truckNo);
+          const packageId = response.data.details[0].package_id;
 
-          await axios.post('/assignPackage', qs.stringify({ packageId: PackageId,
-            truckNo: SelectedTruckData.truckNo }), configToken(customerTokenSelector))
+          console.log(packageId, SelectedTruckData.truckNo);
+
+          await axios(localAxiosToken('/assignPackage', qs.stringify({ packageId,
+            tripId: SelectedTruckData.tripId,
+            truckNo: SelectedTruckData.truckNo }), customerTokenSelector))
             .then(res => {
               console.log(res.data);
               navigation.navigate('Tracking');

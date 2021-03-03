@@ -20,6 +20,7 @@ import OwnerLogin from '../Pages/TruckOwner/OwnerLogIn';
 import OwnerTripRegister from '../Pages/TruckOwner/OwnerTripRegister';
 import OwnerDeliveryRequests from '../Pages/TruckOwner/OwnerDeliveryRequests';
 import OwnerAddDelivery from '../Pages/TruckOwner/OwnerAddDelivery';
+import OwnerCheckList from '../Pages/TruckOwner/OwnerCheckList';
 
 
 enableScreens();
@@ -62,6 +63,8 @@ const Routes = () =>
       <Stack.Screen name="OwnerDeliveryRequests" component={OwnerDeliveryRequests}
         options={{ headerShown: false }}/>
       <Stack.Screen name="OwnerAddDelivery" component={OwnerAddDelivery}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="OwnerCheckList" component={OwnerCheckList}
         options={{ headerShown: false }}/>
     </Stack.Navigator>
   </NavigationContainer>;

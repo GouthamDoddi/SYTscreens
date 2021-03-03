@@ -8,12 +8,12 @@ import { selectedTruckData } from '../Redux/actions/tripsAvailable';
 function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
   const dispatch = useDispatch();
 
+
   return (
     <View>
       { allData.map((data, index) => {
         console.log(`index = ${index}`);
-        console.log(`allData = ${data}`);
-        console.log(`data = ${JSON.stringify(data[index])}`);
+        console.log(`allData = ${JSON.stringify(data)}`);
 
         return (
           <View key={`item${index}`} style={{ backgroundColor: '#FFFFFF', borderWidth: 0.3, marginBottom: '2.1%' }}>
@@ -22,7 +22,7 @@ function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
                 style={styles.img}
                 source={require('../Images/yellowtruck.jpg')}
               />
-              <Text style={styles.searchD}>{ data[1].truck_model }</Text>
+              <Text style={styles.searchD}>{ data.truck_model }</Text>
             </View>
             <View style={{ marginVertical: '1.2%', marginHorizontal: '2.7%', flexDirection: 'row' }}>
               <View style={{ width: '60%' }}>
@@ -39,8 +39,8 @@ function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
                   <Text style={styles.loctext}>Miyapur Main Road</Text>
                   <Text style={styles.loctext}>3rd May, 8:30 PM</Text>
                 </View>
-                <Text style={styles.available}>Available Space : <Text style={{ fontWeight: 'bold' }}> {data[2].availableSpace} </Text></Text>
-                <Text style={styles.available}>Available Weight : <Text style={{ fontWeight: 'bold' }}> { data[2].availableWeight } </Text></Text>
+                <Text style={styles.available}>Available Space : <Text style={{ fontWeight: 'bold' }}> { data.capacity_inspace - data.booked_space } </Text></Text>
+                <Text style={styles.available}>Available Weight : <Text style={{ fontWeight: 'bold' }}> { data.capacity_inkgs - data.booked_weight } </Text></Text>
               </View>
               <View>
                 <View style={{ flexDirection: 'row' }}>
@@ -76,16 +76,16 @@ function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
                 </View>
                 <TouchableOpacity style={styles.but} onPress={() => {
                   const selectedTruck = {
-                    truckNo: data[1].truck_no,
-                    model: data[1].truck_model,
+                    truckNo: data.truck_no,
+                    model: data.truck_model,
                     pickUp,
                     drop,
-                    availableSpace: data[2].availableSpace,
-                    availableWeight: data[2].availableWeight,
+                    availableSpace: data.capacity_inspace - data.booked_space,
+                    availableWeight: data.capacity_inkgs - data.booked_weight,
+                    tripId: data.trip_id,
                   };
 
                   dispatch(selectedTruckData(selectedTruck));
-
                   onSubmit();
                 }}>
                   <Text style={styles.buttext}>Book Truck</Text>

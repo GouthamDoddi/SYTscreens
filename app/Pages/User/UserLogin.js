@@ -3,12 +3,12 @@ import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
-// import axios from 'axios';
+import axios from 'axios';
 
 
-import { customerMobileNum, customerOtp, customerToken } from '../../Redux/actions/customerInfo';
+import { customerMobileNum, customerOtp, customerToken, customerFirstName, customerLastName } from '../../Redux/actions/customerInfo';
 import { loginFailed } from '../../Redux/actions/other';
-import { axios } from '../../utils/axios';
+import { localAxios } from '../../utils/axios';
 import Input from '../../Component/input';
 import AppStatusBar from '../../Component/StatusBar';
 
@@ -41,18 +41,21 @@ function CustomerLogin ({ navigation }) {
     };
 
     // api call
-    await axios.post('/SMSLogin', qs.stringify({
+    await axios(localAxios('/SMSLogin', qs.stringify({
       mobileNum: CustomerMobileNum,
-    }), config)
+    })))
       .then(response => {
         if (response.data.message === 'Error! User is not found.') {
-          console.log(response.data);
+          console.log(`failed! = ${JSON.stringify(response.data)}`);
           dispatch(loginFailed());
         }
 
-        console.log(response.data.rows);
+        console.log(response);
         dispatch(customerOtp(response.data.otp));
         dispatch(customerToken(response.data.token));
+        dispatch(customerLastName(response.data.customerDetails[0].last_name));
+        dispatch(customerFirstName(response.data.customerDetails[0].first_name));
+
         navigation.navigate('CustomerOtp');
       })
       .catch(err => {

@@ -18,3 +18,7 @@ export const ownerToken = token => ({
   data: token,
 });
 
+export const checklist = data => ({
+  type: 'CheckList',
+  data,
+});

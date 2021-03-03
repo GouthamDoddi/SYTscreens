@@ -2,27 +2,19 @@ import React, { useEffect } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
 
-import HeaderU from '../../Components/Header';
+import HeaderU from '../../Component/HeaderU';
 import { localAxiosToken } from '../../utils/axios';
+import { useSelector } from 'react-redux';
+import qs from 'querystring';
 
-function OwnerCheckList () {
+function OwnerCheckList ({ navigation }) {
   // functions
   const onClick = () => console.log('header clicked');
+  const AllTripIdsNTruckNos = useSelector(state => state.AllTripIdsNTruckNos);
+  const DeliveryRequests = useSelector(state => state.DeliveryRequests);
 
-  useEffect(() => {
-    axios(localAxiosToken('/addPackage', params, OwnerToken))
-      .then(res => {
-        console.log(res.data);
-        axios(localAxiosToken('/assignPackage', params2(res.data.details[0].package_id), OwnerToken))
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => console.log(error));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
+  console.log(AllTripIdsNTruckNos);
+
 
   return (
     // <View style={styles.responsiveBox}>
@@ -75,43 +67,53 @@ function OwnerCheckList () {
               <Text style={styles.rowtext3}>Status</Text>
             </View>
           </View>
-          {
-            <View>
-              <View style={styles.row2}>
-                <View style={styles.subrow2}>
-                  <View style={styles.subrow5}>
-                    <View style={styles.rowimagebox}>
-                      <Image
-                        style={styles.rowimage}
-                        source={require('../../Images/phone.png')}
-                      />
+          { DeliveryRequests
+            ? DeliveryRequests.map(data =>
+              <View key={data.package_id}>
+                <View style={styles.row2}>
+                  <View style={styles.subrow2}>
+                    <View style={styles.subrow5}>
+                      <View style={styles.rowimagebox}>
+                        <Image
+                          style={styles.rowimage}
+                          source={require('../../Images/phone.png')}
+                        />
+                      </View>
+                      <View>
+                        <Text style={styles.rowtext4}>{ data.package_receiving_person }</Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text style={styles.rowtext4}>Bhavani</Text>
-                      <Text style={styles.rowtext4}>Shankar</Text>
+                  </View>
+                  <View style={styles.subrow3}>
+                    <Text style={styles.rowtext4}>{ data.pickup_point }</Text>
+                    <Text style={styles.rowtext4}>{ data.drop_point }</Text>
+                  </View>
+                  <View style={styles.subrow4}>
+                    <View style={styles.subrow6}>
+                      {
+                        data.status === 'Delivered'
+                          ? <Image
+                            style={styles.rowimagegreen}
+                            source={require('../../Images/circle.png')} />
+                          : <Image
+                            style={styles.rowimagered}
+                            source={require('../../Images/circle.png')}
+                          />
+
+                      }
+                      <TouchableOpacity>
+                        <Image
+                          style={styles.rowimagedown}
+                          source={require('../../Images/down-arrow.png')}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-                <View style={styles.subrow3}>
-                  <Text style={styles.rowtext4}>Delhi</Text>
-                  <Text style={styles.rowtext4}>Bharakamba Road</Text>
-                </View>
-                <View style={styles.subrow4}>
-                  <View style={styles.subrow6}>
-                    <Image
-                      style={styles.rowimagegreen}
-                      source={require('../../Images/circle.png')}
-                    />
-                    <TouchableOpacity>
-                      <Image
-                        style={styles.rowimagedown}
-                        source={require('../../Images/down-arrow.png')}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.bar}></View>
+                <View style={styles.bar}></View>
+              </View>)
+            : <View>
+              <Text> No packages in the trip.</Text>
             </View>
           }
         </View>

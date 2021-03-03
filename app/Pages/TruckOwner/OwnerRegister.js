@@ -28,7 +28,7 @@ function OwnerRegister ({ navigation }) {
   let login = true;
 
   const dispatch = useDispatch();
-  const OwnerFulName = useSelector(state => state.OwnerFulName);
+  const OwnerFullName = useSelector(state => state.OwnerFullName);
   const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
   const truckNo = useSelector(state => state.TruckNo);
   const truckModel = useSelector(state => state.TruckModel);
@@ -37,8 +37,10 @@ function OwnerRegister ({ navigation }) {
   const TruckRegisterFailed = useSelector(state => state.TruckRegisterFailed);
 
 
+  console.log(OwnerFullName);
+
   const truckOwnerData = qs.stringify({
-    fullName: OwnerFulName,
+    fullName: OwnerFullName,
     mobileNum: OwnerMobileNum,
   });
 
@@ -129,6 +131,7 @@ function OwnerRegister ({ navigation }) {
     try {
       await axios(localAxios('/truckOwnerRegister', truckOwnerData))
         .then(async resp => {
+          console.log(truckOwnerData);
           if (resp.data.statusCode !== 201) {
             console.log(`login faild data here ${JSON.stringify(resp.data)}`);
             // using login since the register send's otp anyway. So no need to login again.
@@ -174,7 +177,9 @@ function OwnerRegister ({ navigation }) {
   const fullName = {
     // label: 'Full Name',
     placeholder: 'Full Name',
-    updateValue: e => dispatch(ownerFullName(e)),
+    updateValue: e => {
+      dispatch(ownerFullName(e));
+    },
     touched: '',
     restInput: '',
     disabled: false,

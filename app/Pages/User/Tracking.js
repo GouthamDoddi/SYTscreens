@@ -10,7 +10,7 @@ import AppStatusBar from '../../Component/StatusBar';
 export default function Tracking ({ navigation }) {
   const headerData = () => console.log('Header clicked!');
 
-  const onSubmit = () => navigation.navigate();
+  const onSubmit = () => console.log('button clicked');
 
   return (
     <View style={styles.container}>

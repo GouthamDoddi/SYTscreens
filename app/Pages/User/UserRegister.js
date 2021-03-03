@@ -8,6 +8,7 @@ import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import axios from 'axios';
 import qs from 'querystring';
 
+import { localAxios } from '../../utils/axios';
 import AppStatusBar from '../../Component/StatusBar';
 import { customerFirstName, customerLastName, customerMobileNum,
   customerOtp, customerToken } from '../../Redux/actions/customerInfo';
@@ -38,16 +39,16 @@ const CustomerRegister = ({ navigation }) => {
 
   const onSubmit = async () => {
     try {
-      await axios.post('http://sut.basservices.in/customerRegister', qs.stringify({
+      await axios(localAxios('/customerRegister', qs.stringify({
         firstName: customerFirstNameSelector,
         lastName: customerLastNameSelector,
         mobileNum: customerMobileNumSelector,
-      }), config)
+      })))
         .then(response => {
           // if register worked then we will call smslogin for otp and token
           console.log(response);
-          dispatch(customerOtp(response.data.details[0]));
-          dispatch(customerToken(response.data.details[1]));
+          dispatch(customerOtp(response.data.otp));
+          dispatch(customerToken(response.data.token));
           navigation.navigate('CustomerOtp');
         })
         .catch(err => {

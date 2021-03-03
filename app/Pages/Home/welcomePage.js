@@ -16,11 +16,6 @@ const WelcomePage = ({ navigation }) => {
   // const Token = useSelector(state => state.Token);
 
   const onCustomer = async () => {
-    // console.log(Token);
-    // if (Token) {
-    //   await axios.post('//getTruckRating', qs.stringify({ truckNo: 'AP31EJ700' }), configToken(Token))
-    //     .then(response => console.log(response.data));
-    // }
     navigation.navigate('CustomerRegister');
   };
   const onTruck = () => navigation.navigate('OwnerRegister');
