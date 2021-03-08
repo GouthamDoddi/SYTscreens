@@ -27,7 +27,7 @@ function TripComponent ({ TripHistory, navigation }) {
     navigation.navigate('OwnerAddDelivery');
   };
 
-  function tripPacakages (tripId) {
+  function tripPacakages (tripId, page) {
     const params = qs.stringify({ tripId });
 
     axios(localAxiosToken('/getTripPackages', params, OwnerToken))
@@ -35,26 +35,33 @@ function TripComponent ({ TripHistory, navigation }) {
         console.log(params);
 
         console.log(res.data);
+        dispatch(deliveryRequests(res.data.packageDetails[0]));
+        if (page === 'CheckList')
+          return navigation.navigate('OwnerCheckList');
+
+        return navigation.navigate('OwnerDeliveryRequests');
 
       // const checklist = res.data;
       })
       .catch(err => console.log(err));
   }
 
-  const onClickDR = () => {
+  const onClickDR = tripId => {
     const data = qs.stringify({ truckNo: TruckNo });
 
     console.log(data);
+    tripPacakages(tripId, 'DR');
 
-    axios(localAxiosToken('/getPackageByTruckNo', data, OwnerToken))
-      .then(res => {
-        console.log(res.data);
-        if (res.data.statusCode !== 400) {
-          dispatch(deliveryRequests(res.data.packageDetails));
-          navigation.navigate('OwnerDeliveryRequests');
-        }
-      })
-      .catch(error => console.log(error));
+
+    // axios(localAxiosToken('/getPackageByTruckNo', data, OwnerToken))
+    //   .then(res => {
+    //     console.log(res.data);
+    //     if (res.data.statusCode !== 400) {
+    //       dispatch(deliveryRequests(res.data.packageDetails));
+    //       navigation.navigate('OwnerDeliveryRequests');
+    //     }
+    //   })
+    //   .catch(error => console.log(error));
   };
 
   // const viewTrip = index => {
@@ -66,9 +73,7 @@ function TripComponent ({ TripHistory, navigation }) {
 
     dispatch(allTripIdsNTruckNos(tripId));
 
-    tripPacakages(tripId);
-
-    navigation.navigate('OwnerCheckList');
+    tripPacakages(tripId, 'CheckList');
   };
 
   if (TripHistory) {
@@ -174,7 +179,7 @@ function TripComponent ({ TripHistory, navigation }) {
                     <TouchableOpacity onPress={ () => addTrip(data.trip_id, data.truck_no, data.start_date)}>
                       <Text>+ Add Delivery</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.last1} onPress={onClickDR} >
+                    <TouchableOpacity style={styles.last1} onPress={() => onClickDR(data.trip_id)} >
                       <Text style={styles.deliveryRequest}>Delevery Requests &#62;</Text>
                     </TouchableOpacity>
                   </View>

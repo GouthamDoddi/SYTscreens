@@ -10,6 +10,8 @@ import { TruckRegisterFailed } from './other';
 import { OwnerFullName, OwnerOtp, OwnerToken, OwnerMobileNum, OwnerCheckList } from './TruckOwnerInfo';
 import { TruckNo, TruckModel, TotalWeight, TotalSpace
   , TripHistory } from './ownerTruckInfo';
+import { CompanyName, NoOfVehicals, ContactNumber } from './transportCompanyInfo';
+
 
 const allReducers = combineReducers({
   CustomerFirstName,
@@ -47,6 +49,10 @@ const allReducers = combineReducers({
   DeliveryRequests,
   TripDetails,
   OwnerCheckList,
+  // transport company
+  CompanyName,
+  ContactNumber,
+  NoOfVehicals,
 });
 
 export default allReducers;

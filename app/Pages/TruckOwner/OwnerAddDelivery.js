@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import HeaderU from '../../Component/HeaderU';
 import TripComponent from '../../Component/TripComponent';
@@ -21,7 +21,7 @@ import Input2 from '../../Component/Input2';
 
 function OwnerAddDelivery ({ navigation }) {
   // vars and selectors
-
+  const [ success, setSuccess ] = useState('');
   const dispatch = useDispatch();
   const onClick = console.log('button clicked!');
   const OwnerFullName = useSelector(state => state.OwnerFullName);
@@ -58,20 +58,27 @@ function OwnerAddDelivery ({ navigation }) {
     truckNo: TripDetails.truckNo,
     tripId: TripDetails.tripId,
     packageId,
+    status: 'Accepted',
   })}&date=${TripDetails.startDate}`;
 
   const onSubmit = () => {
     axios(localAxiosToken('/addPackage', params, OwnerToken))
       .then(res => {
-        console.log(res.data);
+        console.log(params);
+        console.log(res);
         axios(localAxiosToken('/assignPackage', params2(res.data.details[0].package_id), OwnerToken))
           .then(response => {
             console.log(response.data);
+            setSuccess('Yes');
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+            setSuccess('No');
+          });
       })
       .catch(err => {
         console.log(err);
+        setSuccess('No');
       });
   };
 
@@ -194,6 +201,13 @@ function OwnerAddDelivery ({ navigation }) {
         <TouchableOpacity>
           <Text style={styles.addanother}>Add another Delivery request +.</Text>
         </TouchableOpacity>
+        {
+          success === 'Yes'
+            ? <Text>Delivery sucessfully added.</Text>
+            : success === 'No'
+              ? <Text>Delivery failed. Try again</Text>
+              : <View></View>
+        }
       </View>
     </View>
     // {/* // </View> */}

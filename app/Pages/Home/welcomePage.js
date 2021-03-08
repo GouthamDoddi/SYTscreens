@@ -15,11 +15,9 @@ const WelcomePage = ({ navigation }) => {
   const LoginFailed = useSelector(state => state.LoginFailed);
   // const Token = useSelector(state => state.Token);
 
-  const onCustomer = async () => {
-    navigation.navigate('CustomerRegister');
-  };
+  const onCustomer = async () => navigation.navigate('CustomerRegister');
   const onTruck = () => navigation.navigate('OwnerRegister');
-  const onTransport = () => { /* navigate to transport company page */ };
+  const onTransport = () => navigation.navigate('TransportRegister');
 
   if (LoginFailed)
     dispatch(loginFailed());

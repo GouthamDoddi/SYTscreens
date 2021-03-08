@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
 
@@ -8,10 +8,21 @@ import { useSelector } from 'react-redux';
 import qs from 'querystring';
 
 function OwnerCheckList ({ navigation }) {
+  // vars
+  const [ done, setDone ] = useState(0);
+
   // functions
   const onClick = () => console.log('header clicked');
   const AllTripIdsNTruckNos = useSelector(state => state.AllTripIdsNTruckNos);
   const DeliveryRequests = useSelector(state => state.DeliveryRequests);
+  const OwnerFullName = useSelector(state => state.OwnerFullName);
+  const back = () => navigation.navigate('OwnerTripRegister');
+
+  console.log(`deliverrequests = ${JSON.stringify(DeliveryRequests)}`);
+  for (const pack of DeliveryRequests) {
+    if (pack.status === 'Delivered')
+      setDone(done + 1);
+  }
 
   console.log(AllTripIdsNTruckNos);
 
@@ -22,10 +33,10 @@ function OwnerCheckList ({ navigation }) {
       <HeaderU data={onClick} />
       <ScrollView>
         <View style={styles.block}>
-          <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>Vehicle Owner Name !</Text></Text>
+          <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ OwnerFullName } !</Text></Text>
           <View style={styles.adrow}>
             <View style={styles.adrow2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={back} >
                 <Image
                   style={styles.ad}
                   source={require('../../Images/left-arrow.png')}
@@ -34,7 +45,7 @@ function OwnerCheckList ({ navigation }) {
               <Text style={styles.add}>Delivery Request</Text>
             </View>
             <View>
-              <Text style={styles.add}>Total - 38</Text>
+              <Text style={styles.add}>Total - { DeliveryRequests.length }</Text>
             </View>
           </View>
           <View style={styles.row}>
@@ -53,7 +64,7 @@ function OwnerCheckList ({ navigation }) {
               <Text style={styles.rowtext1}>Delivered</Text>
             </View>
             <View style={styles.subrow}>
-              <Text style={styles.rowtext2}>Check List - <Text style={{ color: 'green' }}>4</Text></Text>
+              <Text style={styles.rowtext2}>Drop done - <Text style={{ color: 'green' }}>{ done }</Text></Text>
             </View>
           </View>
           <View style={styles.row2}>
@@ -80,13 +91,13 @@ function OwnerCheckList ({ navigation }) {
                         />
                       </View>
                       <View>
-                        <Text style={styles.rowtext4}>{ data.package_receiving_person }</Text>
+                        <Text style={styles.rowtext4}>{ data[1].package_receiving_person }</Text>
                       </View>
                     </View>
                   </View>
                   <View style={styles.subrow3}>
-                    <Text style={styles.rowtext4}>{ data.pickup_point }</Text>
-                    <Text style={styles.rowtext4}>{ data.drop_point }</Text>
+                    <Text style={styles.rowtext4}>{ data[1].pickup_point }</Text>
+                    <Text style={styles.rowtext4}>{ data[1].drop_point }</Text>
                   </View>
                   <View style={styles.subrow4}>
                     <View style={styles.subrow6}>

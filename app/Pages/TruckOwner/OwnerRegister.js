@@ -122,8 +122,8 @@ function OwnerRegister ({ navigation }) {
     formdata.append('truckModel', truckModel);
     formdata.append('capacityInKgs', capacityInKgs);
     formdata.append('capacityInSpace', capacityInSpace);
-    formdata.append('document', rc);
-    formdata.append('document', lc);
+    formdata.append('rc', rc);
+    formdata.append('license', lc);
     formdata.append('mobileNum', OwnerMobileNum);
 
     // formdata.append('image', rc.base64);

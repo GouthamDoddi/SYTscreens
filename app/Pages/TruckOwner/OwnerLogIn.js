@@ -46,7 +46,7 @@ function CustomerLogin ({ navigation }) {
             console.log(response.data.truckDetails[0].truck_no);
             // eslint-disable-next-line function-call-argument-newline
             dispatch(ownerOtp(response.data.otp));
-            dispatch(ownerMobileNum(response.data.truckOwner[0].mobile_num));
+            // dispatch(ownerMobileNum(response.data.truckOwner[0].mobile_num));
             dispatch(ownerToken(response.data.token));
             dispatch(ownerFullName(response.data.truckOwner[0].full_name));
             dispatch(truckN0(response.data.truckDetails[0].truck_no));
