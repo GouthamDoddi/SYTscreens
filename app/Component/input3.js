@@ -4,7 +4,38 @@ import { ArialMT } from 'expo-font';
 
 // creating a custom hook called useInput
 const Input = ({ componentData }) => {
-  const { label, placeholder, onChangeText, touched, restInput, disabled, defaultValue } = componentData;
+  const { label, placeholder, onChangeText, touched, restInput, disabled, defaultValue, color } = componentData;
+  const styles = StyleSheet.create({
+    labelContainer: {
+      color: color
+        ? color
+        : '#FFFFFF',
+      fontFamily: ArialMT,
+      fontSize: 10,
+      lineHeight: 11,
+      letterSpacing: 0.29,
+      marginTop: '1%',
+    },
+    input: {
+      color: color
+        ? '#000000'
+        : '#ffffff',
+      fontSize: 20,
+      lineHeight: 23,
+      letterSpacing: 0,
+      fontFamily: ArialMT,
+      marginTop: '0.6%',
+      marginBottom: '0.6%',
+    },
+    inputHeader: {
+      borderColor: color
+        ? color
+        : '#FFFFFF',
+      height: 50,
+      borderBottomWidth: 1,
+    },
+  });
+
 
   return (
     <View style={styles.inputHeader}>
@@ -20,35 +51,12 @@ const Input = ({ componentData }) => {
         disabled={disabled}
         {...restInput}
         inputStyle={{ color: 'black' }}
-        placeholderTextColor="#FFFFFF"
+        placeholderTextColor= { color
+          ? color
+          : '#FFFFFF' }
       />
       <Text style={{ color: 'red', marginTop: 5 }}>{touched && error}</Text>
     </View>);
 };
-
-const styles = StyleSheet.create({
-  labelContainer: {
-    color: '#FFFFFF',
-    fontFamily: ArialMT,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.29,
-    marginTop: '1%',
-  },
-  input: {
-    color: '#ffffff',
-    fontSize: 20,
-    lineHeight: 23,
-    letterSpacing: 0,
-    fontFamily: ArialMT,
-    marginTop: '0.6%',
-    marginBottom: '0.6%',
-  },
-  inputHeader: {
-    borderColor: '#FFFFFF',
-    height: 50,
-    borderBottomWidth: 1,
-  },
-});
 
 export default Input;

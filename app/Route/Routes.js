@@ -25,6 +25,8 @@ import OwnerCheckList from '../Pages/TruckOwner/OwnerCheckList';
 import TransportRegister from '../Pages/TransportCompany/TransportRegister';
 import TransportLogin from '../Pages/TransportCompany/TransportLogin';
 
+import App from '../Component/sideBar';
+
 
 enableScreens();
 
@@ -73,6 +75,13 @@ const Routes = () =>
         options={{ headerShown: false }}/>
       <Stack.Screen name="TransportLogin" component={TransportLogin}
         options={{ headerShown: false }}/>
+
+      <Stack.Screen name="HomeScreen" component={App}
+        options={{ headerShown: false }}/>
+      {/* <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}
+        options={{ headerShown: false }}/>
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen}
+        options={{ headerShown: false }}/> */}
     </Stack.Navigator>
   </NavigationContainer>;
 

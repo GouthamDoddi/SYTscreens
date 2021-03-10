@@ -29,7 +29,7 @@ export const localAxiosToken = (url, data, token) => {
   return {
     method: 'post',
     url: `https://syt-backend.herokuapp.com${url}`,
-    // url: `http://localhost:3000${url}`,
+    // url: `http://192.168.2.5:19000${url}`,
     headers: {
       Accept: '*/*',
       'Content-Type': 'application/x-www-form-urlencoded',
