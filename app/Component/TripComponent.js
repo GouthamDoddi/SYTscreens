@@ -79,16 +79,6 @@ function TripComponent ({ TripHistory, navigation }) {
   if (TripHistory) {
     const totalTrips = TripHistory.length;
 
-    // for (let i = 0; i < totalTrips; i++)
-    //   listOfButtons.push(false);
-
-    // console.log(JSON.stringify(listOfButtons));
-    // const refreshDate = useSelector(state => state.PickUpDate) ? useSelector(state => state.PickUpDate) : 0
-
-    // const updatedDate = refreshDate();
-
-    // const pickDate = updatedDate.slice(1, 10);
-
 
     return (
       <View>
@@ -96,37 +86,6 @@ function TripComponent ({ TripHistory, navigation }) {
 
           { TripHistory.reverse().map((data, index) =>
             <View key={`item${index}`} style={styles.box}>
-              {/* <View style={styles.search}>
-              <Text style={styles.searchT}>{ (totalTrips - index) }</Text>
-              <Text style={styles.searchD}>Status : </Text>
-              {
-                data.trip_duration_in_hours
-                  ? <Text style={styles.searchDs}>Completed</Text>
-                  : <Text style={styles.searchDs}>In Transist</Text>
-              }
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: '2.1%' }}>
-              <View style={{ marginBottom: '3.1%' }}>
-                <View style={styles.d}>
-                  <Text style={styles.dropt3}>Delivery Start Point</Text>
-                  <Text style={styles.dropt}>{data.source}</Text>
-                </View>
-                <View style={styles.d}>
-                  <Text style={styles.dropt3}>Delivery End Point</Text>
-                  <Text style={styles.dropt}>{data.destination}</Text>
-                </View>
-                <View style={styles.d}>
-                  <Text style={styles.dropt3}>Date &#x26; Time</Text>
-                  <Text style={styles.dropt}>start_date</Text>
-                </View>
-              </View>
-              <View style={styles.s}>
-                <Text style={styles.sea}>Delivered Packages</Text>
-                <Text style={styles.number}>{data.delivered_packages}</Text>
-                <Text style={styles.seas}>Drop Done - <Text style={{ color: 'green' }}>4</Text></Text>
-                <Text style={styles.seaund}>Check List</Text>
-              </View>
-            </View> */}
               <View style={styles.search}>
                 <Text style={styles.searchT}>Trip {totalTrips - index}</Text>
                 <View style={styles.search2}>

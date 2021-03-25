@@ -16,3 +16,13 @@ export const noOfVehicals = data => ({
   type: 'NoOfVehicals',
   data,
 });
+
+export const selectedTruck = data => ({
+  type: 'SelectedTruck',
+  data,
+});
+
+export const allTruckData = data => ({
+  type: 'AllTruckData',
+  data,
+});

@@ -1,32 +1,31 @@
 import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import HeaderU from '../../Component/HeaderU';
-import TripComponent from '../../Component/TripComponent';
-import { pickUpDate, drop, pickUp } from '../../Redux/actions/packageDetails';
+import { drop, pickUp } from '../../Redux/actions/packageDetails';
 import { localAxiosToken } from '../../utils/axios';
 import axios from 'axios';
 import qs from 'querystring';
 
-import { packageWeight, packageSpace, entireTruck, receivingPersonName, receivingPersonNum, dropPersonName, dropPersonNum } from '../../Redux/actions/packageDetails';
+import { packageWeight,
+  packageSpace, receivingPersonName,
+  receivingPersonNum, dropPersonName, dropPersonNum } from '../../Redux/actions/packageDetails';
 import { useSelector, useDispatch } from 'react-redux';
-import { tripHistory } from '../../Redux/actions/ownerTruckInfo';
-import DropDown from '../../Component/DropDown';
-import DatePicker2 from '../../Component/DatePicker2';
 import Input2 from '../../Component/Input2';
+import DropDown from '../../Component/DropDown';
+import HeaderT from '../../Component/HeaderT';
 
-function OwnerAddDelivery ({ navigation }) {
+
+function TransportAddDelivery ({ navigation }) {
   // vars and selectors
   const [ success, setSuccess ] = useState('');
-  const [ message, setMessage ] = useState('');
   const dispatch = useDispatch();
   const onClick = console.log('button clicked!');
   const OwnerFullName = useSelector(state => state.OwnerFullName);
   const OwnerToken = useSelector(state => state.OwnerToken);
   const TruckNo = useSelector(state => state.TruckNo);
+  const CompanyName = useSelector(state => state.CompanyName);
 
   const pickUpPointSelector = useSelector(state => state.PickUp);
   const dropPointSelector = useSelector(state => state.Drop);
-  const dateSelector = useSelector(state => state.PickUpDate);
   const entireTruckSelector = useSelector(state => state.EntireTruck);
   const receivingPersonNameSelector = useSelector(state => state.ReceivingPersonName);
   const packageSpaceSelector = useSelector(state => state.PackageSpace);
@@ -61,10 +60,7 @@ function OwnerAddDelivery ({ navigation }) {
     axios(localAxiosToken('/addPackage', params, OwnerToken))
       .then(res => {
         console.log(params);
-        console.log(res);
-        if (res.data.statusCode === 400)
-          setMessage(res.data.message);
-
+        console.log(res.data);
         axios(localAxiosToken('/assignPackage', params2(res.data.details[0].package_id), OwnerToken))
           .then(response => {
             console.log(response.data);
@@ -122,21 +118,20 @@ function OwnerAddDelivery ({ navigation }) {
   };
   const ReceivingPersonNumInput = {
     label: '',
-    placeholder: 'Receiving Mobile Number',
+    placeholder: 'Receiving Person Mobile Number',
     onChangeText (e) {
       dispatch(receivingPersonNum(e));
     },
   };
 
   // function
-  const lastPage = () => navigation.navigate('OwnerTripRegister');
+  const lastPage = () => navigation.navigate('TransportAddTrip');
 
   return (
-    // <View style={styles.responsiveBox}>
     <View style={styles.container}>
-      <HeaderU data={onSubmit}/>
+      <HeaderT data={onSubmit}/>
       <View style={styles.block}>
-        <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{OwnerFullName} !</Text></Text>
+        <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CompanyName} !</Text></Text>
         <View style={styles.delrow}>
           <TouchableOpacity onPress={lastPage}>
             <Image
@@ -204,16 +199,15 @@ function OwnerAddDelivery ({ navigation }) {
           success === 'Yes'
             ? <Text>Delivery sucessfully added.</Text>
             : success === 'No'
-              ? <Text>Delivery failed. Try again. { message }</Text>
+              ? <Text>Delivery failed. Try again</Text>
               : <View></View>
         }
       </View>
     </View>
-    // {/* // </View> */}
   );
 }
 
-export default OwnerAddDelivery;
+export default TransportAddDelivery;
 
 const styles = StyleSheet.create({
   container: {
@@ -222,10 +216,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  //   responsiveBox: {
-  //     width: wp('100%'),
-  //     height: hp('100%'),
-  //   },
   block: {
     paddingHorizontal: '3.5%',
   },
@@ -256,7 +246,7 @@ const styles = StyleSheet.create({
   },
   search: {
     flexDirection: 'row',
-    backgroundColor: '#FFF2E4',
+    backgroundColor: '#C0C0C0',
   },
   img: {
     width: 25,
@@ -267,7 +257,7 @@ const styles = StyleSheet.create({
     marginRight: '1.6%',
   },
   searchT: {
-    color: '#FF8200',
+    color: '#000000',
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0,
@@ -289,7 +279,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   canceltext: {
-    color: '#FF8200',
+    color: '#000000',
     fontSize: 13,
     lineHeight: 15,
     letterSpacing: 0,
@@ -299,10 +289,10 @@ const styles = StyleSheet.create({
   deleteimg: {
     width: 15,
     height: 14,
-    tintColor: '#FF8200',
+    tintColor: '#000000',
   },
   searchtruck: {
-    backgroundColor: '#FF8200',
+    backgroundColor: '#000000',
     alignSelf: 'flex-end',
     paddingVertical: '0.6%',
     paddingHorizontal: '3%',
@@ -324,3 +314,4 @@ const styles = StyleSheet.create({
     marginLeft: '4.5%',
   },
 });
+

@@ -29,7 +29,7 @@ function CustomerLogin ({ navigation }) {
     navigation.navigate('Welcome');
   };
 
-  const registerRedirect = () => navigation.navigate('CustomerRegister');
+  const registerRedirect = () => navigation.navigate('TruckRegister');
 
 
   const onSubmit = async () => {
@@ -121,8 +121,8 @@ function CustomerLogin ({ navigation }) {
             style={styles.img}
             source={require('../../Images/logowhite.jpg')}
           />
-          <Text style={styles.headText}>Enter the 4-Digit Mobile Verification Code </Text>
-          <Text style={styles.headText}>You shall recive the code to your Number</Text>
+          {/* <Text style={styles.headText}>Enter the 4-Digit Mobile Verification Code </Text>
+          <Text style={styles.headText}>You shall recive the code to your Number</Text> */}
           <View>
             <Text style={styles.mainText}>Verification Code</Text>
             <TouchableOpacity onPress={registerRedirect}>

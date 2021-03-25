@@ -1,4 +1,4 @@
-// export const LoginFailed = (state = '', action) => {
+// export const LoginFailed = (state = null, action) => {
 //   switch (action.type) {
 //     case 'LoginFailed':
 //       state = action.data;

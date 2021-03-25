@@ -1,7 +1,7 @@
 import React from 'react';
-import Input3 from '../../Component/Input2';
+import Input from '../../Component/input3';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { contactNumber } from '../../Redux/actions/transportCompanyInfo';
+import { companyName, contactNumber, allTruckData } from '../../Redux/actions/transportCompanyInfo';
 import { localAxios } from '../../utils/axios';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ const TransportLogin = ({ navigation }) => {
   // vars
   const dispatch = useDispatch();
   const ContactNumber = useSelector(state => state.ContactNumber);
+  const OwnerOtp = useSelector(state => state.OwnerOtp);
 
   // functions
   const mobileNumData = {
@@ -35,7 +36,10 @@ const TransportLogin = ({ navigation }) => {
         console.log(response.data);
 
         dispatch(ownerOtp(response.data.otp));
+        dispatch(companyName(response.data.transportOwner[0].company_name));
         dispatch(ownerToken(response.data.token));
+        dispatch(allTruckData(response.data.truckDetails));
+        navigation.navigate('TransportOtp');
       })
       .catch(error => {
         console.log(error);
@@ -55,7 +59,7 @@ const TransportLogin = ({ navigation }) => {
           <TouchableOpacity onPress={ register }>
             <Text style={styles.loginText}>Not registered? Please <Text style={styles.underline}>Register</Text></Text>
           </TouchableOpacity>
-          <Input3 data={ mobileNumData }/>
+          <Input componentData={ mobileNumData }/>
         </View>
         <View>
           <TouchableOpacity onPress={ onSubmit }>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-    fontFamily: 'ArialMT',
+    // fontFamily: 'ArialMT',
     marginTop: '0.9%',
     fontWeight: 'bold',
   },
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 34,
     letterSpacing: 0.86,
-    fontFamily: 'ArialMT',
+    // fontFamily: 'ArialMT',
     marginTop: '4.2%',
   },
   loginText: {
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-    fontFamily: 'ArialMT',
+    // fontFamily: 'ArialMT',
     marginTop: '0.4%',
     marginBottom: '4.6%',
   },
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     lineHeight: 45,
     letterSpacing: 1.37,
-    fontFamily: 'ArialMT',
+    // fontFamily: 'ArialMT',
     marginTop: '59%',
     marginBottom: '3%',
     textAlign: 'right',

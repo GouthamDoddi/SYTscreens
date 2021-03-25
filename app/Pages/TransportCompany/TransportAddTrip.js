@@ -1,29 +1,37 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import HeaderU from '../../Component/HeaderU';
-import TripComponent from '../../Component/TripComponent';
+import axios from 'axios';
+import qs from 'querystring';
+import { useSelector, useDispatch } from 'react-redux';
+
+import HeaderT from '../../Component/HeaderT';
+import TripComponent2 from '../../Component/TripComponent2';
 import { pickUpDate, drop, pickUp } from '../../Redux/actions/packageDetails';
 import Dropdown from '../../Component/DropDown';
 import DatePicker2 from '../../Component/DatePicker2';
+import TruckDropDown from '../../Component/TruckDropDown';
+import Input3 from '../../Component/input3';
 import { localAxiosToken } from '../../utils/axios';
-import { DrawerActions } from '@react-navigation/drawer';
-
-import { useSelector, useDispatch } from 'react-redux';
 import { tripHistory } from '../../Redux/actions/ownerTruckInfo';
-import axios from 'axios';
-import qs from 'querystring';
+import { selectedTruck } from '../../Redux/actions/transportCompanyInfo';
+import { ownerFullName, ownerMobileNum } from '../../Redux/actions/ownerInfo';
 
-function OwnerTripRegister ({ navigation }) {
+
+function TransportTripRegister ({ navigation }) {
   // variables
   const TripHistory = useSelector(state => state.TripHistory);
   const OwnerFullName = useSelector(state => state.OwnerFullName);
   const TruckNo = useSelector(state => state.TruckNo);
+  const SelectedTruck = useSelector(state => state.SelectedTruck);
   const PickUpDate = useSelector(state => state.PickUpDate);
   const PickUpSelector = useSelector(state => state.PickUp);
   const Drop = useSelector(state => state.Drop);
   const OwnerToken = useSelector(state => state.OwnerToken);
+  const CompanyName = useSelector(state => state.CompanyName);
   const dispatch = useDispatch();
   const [ addTripButton, setAddTripButton ] = useState(false);
+  const [ truckDriver, setTruckDriver ] = useState(0);
+  const [ truckDriverNum, setTruckDriverNum ] = useState(0);
 
 
   // const PickUpDate = useSelector(state => state.PickUpDate);
@@ -32,7 +40,7 @@ function OwnerTripRegister ({ navigation }) {
 
   // functions
 
-  const onSubmit = () => DrawerActions.toggleDrawer();
+  const onSubmit = () => console.log('header clicked!');
 
   const onClick = () => console.log('Submit called');
 
@@ -41,29 +49,43 @@ function OwnerTripRegister ({ navigation }) {
     const formData = `${qs.stringify({
       source: PickUpSelector,
       destination: Drop,
-      truckNo: TruckNo,
+      truckNo: SelectedTruck,
+      truckDriver,
+      truckDriverNum,
     })}&startDate=${PickUpDate}`;
 
 
     axios(localAxiosToken('/addTrip', formData, OwnerToken))
       .then(res => {
-        console.log(res.data.details[0]);
+        console.log(res.data);
 
-        if (TripHistory === 0) {
-          const tripDetails2 = [ res.data.details[0] ];
+        axios(localAxiosToken('/getAvailableSpace', qs.stringify({ truckNo: selectedTruck }), OwnerToken))
+          .then(response => {
+            console.log(response.data);
+            const { availableSpace } = response.data;
+            const { availableWeight } = response.data;
 
-          dispatch(tripHistory(tripDetails2));
-        }
+            const trip = res.data.details[0];
 
-        const tripDetails = [ ...TripHistory, res.data.details[0] ];
+            trip.availableSpace = availableSpace;
+            trip.availableWeight = availableWeight;
 
-        dispatch(tripHistory(tripDetails));
+            if (TripHistory) {
+              const tripDetails = [ ...TripHistory, trip ];
 
-        console.log(`trip history = ${tripDetails}`);
+              dispatch(tripHistory(tripDetails));
+
+              console.log(`trip history = ${JSON.stringify(tripDetails)}`);
+            } else {
+              dispatch(tripHistory([ trip ]));
+            }
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
   };
 
+  const TruckNoSelecter = data => dispatch(selectedTruck(data));
   const PickUp = data => dispatch(pickUp(data));
   const destination = data => dispatch(drop(data));
 
@@ -71,21 +93,42 @@ function OwnerTripRegister ({ navigation }) {
     setAddTripButton(!addTripButton);
   };
 
+  // form data
+  const truckDriverData = {
+    label: '',
+    placeholder: 'Driver Name',
+    onChangeText (e) {
+      dispatch(ownerFullName(e));
+    },
+    color: '#C0C0C0',
+  };
+
+  const truckDriverNumData = {
+    label: '',
+    placeholder: 'Mobile number',
+    onChangeText (e) {
+      dispatch(ownerMobileNum(e));
+    },
+    color: '#C0C0C0',
+  };
+
   // async function getTrips () {
   // }
   return (
     <View style={styles.container}>
       {/* <AppStatusBarU /> */}
-      <HeaderU data={ onSubmit }/>
+      <HeaderT data={ onSubmit }/>
       <View style={styles.block}>
-        <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>Vehicle Owner Name !</Text></Text>
+        <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ CompanyName } !</Text></Text>
         <Text style={styles.ntext}><Text style={{ fontWeight: 'bold' }}>Driver Name : </Text>{ OwnerFullName }</Text>
         { addTripButton
           ? <View>
             <TouchableOpacity onPress={addTrip}>
-              <Text style={styles.add}>Add Trip +</Text>
+              <Text style={styles.add}>Close trip -</Text>
             </TouchableOpacity>
             <View style={{ marginTop: '1.1%', marginLeft: '2.7%', marginRight: '2.1%' }}>
+              <TruckDropDown action={TruckNoSelecter} />
+
               <Dropdown action={PickUp}/>
 
               <Dropdown action={destination}/>
@@ -102,6 +145,12 @@ function OwnerTripRegister ({ navigation }) {
                     />
                   </TouchableOpacity>
                 </View>
+                <View style={{ width: '47.8%', marginTop: '10%', marginLeft: '-100%', marginRight: '2%' }}>
+                  <Input3 componentData={truckDriverData} />
+                </View>
+                <View style={{ width: '47.8%', marginTop: '10%', marginLeft: '2%' }}>
+                  <Input3 componentData={truckDriverNumData} />
+                </View>
               </View>
               <TouchableOpacity onPress={tripRegister} style={styles.searchtruck}>
                 <Text style={styles.searchtruckt}>Save Details</Text>
@@ -112,8 +161,8 @@ function OwnerTripRegister ({ navigation }) {
             <Text style={styles.add}>Add Trip +</Text>
           </TouchableOpacity>
         }
-        <View style={{ backgroundColor: '#FFFFFF', marginBottom: '2.1%', borderWidth: 0.3 }}>
-          <TripComponent TripHistory={useSelector(state => state.TripHistory)} navigation={navigation} />
+        <View style={{ backgroundColor: '#FFFFFF', marginBottom: '2.1%', borderWidth: 0.3, marginTop: '10%' }}>
+          <TripComponent2 TripHistory={useSelector(state => state.TripHistory)} navigation={navigation} />
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: '2.2%' }}>
           </View>
         </View>
@@ -122,7 +171,7 @@ function OwnerTripRegister ({ navigation }) {
   );
 }
 
-export default OwnerTripRegister;
+export default TransportTripRegister;
 
 const styles = StyleSheet.create({
   container: {
@@ -207,7 +256,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingVertical: '0.6%',
     paddingHorizontal: '3.2%',
-    marginTop: '1.6%',
+    marginTop: '15.6%',
   },
   searchtruckt: {
     color: '#FFFFFF',

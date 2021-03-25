@@ -1,3 +1,4 @@
+/* eslint-disable no-negated-condition */
 import React from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -5,11 +6,10 @@ import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxiosToken } from '../../utils/axios';
-import HeaderU from '../../Component/HeaderU';
+import HeaderT from '../../Component/HeaderT';
 
-function OwnerDeliveryRequests ({ navigation }) {
+function TransportDeliveryRequests ({ navigation }) {
   // vars and selectors
-
   const DeliveryRequests = useSelector(state => state.DeliveryRequests);
   const OwnerFullName = useSelector(state => state.OwnerFullName);
   const TripDetails = useSelector(state => state.TripDetails);
@@ -19,7 +19,7 @@ function OwnerDeliveryRequests ({ navigation }) {
 
   const onSubmit = () => console.log('header clicked');
 
-  const goBack = () => navigation.navigate('OwnerTripRegister');
+  const goBack = () => navigation.navigate('TransportAddTrip');
 
   const params2 = mappingId => qs.stringify({
     delivered: false,
@@ -39,7 +39,7 @@ function OwnerDeliveryRequests ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderU data={ onSubmit } />
+      <HeaderT data={ onSubmit } />
       <ScrollView>
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{OwnerFullName} !</Text></Text>
@@ -117,20 +117,8 @@ function OwnerDeliveryRequests ({ navigation }) {
                       </View>
                     </View>
                   </View>
-                  { data[1].status === 'Accepted'
+                  { data[1].status !== 'Accepted'
                     ? <View style={styles.delivery}>
-                      <TouchableOpacity style={styles.deliverysub}>
-                        <Text style={styles.last1}>Cancel Deliver</Text>
-                        <Image
-                          style={styles.deimg}
-                          source={require('../../Images/dustbin.png')}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[0].mapping_id) }>
-                        <Text style={styles.last2}>Accept Delivery</Text>
-                      </TouchableOpacity>
-                    </View>
-                    : <View style={styles.delivery}>
                       <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[0].mapping_id) }>
                         <Text style={styles.last2}>Delivery Done</Text>
                       </TouchableOpacity>
@@ -140,6 +128,18 @@ function OwnerDeliveryRequests ({ navigation }) {
                           style={styles.deimg}
                           source={require('../../Images/dustbin.png')}
                         />
+                      </TouchableOpacity>
+                    </View>
+                    : <View style={styles.delivery}>
+                      <TouchableOpacity style={styles.deliverysub}>
+                        <Text style={styles.last1}>Cancel Deliver</Text>
+                        <Image
+                          style={styles.deimg}
+                          source={require('../../Images/dustbin.png')}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[0].mapping_id) }>
+                        <Text style={styles.last2}>Accept Delivery</Text>
                       </TouchableOpacity>
                     </View>
                   }
@@ -229,7 +229,7 @@ function OwnerDeliveryRequests ({ navigation }) {
   );
 }
 
-export default OwnerDeliveryRequests;
+export default TransportDeliveryRequests;
 
 const styles = StyleSheet.create({
   container: {
@@ -238,10 +238,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  //   responsiveBox: {
-  //     width: wp('100%'),
-  //     height: hp('100/%'),
-  //   },
   block: {
     paddingLeft: '3.5%',
     paddingRight: '3.2%',
@@ -277,7 +273,7 @@ const styles = StyleSheet.create({
   },
   search: {
     flexDirection: 'row',
-    backgroundColor: '#FFF2E3',
+    backgroundColor: '#D3D3D3',
     marginBottom: '1.7%',
     paddingLeft: '2.4%',
     paddingRight: '4.6%',
@@ -295,7 +291,7 @@ const styles = StyleSheet.create({
     marginRight: '1.6%',
   },
   searchT: {
-    color: '#FF8200',
+    color: '#000000',
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0,
@@ -312,7 +308,7 @@ const styles = StyleSheet.create({
     marginRight: '1.6%',
   },
   minus: {
-    tintColor: '#FF8200',
+    tintColor: '#000000',
     width: 12,
     height: 20,
   },
@@ -383,7 +379,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   last1: {
-    color: '#FF8200',
+    color: '#000000',
     fontSize: 13,
     lineHeight: 15,
     letterSpacing: 0,
@@ -392,12 +388,12 @@ const styles = StyleSheet.create({
   deimg: {
     width: 20,
     height: 20,
-    tintColor: '#FF8200',
+    tintColor: '#000000',
   },
   last: {
     paddingVertical: '0.6%',
     paddingHorizontal: '3%',
-    backgroundColor: '#FF8200',
+    backgroundColor: '#000000',
   },
   last2: {
     color: '#FFFFFF',
