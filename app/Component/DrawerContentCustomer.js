@@ -1,10 +1,35 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Drawer } from 'react-native-paper';
+import axios from 'axios';
+import qs from 'querystring';
+
+import { localAxiosToken } from '../utils/axios';
+import { receivingPackages } from '../Redux/actions/customerInfo';
 
 
 function DrawerContentCustomer (props) {
+  const { navigation } = props;
+
+  const dispatch = useDispatch();
+  const CustomerMobileNum = useSelector(state => state.CustomerMobileNum)
+  const CustomerToken = useSelector(state => state.CustomerToken)
+  
+  const getReceivingPackages = () => {
+    axios(localAxiosToken('/getReceivingPackages', qs.stringify({mobileNum: CustomerMobileNum}), CustomerToken))
+    .then(res => {
+      if (res.data.statusCode === 200){
+        console.log(res.data);
+        dispatch(receivingPackages(res.data.packageDetails));
+        navigation.navigate('ReceivingPackages');
+      } else {
+        navigation.navigate('ReceivingPackages');
+      }
+    })
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <DrawerContentScrollView { ...props}>
@@ -25,6 +50,12 @@ function DrawerContentCustomer (props) {
           <DrawerItem
             label="Notification"
             onPress={() => console.log('Log Out called')}
+          />
+        </Drawer.Section>
+        <Drawer.Section style={styles.bottomDrawerSection}>
+          <DrawerItem
+            label="Receiving Packages"
+            onPress={getReceivingPackages}
           />
         </Drawer.Section>
         <Drawer.Section style={styles.bottomDrawerSection}>
@@ -54,7 +85,7 @@ function DrawerContentCustomer (props) {
         <Drawer.Section style={styles.bottomDrawerSection}>
           <DrawerItem
             label="Sign Out"
-            onPress={() => console.log('Log Out called')}
+            onPress={() => navigation.navigate('Welcome')}
           />
         </Drawer.Section>
       </View>

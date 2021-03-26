@@ -27,3 +27,8 @@ export const customerPackages = data => ({
   type: 'CustomerPackages',
   data,
 });
+
+export const receivingPackages = data => ({
+  type: 'ReceivingPackages',
+  data,
+});

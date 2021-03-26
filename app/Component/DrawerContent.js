@@ -6,6 +6,7 @@ import { Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function DrawerContent (props) {
+  const { navigation } = props;
   return (
     <View style={{ flex: 1, backgroundColor: '#FF8200' }}>
       <DrawerContentScrollView { ...props}>
@@ -67,7 +68,7 @@ function DrawerContent (props) {
         <Drawer.Section style={styles.bottomDrawerSection}>
           <DrawerItem
             label="Sign Out"
-            onPress={() => console.log('Log Out called')}
+            onPress={() => navigation.navigate('Welcome')}
           />
         </Drawer.Section>
       </View>

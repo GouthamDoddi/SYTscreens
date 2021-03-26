@@ -15,9 +15,9 @@ import TransportStack from './TransportStack';
 const Drawer = createDrawerNavigator();
 
 
-export function MyDrawer ({ navigation }) {
+export function MyDrawer () {
   return (
-    <Drawer.Navigator drawerContent={props => <DrawerContent { ...navigation } />} >
+    <Drawer.Navigator drawerContent={props => <DrawerContent { ...props } />} >
       <Drawer.Screen name='addTrip' component={OwnerStack} />
     </Drawer.Navigator>
   );

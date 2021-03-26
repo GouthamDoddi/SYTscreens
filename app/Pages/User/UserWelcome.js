@@ -16,13 +16,15 @@ export default function CustomerWelcome ({ navigation }) {
   const CustomerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
   const CustomerPackages = useSelector(state => state.CustomerPackages);
 
+  console.log(CustomerPackages)
+
   const onSubmit = () => {
     console.log('onSubmit called');
     navigation.navigate('CustomerAddPackage');
   };
 
   const track = () => {
-    console.log('track called');
+    navigation.navigate('Tracking')
   };
 
   // component data
@@ -47,11 +49,13 @@ export default function CustomerWelcome ({ navigation }) {
       <Header data={componentData} />
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CustomerFullName}!</Text></Text>
-        <Text style={styles.add}>Your Package is On the Way</Text>
-        <PackageComponent packages={CustomerPackages} track={track} />
-        <TouchableOpacity onPress={onSubmit}>
+        <TouchableOpacity onPress={onSubmit} >
+          <Text style={styles.addanother}>Add Delivery request </Text>
+        </TouchableOpacity>
+        <TouchableOpacity >
           <Text style={styles.adds}>+</Text>
         </TouchableOpacity>
+        <PackageComponent packages={CustomerPackages} track={track} />
         <Text style={styles.del}>Deliver a Package</Text>
         <TouchableOpacity>
           <Text style={styles.wan}>Want to Deliver a Package ?</Text>
@@ -70,7 +74,8 @@ const styles = StyleSheet.create({
     // marginTop: StatusBar.currentHeight,
   },
   block: {
-    marginLeft: '6.1%',
+    marginLeft: '5%',
+    marginRight: '5%',
   },
   ntext: {
     color: '#000000',
@@ -84,8 +89,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 18,
     letterSpacing: 0.46,
-    marginTop: '2.1%',
+    marginTop: '5.1%',
     marginBottom: '2.2%',
+  },
+  addanother:{
+    marginTop: '5%',
   },
   search: {
     flexDirection: 'row',
@@ -158,8 +166,9 @@ const styles = StyleSheet.create({
     lineHeight: 74,
     letterSpacing: 1.89,
     textAlign: 'center',
-    marginTop: '30.2%',
+    marginTop: '-11%',
     marginBottom: '0.1%',
+    marginLeft: '-5%',
   },
   del: {
     color: '#000000',

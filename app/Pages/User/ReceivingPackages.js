@@ -1,68 +1,80 @@
 import React from 'react'
 import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { useSelector } from 'react-redux';
 
-function PackageComponent({ packages, track }) {
+function ReceivingPackages({ navigation }) {
+
+  const ReceivingPackages = useSelector(state => state.ReceivingPackages)
 
   return (
     <ScrollView>
-      { packages.map( ( data, index) => 
+      {
+        ReceivingPackages
+        ? <View>
+          { ReceivingPackages.map( ( data, index) => 
       <View key={index} style={{ backgroundColor: '#FFFFFF', borderWidth: 0.3, marginBottom: '2.1%' }}>
         <View style={styles.search}>
           <View style={{ flexDirection: 'row', width: '60%' }}>
             <Image
               style={styles.img}
-              source={require('../Images/deliverybox.jpg')}
+              source={require('../../Images/deliverybox.jpg')}
             />
             <Text style={styles.stat}>Status : <Text style={{ color: 'orange' }}>{ data[0] === 'unassigned' ? 'Request Pending' : data[1].reach_date === null ? 'In transist' : 'Delivered' }</Text></Text>
-            <Text style={styles.truckNo}>{ data[0].truck_no }</Text>
           </View>
+          <TouchableOpacity style={styles.but} onPress={track}>
+            <Text style={styles.buttext}>Track Delivery</Text>
+          </TouchableOpacity>
         </View>
         <View style={{ flexDirection: 'row', marginTop: '0.7%', marginHorizontal: '2.7%' }}>
           <Image
             style={styles.img4}
-            source={require('../Images/yellowtruck.jpg')}
+            source={require('../../Images/call.jpg')}
           />
-          <View style={styles.but2}>
-            <Text style={styles.availtext}>Driver Info</Text>
+          <View style={{ marginRight: '0.3%' }}>
+            <Text style={styles.availtext}>{ data[0].truck_no }</Text>
+            <Text style={styles.availtext}>Person Name</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.but} onPress={track}>
-            <Text style={styles.buttext}>Track Delivery</Text>
-        </TouchableOpacity>
         <View style={{ marginBottom: '1.2%', marginHorizontal: '2.7%', flexDirection: 'row' }}>
           <View style={{ width: '60%' }}>
             <View style={{ flexDirection: 'row' }}>
               <Image
                 style={styles.img3}
-                source={require('../Images/map.jpg')}
+                source={require('../../Images/map.jpg')}
               />
               <View style={styles.bord}/>
             </View>
             <View style={{ marginBottom: '1%' }}>
               <Text style={styles.loctext}>{ data[1].pickup_point }</Text>
-              <Text style={styles.loctext}>Rk Beach</Text>
+              <Text style={styles.loctext}></Text>
               <Text style={styles.loctext}>{ (data[1].pickup_date).slice(0, 10) }</Text>
             </View>
           </View>
           <View>
             <Image
               style={styles.img3}
-              source={require('../Images/map.jpg')}
+              source={require('../../Images/map.jpg')}
             />
             <View style={{ marginBottom: '1%' }}>
               <Text style={styles.loctext}>{ data[1].drop_point }</Text>
               <Text style={styles.loctext}>Barakhamba Road</Text>
-              <Text style={styles.loctext}>{ data[1].reach_date ? data[1].reach_date : 'Updates on delivery' }</Text>
+              <Text style={styles.loctext}>{ data[1].reach_date ? data[1].reach_date : 'Yet to deliver' }</Text>
             </View>
           </View>
         </View>
       </View>)
     }
+        </View>
+        : <View>
+          <Text>No Packages to receive</Text>
+        </View>
+      }
+      
     </ScrollView>
   )
 }
 
-export default PackageComponent
+export default ReceivingPackages
 
 const styles = StyleSheet.create({
   container: {
@@ -81,9 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-  },
-  truckNo: {
-    marginLeft: '50%',
   },
   add: {
     color: '#000000',
@@ -119,18 +128,8 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     paddingVertical: '0.6%',
     paddingHorizontal: '3.4%',
-    marginTop: '-5%',
+    marginTop: '1.5%',
     marginBottom: '1.2%',
-    marginLeft: '70%',
-  },
-  but2: {
-    backgroundColor: '#FF9F00',
-    borderRadius: 1,
-    paddingVertical: '0.6%',
-    paddingHorizontal: '3.4%',
-    marginTop: '1%',
-    marginBottom: '1.2%',
-    marginRight: '40%',
   },
   buttext: {
     fontSize: 13,
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     marginRight: '2.4%',
   },
   availtext: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 13,
     lineHeight: 15,
     letterSpacing: 0,

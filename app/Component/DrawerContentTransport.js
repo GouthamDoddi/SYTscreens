@@ -80,7 +80,7 @@ function DrawerContentTransport (props) {
         <Drawer.Section style={styles.bottomDrawerSection}>
           <DrawerItem
             label="Sign Out"
-            onPress={() => console.log('Log Out called')}
+            onPress={() => navigation.navigate('Welcome')}
           />
         </Drawer.Section>
       </View>

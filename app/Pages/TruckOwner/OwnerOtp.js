@@ -25,33 +25,29 @@ function OwnerOTP ({ navigation }) {
   // functions
   const onSubmit = () => {
     // check if the input matches the real otp
-    if (input === OwnerOtp) {
-      // logged in
-      console.log(`${OwnerOtp} == ${input}`);
-
-      // TruckNo = 'AP31EJ700';
-      const data = qs.stringify({ truckNo: TruckNo });
-
-      console.log(`token = ${OwnerToken}`);
-
-      axios(localAxiosToken('/getTripByTruckNo', data, OwnerToken))
-        .then(resp => {
-          console.log(resp.data);
-          const tripDetails = resp.data.message.tripDetails
-            ? resp.data.message.tripDetails
-            : 0;
-
-          console.log(`my condolences ${JSON.stringify(tripDetails)}`);
-
-          dispatch(tripHistory(tripDetails.reverse()));
-        })
-        .catch(err => console.log(err));
+    if (input === OwnerOtp)
       navigation.navigate('OwnerTripRegister');
-      console.log('logged in');
-    } else {
-      console.log("'didn't match");
-    }
+   else
+      console.log("didn't match");
   };
+
+  const fetchData = () => {
+    const data = qs.stringify({ truckNo: TruckNo });
+
+    axios(localAxiosToken('/getTripByTruckNo', data, OwnerToken))
+    .then(resp => {
+      console.log(resp.data);
+      const tripDetails = resp.data.message.tripDetails
+        ? resp.data.message.tripDetails
+        : 0;
+
+      console.log(`${JSON.stringify(tripDetails)}`);
+
+      dispatch(tripHistory(tripDetails.reverse()));
+
+    })
+    .catch(err => console.log(err));
+  }
 
 
   const backPage = () => {
@@ -82,6 +78,7 @@ function OwnerOTP ({ navigation }) {
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
       <ScrollView>
+        { fetchData() }
         <TouchableOpacity onPress={backPage}>
           <Text style={styles.backarrow}>&#x2190;</Text>
         </TouchableOpacity>

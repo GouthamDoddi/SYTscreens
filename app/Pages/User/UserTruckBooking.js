@@ -28,43 +28,44 @@ function CustomerTruckBooking ({ navigation }) {
 
 
   const onSubmit = async () => {
-    const SelectedTruckData = useSelector(state => state.SelectedTruckData);
+    // const SelectedTruckData = useSelector(state => state.SelectedTruckData);
 
-    const params = `${qs.stringify({
-      pickUpPoint: pickUpPointSelector,
-      dropPoint: dropPointSelector,
-      entireTruck: entireTruckSelector,
-      receivingPersonName: receivingPersonNameSelector,
-      receivingPersonNo: receivingPersonNumSelector,
-      packageSpace: packageSpaceSelector,
-      packageWeight: packageWeightSelector,
-    })}&date=${dateSelector}`;
+    // const params = `${qs.stringify({
+    //   pickUpPoint: pickUpPointSelector,
+    //   dropPoint: dropPointSelector,
+    //   entireTruck: entireTruckSelector,
+    //   receivingPersonName: receivingPersonNameSelector,
+    //   receivingPersonNo: receivingPersonNumSelector,
+    //   packageSpace: packageSpaceSelector,
+    //   packageWeight: packageWeightSelector,
+    // })}&date=${dateSelector}`;
 
-    try {
-      await axios(localAxiosToken('/addPackage', params, customerTokenSelector))
-        .then(async response => {
-          console.log(response.data);
-          console.log(params);
-          // dispatch(packageId(response.data.details[0].package_id));
+    // try {
+    //   await axios(localAxiosToken('/addPackage', params, customerTokenSelector))
+    //     .then(async response => {
+    //       console.log(response.data);
+    //       console.log(params);
+    //       // dispatch(packageId(response.data.details[0].package_id));
 
-          const packageId = response.data.details[0].package_id;
+    //       const packageId = response.data.details[0].package_id;
 
-          console.log(packageId, SelectedTruckData.truckNo);
+    //       console.log(packageId, SelectedTruckData.truckNo);
 
-          await axios(localAxiosToken('/assignPackage', qs.stringify({ packageId,
-            tripId: SelectedTruckData.tripId,
-            truckNo: SelectedTruckData.truckNo }), customerTokenSelector))
-            .then(res => {
-              console.log(res.data);
-              navigation.navigate('Tracking');
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+    //       await axios(localAxiosToken('/assignPackage', qs.stringify({ packageId,
+    //         tripId: SelectedTruckData.tripId,
+    //         truckNo: SelectedTruckData.truckNo }), customerTokenSelector))
+    //         .then(res => {
+    //           console.log(res.data);
+    //           navigation.navigate('Tracking');
+    //         });
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    console.log('clicked');
   };
 
   const headerData = () => console.log('clicked on header');

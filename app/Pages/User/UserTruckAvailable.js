@@ -5,13 +5,14 @@ import { StatusBar, Text, View, Image, StyleSheet,
 // import axios from 'axios';
 import qs from 'querystring';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios'
 
 import Header from '../../Component/Header';
 import TruckComponet from '../../Component/truckComponet';
 import AppStatusBar from '../../Component/StatusBar';
 
 import { allTripIdsNTruckNos, allTruckDetails, noOfTripsFound } from '../../Redux/actions/tripsAvailable';
-import { axios, fetchURL, configToken } from '../../utils/axios';
+import { localAxiosToken } from '../../utils/axios';
 import { AllTruckDetails, AllTruckSpaceNWeight } from '../../Redux/reducers/tripsAvailable';
 import { getListOfTruckIds } from '../../utils/formData';
 
@@ -21,18 +22,26 @@ function CustomerTruckAvailable ({ navigation }) {
   const dispatch = useDispatch();
   const allTruckDetailsSelector = useSelector(state => state.AllTruckDetails);
   const allTruckSpaceNWeightSelector = useSelector(state => state.AllTruckSpaceNWeight);
-
-  console.log(`this is the selector ${allTruckSpaceNWeightSelector}`);
   const pickUpPointSelector = useSelector(state => state.PickUp);
   const dropPointSelector = useSelector(state => state.Drop);
+  const dateSelector = useSelector(state => state.PickUpDate);
+  const entireTruckSelector = useSelector(state => state.EntireTruck);
+  const receivingPersonNameSelector = useSelector(state => state.ReceivingPersonName);
+  const packageSpaceSelector = useSelector(state => state.PackageSpace);
+  const packageWeightSelector = useSelector(state => state.PackageWeight);
+  const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
+  const customerTokenSelector = useSelector(state => state.CustomerToken);
+
+  console.log(`this is the selector ${allTruckSpaceNWeightSelector}`);
+  // const pickUpPointSelector = useSelector(state => state.PickUp);
+  // const dropPointSelector = useSelector(state => state.Drop);
   const customerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
+  const SelectedTruckData = useSelector(state => state.SelectedTruckData);
 
 
   // functions
 
   const onSubmit = async () => { 
-    const SelectedTruckData = useSelector(state => state.SelectedTruckData);
-
     const params = `${qs.stringify({
       pickUpPoint: pickUpPointSelector,
       dropPoint: dropPointSelector,
@@ -59,7 +68,7 @@ function CustomerTruckAvailable ({ navigation }) {
             truckNo: SelectedTruckData.truckNo }), customerTokenSelector))
             .then(res => {
               console.log(res.data);
-              navigation.navigate('UserWelcome');
+              navigation.navigate('CustomerWelcome');
             });
         })
         .catch(err => {

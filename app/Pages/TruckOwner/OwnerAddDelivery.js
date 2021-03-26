@@ -197,9 +197,7 @@ function OwnerAddDelivery ({ navigation }) {
             </View>
           </View>
         </View>
-        <TouchableOpacity>
-          <Text style={styles.addanother}>Add another Delivery request +.</Text>
-        </TouchableOpacity>
+
         {
           success === 'Yes'
             ? <Text>Delivery sucessfully added.</Text>

@@ -63,3 +63,14 @@ export const CustomerPackages = (state = '', action) => {
       return state;
   }
 };
+
+export const ReceivingPackages = (state = '', action) => {
+  switch (action.type) {
+    case 'ReceivingPackages':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};
