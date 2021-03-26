@@ -18,7 +18,7 @@ function deleteTruck({navigation}) {
     axios(localAxiosToken('/deleteTruck', qs.stringify({truckNo}), OwnerToken))
     .then(res => {
       if (res.data.statusCode === 200)
-        AllTruckData.remove(index)
+        AllTruckData.splice(index, 1)
     })
 
   }

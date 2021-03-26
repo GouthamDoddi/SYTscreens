@@ -84,7 +84,7 @@ function TripComponent ({ TripHistory, navigation }) {
       <View>
         <ScrollView>
 
-          { TripHistory.reverse().map((data, index) =>
+          { TripHistory.map((data, index) =>
             <View key={`item${index}`} style={styles.box}>
               <View style={styles.search}>
                 <Text style={styles.searchT}>Trip {totalTrips - index}</Text>

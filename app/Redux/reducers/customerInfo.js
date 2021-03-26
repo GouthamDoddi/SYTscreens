@@ -52,3 +52,14 @@ export const CustomerToken = (state = '', action) => {
       return state;
   }
 };
+
+export const CustomerPackages = (state = '', action) => {
+  switch (action.type) {
+    case 'CustomerPackages':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

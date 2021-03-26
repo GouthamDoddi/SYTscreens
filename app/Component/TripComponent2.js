@@ -65,18 +65,13 @@ function TripComponent2 ({ TripHistory, navigation }) {
   };
 
   if (TripHistory) {
-    const totalTrips = TripHistory.length;
-
-    const trips = totalTrips > 1
-      ? TripHistory.reverse()
-      : TripHistory;
 
 
     return (
       <View>
         <ScrollView>
 
-          { trips.map((data, index) =>
+          { TripHistory.map((data, index) =>
 
             <View key={`item${index}`} style={styles.box}>
               <View style={{ backgroundColor: '#FFFFFF', marginBottom: '2.1%', borderWidth: 0.3 }}>

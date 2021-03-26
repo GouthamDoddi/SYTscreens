@@ -30,7 +30,45 @@ function CustomerTruckAvailable ({ navigation }) {
 
   // functions
 
-  const onSubmit = () => navigation.navigate('CustomerTruckBooking');
+  const onSubmit = async () => { 
+    const SelectedTruckData = useSelector(state => state.SelectedTruckData);
+
+    const params = `${qs.stringify({
+      pickUpPoint: pickUpPointSelector,
+      dropPoint: dropPointSelector,
+      entireTruck: entireTruckSelector,
+      receivingPersonName: receivingPersonNameSelector,
+      receivingPersonNo: receivingPersonNumSelector,
+      packageSpace: packageSpaceSelector,
+      packageWeight: packageWeightSelector,
+    })}&date=${dateSelector}`;
+
+    try {
+      await axios(localAxiosToken('/addPackage', params, customerTokenSelector))
+        .then(async response => {
+          console.log(response.data);
+          console.log(params);
+          // dispatch(packageId(response.data.details[0].package_id));
+
+          const packageId = response.data.details[0].package_id;
+
+          console.log(packageId, SelectedTruckData.truckNo);
+
+          await axios(localAxiosToken('/assignPackage', qs.stringify({ packageId,
+            tripId: SelectedTruckData.tripId,
+            truckNo: SelectedTruckData.truckNo }), customerTokenSelector))
+            .then(res => {
+              console.log(res.data);
+              navigation.navigate('UserWelcome');
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+   }
 
   // formData
 

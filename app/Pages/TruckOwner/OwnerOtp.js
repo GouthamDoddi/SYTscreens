@@ -43,7 +43,7 @@ function OwnerOTP ({ navigation }) {
 
           console.log(`my condolences ${JSON.stringify(tripDetails)}`);
 
-          dispatch(tripHistory(tripDetails));
+          dispatch(tripHistory(tripDetails.reverse()));
         })
         .catch(err => console.log(err));
       navigation.navigate('OwnerTripRegister');

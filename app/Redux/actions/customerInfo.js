@@ -22,3 +22,8 @@ export const customerToken = token => ({
   type: 'Token',
   data: token,
 });
+
+export const customerPackages = data => ({
+  type: 'CustomerPackages',
+  data,
+});

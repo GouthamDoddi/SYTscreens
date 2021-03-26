@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
+import axios from 'axios';
+import qs from 'querystring';
 
+import { localAxiosToken } from '../../utils/axios';
 import Input from '../../Component/input';
 import AppStatusBar from '../../Component/StatusBar';
+import { customerPackages } from '../../Redux/actions/customerInfo';
 
 
 function CustomerOtp ({ navigation }) {
   const [ input, setInput ] = useState('');
+  const dispatch = useDispatch();
 
   const customerOtpSelector = useSelector(state => state.CustomerOtp);
+  const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
+  const CustomerToken = useSelector(state => state.CustomerToken);
 
-  console.log(customerOtpSelector);
+  // console.log(CustomerToken);
 
   let loggedIn = 0;
 
@@ -31,6 +38,14 @@ function CustomerOtp ({ navigation }) {
       console.log("'didn't match");
     }
   };
+
+  const fetchPackageData = () => {
+    axios(localAxiosToken('/getCustomerPackages', qs.stringify({mobileNum: CustomerMobileNum}), CustomerToken))
+    .then(res => {
+      if (res.data.statusCode === 200)
+        dispatch(customerPackages((res.data.packageDetails).reverse()))
+    })
+  }
 
 
   const backPage = () => {
@@ -60,6 +75,7 @@ function CustomerOtp ({ navigation }) {
   return (
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
+      { fetchPackageData() }
       <AppStatusBar />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>

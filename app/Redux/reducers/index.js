@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { CustomerFirstName, CustomerLastName,
-  CustomerMobileNum, CustomerOtp, CustomerToken } from './customerInfo';
+  CustomerMobileNum, CustomerOtp, CustomerToken, CustomerPackages } from './customerInfo';
 import { PickUp, Drop, PickUpDate, EntireTruck,
   PackageWeight, PackageSpace, ReceivingPersonName,
   ReceivingPersonNum, PackageId, DropPersonName, DropPersonNum } from './packageDetails';
@@ -19,6 +19,7 @@ const allReducers = combineReducers({
   CustomerLastName,
   CustomerMobileNum,
   CustomerOtp,
+  CustomerPackages,
   PickUp,
   Drop,
   PackageId,

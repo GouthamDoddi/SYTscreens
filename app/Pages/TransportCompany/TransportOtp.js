@@ -60,8 +60,10 @@ function TransportOtp ({ navigation }) {
         requestList.push(
         axios(localAxiosToken('/getTripByTruckNo', data, OwnerToken))
         .then(res => {
-          if (res.data.statusCode === 200)
-            listOfTrtips.push(...res.data.message.tripDetails)
+          if (res.data.statusCode === 200) {
+            const trips = res.data.message.tripDetails
+            listOfTrtips.push(...trips.reverse());
+          }
         }))          
       }
 

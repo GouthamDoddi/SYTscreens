@@ -3,15 +3,18 @@ import { StatusBar, Text, View, SafeAreaView, Image, StyleSheet, TouchableOpacit
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 import { useSelector } from 'react-redux';
-
+import TruckComponent from '../../Component/truckComponet';
 
 import Header from '../../Component/Header';
+import TruckComponet from '../../Component/truckComponet';
+import PackageComponent from '../../Component/PackageComponent';
 
 
 export default function CustomerWelcome ({ navigation }) {
   // state vars
 
   const CustomerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
+  const CustomerPackages = useSelector(state => state.CustomerPackages);
 
   const onSubmit = () => {
     console.log('onSubmit called');
@@ -45,57 +48,7 @@ export default function CustomerWelcome ({ navigation }) {
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CustomerFullName}!</Text></Text>
         <Text style={styles.add}>Your Package is On the Way</Text>
-        <View style={{ backgroundColor: '#FFFFFF', borderWidth: 0.3, marginBottom: '2.1%', marginLeft: '-2.6%' }}>
-          <View style={styles.search}>
-            <View style={{ flexDirection: 'row', width: '60%' }}>
-              <Image
-                style={styles.img}
-                source={require('../../Images/deliverybox.jpg')}
-              />
-              <Text style={styles.stat}>Status : <Text style={{ color: 'orange' }}>In Transit</Text></Text>
-            </View>
-            <TouchableOpacity style={styles.but} onPress={track}>
-              <Text style={styles.buttext}>Track Delivery</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: 'row', marginTop: '0.7%', marginHorizontal: '2.7%' }}>
-            <Image
-              style={styles.img4}
-              source={require('../../Images/call.jpg')}
-            />
-            <View style={{ marginRight: '0.3%' }}>
-              <Text style={styles.availtext}>Tata Ace (Lorry No)</Text>
-              <Text style={styles.availtext}>Person Name</Text>
-            </View>
-          </View>
-          <View style={{ marginBottom: '1.2%', marginHorizontal: '2.7%', flexDirection: 'row' }}>
-            <View style={{ width: '60%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  style={styles.img3}
-                  source={require('../../Images/map.jpg')}
-                />
-                <View style={styles.bord}/>
-              </View>
-              <View style={{ marginBottom: '1%' }}>
-                <Text style={styles.loctext}>Hyderabad</Text>
-                <Text style={styles.loctext}>Miyapur Main Road</Text>
-                <Text style={styles.loctext}>3rd May, 8:30 PM</Text>
-              </View>
-            </View>
-            <View>
-              <Image
-                style={styles.img3}
-                source={require('../../Images/map.jpg')}
-              />
-              <View style={{ marginBottom: '1%' }}>
-                <Text style={styles.loctext}>Delhi</Text>
-                <Text style={styles.loctext}>Barakhamba Road</Text>
-                <Text style={styles.loctext}>4th May, 9:30 PM</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        <PackageComponent packages={CustomerPackages} track={track} />
         <TouchableOpacity onPress={onSubmit}>
           <Text style={styles.adds}>+</Text>
         </TouchableOpacity>

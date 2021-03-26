@@ -26,9 +26,10 @@ function CustomerTruckBooking ({ navigation }) {
   const customerTokenSelector = useSelector(state => state.CustomerToken);
   // const PackageId = useSelector(state => state.PackageId);
 
-  const SelectedTruckData = useSelector(state => state.SelectedTruckData);
 
   const onSubmit = async () => {
+    const SelectedTruckData = useSelector(state => state.SelectedTruckData);
+
     const params = `${qs.stringify({
       pickUpPoint: pickUpPointSelector,
       dropPoint: dropPointSelector,
