@@ -117,7 +117,7 @@ function OwnerDeliveryRequests ({ navigation }) {
                       </View>
                     </View>
                   </View>
-                  { data[1].status === 'Accepted'
+                  { data[0].status === null
                     ? <View style={styles.delivery}>
                       <TouchableOpacity style={styles.deliverysub}>
                         <Text style={styles.last1}>Cancel Deliver</Text>

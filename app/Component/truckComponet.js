@@ -11,7 +11,6 @@ import { customerPackages } from '../Redux/actions/customerInfo';
 
 function TruckComponet ({ allData, pickUp, drop, navigation }) {
   const dispatch = useDispatch();
-  const [selectedTruck, setSelectedTruck] = useState(0);
 
   const pickUpPointSelector = useSelector(state => state.PickUp);
   const dropPointSelector = useSelector(state => state.Drop);
@@ -23,9 +22,11 @@ function TruckComponet ({ allData, pickUp, drop, navigation }) {
   const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
   const customerTokenSelector = useSelector(state => state.CustomerToken);
   const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
+  const CustomerFullName = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`);
+
 
   
-  const onSubmit = async () => {
+  const onSubmit = async selectedTruck => {
     const params = `${qs.stringify({
       pickUpPoint: pickUpPointSelector,
       dropPoint: dropPointSelector,
@@ -34,6 +35,7 @@ function TruckComponet ({ allData, pickUp, drop, navigation }) {
       receivingPersonNo: receivingPersonNumSelector,
       packageSpace: packageSpaceSelector,
       packageWeight: packageWeightSelector,
+      customerName: CustomerFullName,
     })}&date=${dateSelector}`;
 
     try {
@@ -146,8 +148,7 @@ function TruckComponet ({ allData, pickUp, drop, navigation }) {
                     tripId: data.trip_id,
                   };
 
-                  setSelectedTruck(selectedTruck);
-                  onSubmit();
+                  onSubmit(selectedTruck);
                 }}>
                   <Text style={styles.buttext}>Book Truck</Text>
                 </TouchableOpacity>

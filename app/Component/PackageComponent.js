@@ -14,8 +14,16 @@ function PackageComponent({ packages, track }) {
               style={styles.img}
               source={require('../Images/deliverybox.jpg')}
             />
-            <Text style={styles.stat}>Status : <Text style={{ color: 'orange' }}>{ data[0] === 'unassigned' ? 'Request Pending' : data[1].reach_date === null ? 'In transist' : 'Delivered' }</Text></Text>
+            { data[0] === 'unassigned'
+            ? 
+            <TouchableOpacity>
+              <Text>Draft. Search again?</Text>
+            </TouchableOpacity>
+            : <View>
+            <Text style={styles.stat}>Status : <Text style={{ color: 'orange' }}>{ data[0].status === null ? 'Request Pending' : data[1].status === 'Accep' ? 'In transist' : 'Delivered' }</Text></Text>
             <Text style={styles.truckNo}>{ data[0].truck_no }</Text>
+            </View>
+            }
           </View>
         </View>
         <View style={{ flexDirection: 'row', marginTop: '0.7%', marginHorizontal: '2.7%' }}>
