@@ -40,6 +40,7 @@ export const DatePicker = ({ action }) => {
             source={require('../Images/calender.jpg')}
           />
         </TouchableOpacity>
+        <Text style={ styles.date } >{ (JSON.stringify(date)).slice(1, 11) }</Text>
       </View>
       {show &&
         <DateTimePicker
@@ -70,6 +71,10 @@ img: {
   height: 35,
   marginTop: '-13.2%',
   marginLeft: '28%',
+},
+date: {
+  marginLeft: '60%',
+  marginTop: '-7%'
 },
 container: {
   borderColor: '#000000',

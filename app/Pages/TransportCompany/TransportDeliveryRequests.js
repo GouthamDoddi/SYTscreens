@@ -21,10 +21,23 @@ function TransportDeliveryRequests ({ navigation }) {
 
   const goBack = () => navigation.navigate('TransportAddTrip');
 
+  const currentDate = new Date();
+
   const params2 = mappingId => qs.stringify({
     delivered: false,
     status: 'Accepted',
     mappingId,
+  });
+
+  const params3 = mappingId => qs.stringify({
+    delivered: true,
+    status: 'Accepted',
+    mappingId,
+  });
+
+  const params4 = tripId => qs.stringify({
+    tripId,
+    reachDate: JSON.stringify(currentDate),
   });
 
   const mapPackageToTruck = mappingId => {
@@ -33,6 +46,21 @@ function TransportDeliveryRequests ({ navigation }) {
         console.log(response.data);
       })
       .catch(error => console.log(error));
+  };
+
+  const deliveryDone = (mappingId, tripId) => {
+
+
+    axios(localAxiosToken('/updatePackageMapping', params3(mappingId), OwnerToken))
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => console.log(error));
+    axios(localAxiosToken('/updateTrip', params4(tripId), OwnerToken))
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => console.log(error));
   };
 
   console.log(`del = ${JSON.stringify(DeliveryRequests)}`);
@@ -119,7 +147,7 @@ function TransportDeliveryRequests ({ navigation }) {
                   </View>
                   { data[1].status !== 'Accepted'
                     ? <View style={styles.delivery}>
-                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[0].mapping_id) }>
+                      <TouchableOpacity style={styles.last} onPress={ () => deliveryDone(data[0]) }>
                         <Text style={styles.last2}>Delivery Done</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.deliverysub}>
@@ -146,83 +174,6 @@ function TransportDeliveryRequests ({ navigation }) {
                 </View>
               </View>)}
           </ScrollView>
-          {/* <View style={styles.searchbox}>
-            <View style={styles.search}>
-              <View style={styles.searchsubrow}>
-                <Image
-                  style={styles.dimg}
-                  source={require('../../Images/deliveryboxorange.jpg')}
-                />
-                <Text style={styles.searchT}>Package 31-Accepted</Text>
-              </View>
-              <View style={styles.searchsubrow2}>
-                <Text style={styles.searchD}>Minimize </Text>
-                <TouchableOpacity>
-                  <Image
-                    style={styles.minus}
-                    source={require('../../Images/minus-icon.png')}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.weightrow}>
-              <View style={styles.weightsubrow}>
-                <View>
-                  <Text style={styles.avail}>Package Weight</Text>
-                  <Text style={styles.avail2}>20. KG</Text>
-                </View>
-                <View>
-                  <Text style={styles.avail}>Package Space</Text>
-                  <Text style={styles.avail2}>2. FT</Text>
-                </View>
-                <Text style={styles.avail3}>RS 320</Text>
-              </View>
-              <View style={styles.location}>
-                <View style={styles.locationsub}>
-                  <Text style={styles.dropt3}>Drop Location</Text>
-                  <Text style={styles.dropt}>Drop Location Name</Text>
-                  <Text style={styles.dropt3}>Customer Name</Text>
-                  <Text style={styles.dropt}>Print Name</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity>
-                      <Image
-                        style={styles.droptimg}
-                        source={require('../../Images/phone.png')}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.dropt3}>9999999999</Text>
-                  </View>
-                </View>
-                <View style={styles.locationsub}>
-                  <Text style={styles.dropt3}>Pickup Location</Text>
-                  <Text style={styles.dropt}>Pickup Location Name</Text>
-                  <Text style={styles.dropt3}>Customer Name</Text>
-                  <Text style={styles.dropt}>Print Name</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity>
-                      <Image
-                        style={styles.droptimg}
-                        source={require('../../Images/phone.png')}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.dropt3}>9999999999</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.delivery}>
-                <TouchableOpacity style={styles.last}>
-                  <Text style={styles.last2}>Delivery Done</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.deliverysub}>
-                  <Text style={styles.last1}>Cancel Deliver</Text>
-                  <Image
-                    style={styles.deimg}
-                    source={require('../../Images/dustbin.png')}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View> */}
         </View>
       </ScrollView>
     </View>

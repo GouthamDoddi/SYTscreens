@@ -1,12 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet }
   from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import qs from 'querystring';
+import axios from 'axios';
 
-import { selectedTruckData } from '../Redux/actions/tripsAvailable';
+import { localAxiosToken } from '../utils/axios';
+import { customerPackages } from '../Redux/actions/customerInfo';
 
-function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
+
+function TruckComponet ({ allData, pickUp, drop, navigation }) {
   const dispatch = useDispatch();
+  const [selectedTruck, setSelectedTruck] = useState(0);
+
+  const pickUpPointSelector = useSelector(state => state.PickUp);
+  const dropPointSelector = useSelector(state => state.Drop);
+  const dateSelector = useSelector(state => state.PickUpDate);
+  const entireTruckSelector = useSelector(state => state.EntireTruck);
+  const receivingPersonNameSelector = useSelector(state => state.ReceivingPersonName);
+  const packageSpaceSelector = useSelector(state => state.PackageSpace);
+  const packageWeightSelector = useSelector(state => state.PackageWeight);
+  const receivingPersonNumSelector = useSelector(state => state.ReceivingPersonNum);
+  const customerTokenSelector = useSelector(state => state.CustomerToken);
+  const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
+
+  
+  const onSubmit = async () => {
+    const params = `${qs.stringify({
+      pickUpPoint: pickUpPointSelector,
+      dropPoint: dropPointSelector,
+      entireTruck: entireTruckSelector,
+      receivingPersonName: receivingPersonNameSelector,
+      receivingPersonNo: receivingPersonNumSelector,
+      packageSpace: packageSpaceSelector,
+      packageWeight: packageWeightSelector,
+    })}&date=${dateSelector}`;
+
+    try {
+      await axios(localAxiosToken('/addPackage', params, customerTokenSelector))
+        .then(async response => {
+          console.log(response.data);
+          console.log(params);
+          // dispatch(packageId(response.data.details[0].package_id));
+
+          const packageId = response.data.details[0].package_id;
+
+          console.log(packageId, selectedTruck);
+
+          await axios(localAxiosToken('/assignPackage', qs.stringify({ packageId,
+            tripId: selectedTruck.tripId,
+            truckNo: selectedTruck.truckNo }), customerTokenSelector))
+            .then(res => {
+              console.log(res.data);
+
+              axios(localAxiosToken('/getCustomerPackages', qs.stringify({mobileNum: CustomerMobileNum}), customerTokenSelector))
+              .then(res => {
+                if (res.data.statusCode === 200)
+                  dispatch(customerPackages((res.data.packageDetails).reverse()))
+                  navigation.navigate('CustomerWelcome');
+              })
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+   }
 
 
   return (
@@ -85,7 +146,7 @@ function TruckComponet ({ allData, pickUp, drop, navigation, onSubmit }) {
                     tripId: data.trip_id,
                   };
 
-                  dispatch(selectedTruckData(selectedTruck));
+                  setSelectedTruck(selectedTruck);
                   onSubmit();
                 }}>
                   <Text style={styles.buttext}>Book Truck</Text>

@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'rea
 
 function PackageComponent({ packages, track }) {
 
+  if (packages.length)
   return (
     <ScrollView>
       { packages.map( ( data, index) => 
@@ -60,6 +61,10 @@ function PackageComponent({ packages, track }) {
     }
     </ScrollView>
   )
+  else
+    return(<View>
+      <Text>Booked packages will be displayed here.</Text>
+    </View>)
 }
 
 export default PackageComponent

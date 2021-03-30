@@ -42,16 +42,6 @@ const CustomerAddPackage = ({ navigation }) => {
 
   // intigrating API
 
-  const params = `${qs.stringify({
-    pickUpPoint: pickUpPointSelector,
-    dropPoint: dropPointSelector,
-    entireTruck: entireTruckSelector,
-    receivingPersonName: receivingPersonNameSelector,
-    receivingPersonNo: receivingPersonNumSelector,
-    packageSpace: packageSpaceSelector,
-    packageWeight: packageWeightSelector,
-  })}&date=${dateSelector}`;
-
   const params2 = `${qs.stringify({
     source: pickUpPointSelector,
     destination: dropPointSelector,
@@ -63,9 +53,15 @@ const CustomerAddPackage = ({ navigation }) => {
     try {
       axios(localAxiosToken('/getTruckList', params2, customerTokenSelector))
         .then(res => {
-          console.log(res.data);
-          dispatch(allTruckDetails(res.data.data));
+          if (res.data.statusCode === 200) {
+            console.log(res.data);
+            dispatch(allTruckDetails(res.data.data));
+            navigation.navigate('CustomerTruckAvailable');
+          } else {
+          dispatch(allTruckDetails(0));
           navigation.navigate('CustomerTruckAvailable');
+          console.log(res.data);
+          }
         })
         .error(err => console.log(err));
     } catch (err) {
