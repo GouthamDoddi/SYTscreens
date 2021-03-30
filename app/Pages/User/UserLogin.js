@@ -31,25 +31,32 @@ function CustomerLogin ({ navigation }) {
 
 
   const onSubmit = async () => {
+    const config = {
+      mode: 'cors',
+      crossDomain: true,
+      'Access-Control-Allow-Origin': 'http://localhost:3000/SMSLogin',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+    };
 
     // api call
     await axios(localAxios('/SMSLogin', qs.stringify({
       mobileNum: CustomerMobileNum,
     })))
-      .then(res => {
-        console.log(res.data)
-        if (res.data.statusCode === 200 && res.data.customerDetails) {
-
-          dispatch(customerOtp(res.data.otp));
-          dispatch(customerToken(res.data.token));
-          dispatch(customerLastName(res.data.customerDetails[0].last_name));
-          dispatch(customerFirstName(res.data.customerDetails[0].first_name));
-  
-          navigation.navigate('CustomerOtp');
-
+      .then(response => {
+        if (response.data.message === 'Error! User is not found.') {
+          console.log(`failed! = ${JSON.stringify(response.data)}`);
+          dispatch(loginFailed());
         }
-        console.log(`failed! = ${JSON.stringify(res.data)}`);
-        dispatch(loginFailed());
+
+        console.log(response);
+        dispatch(customerOtp(response.data.otp));
+        dispatch(customerToken(response.data.token));
+        dispatch(customerLastName(response.data.customerDetails[0].last_name));
+        dispatch(customerFirstName(response.data.customerDetails[0].first_name));
+
+        navigation.navigate('CustomerOtp');
       })
       .catch(err => {
         console.log(err);
