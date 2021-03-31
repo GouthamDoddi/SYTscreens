@@ -8,6 +8,7 @@ import TruckComponent from '../../Component/truckComponet';
 import Header from '../../Component/Header';
 import TruckComponet from '../../Component/truckComponet';
 import PackageComponent from '../../Component/PackageComponent';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 export default function CustomerWelcome ({ navigation }) {
@@ -47,6 +48,7 @@ export default function CustomerWelcome ({ navigation }) {
   // <View style={styles.responsiveBox}>
     <SafeAreaView style={styles.container}>
       <Header openDrawer={() => navigation.openDrawer()} />
+      <ScrollView>
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CustomerFullName}!</Text></Text>
         <TouchableOpacity onPress={onSubmit} >
@@ -61,6 +63,7 @@ export default function CustomerWelcome ({ navigation }) {
           <Text style={styles.wan}>Want to Deliver a Package ?</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
