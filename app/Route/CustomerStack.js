@@ -9,6 +9,7 @@ import CustomerTruckAvailable from '../Pages/User/UserTruckAvailable';
 import CustomerTruckBooking from '../Pages/User/UserTruckBooking';
 import Tracking from '../Pages/User/Tracking';
 import ReceivingPackages from '../Pages/User/ReceivingPackages';
+import rating from '../Pages/User/ratings';
 
 
 enableScreens();
@@ -34,6 +35,7 @@ function CustomerStack () {
         options={{ headerShown: false }}/>
       <Stack.Screen name="ReceivingPackages" component={ReceivingPackages}
         options={{ headerShown: false }}/>
+      <Stack.Screen name="Rating" component={rating} />
     </Stack.Navigator>
   );
 }

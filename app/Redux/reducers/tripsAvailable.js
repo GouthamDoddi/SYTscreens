@@ -80,3 +80,14 @@ export const TripDetails = (state = '', action) => {
       return state;
   }
 };
+
+export const SelectedTrip = (state = '', action) => {
+  switch (action.type) {
+    case 'SelectedTrip':
+      state = action.data;
+
+      return state;
+    default:
+      return state;
+  }
+};

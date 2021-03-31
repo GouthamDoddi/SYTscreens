@@ -27,8 +27,21 @@ function OwnerDeliveryRequests ({ navigation }) {
     mappingId,
   });
 
+  const params1 = packageId => qs.stringify({
+    packageId,
+    reachDate: JSON.stringify(new Date),
+  });
+
   const mapPackageToTruck = mappingId => {
     axios(localAxiosToken('/updatePackageMapping', params2(mappingId), OwnerToken))
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => console.log(error));
+  };
+
+  const mapPackageToTruck2 = packageId => {
+    axios(localAxiosToken('/updatePackage', params1(packageId), OwnerToken))
       .then(response => {
         console.log(response.data);
       })
@@ -131,7 +144,7 @@ function OwnerDeliveryRequests ({ navigation }) {
                       </TouchableOpacity>
                     </View>
                     : <View style={styles.delivery}>
-                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck(data[0].mapping_id) }>
+                      <TouchableOpacity style={styles.last} onPress={ () => mapPackageToTruck2(data[1].package_id) }>
                         <Text style={styles.last2}>Delivery Done</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.deliverysub}>

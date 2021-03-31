@@ -33,3 +33,8 @@ export const tripDetails = data => ({
   type: 'TripDetails',
   data,
 });
+
+export const selectedTrip = data => ({
+  type: 'SelectedTrip',
+  data,
+});

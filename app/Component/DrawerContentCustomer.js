@@ -20,8 +20,9 @@ function DrawerContentCustomer (props) {
   const getReceivingPackages = () => {
     axios(localAxiosToken('/getReceivingPackages', qs.stringify({mobileNum: CustomerMobileNum}), CustomerToken))
     .then(res => {
+      console.log(res.data);
+
       if (res.data.statusCode === 200){
-        console.log(res.data);
         dispatch(receivingPackages(res.data.packageDetails));
         navigation.navigate('ReceivingPackages');
       } else {

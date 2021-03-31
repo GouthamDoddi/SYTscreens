@@ -1,13 +1,17 @@
 import React from 'react'
 import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectedTrip } from '../../Redux/actions/tripsAvailable';
 
 function ReceivingPackages({ navigation }) {
 
-  const ReceivingPackages = useSelector(state => state.ReceivingPackages)
+  const ReceivingPackages = useSelector(state => state.ReceivingPackages);
+  const track = () => navigation.navigate('Tracking');
+  const dispatch = useDispatch();
 
   return (
     <ScrollView>
+      <Text style={styles.text}>All receiving packages are found below.</Text>
       {
         ReceivingPackages
         ? <View>
@@ -58,7 +62,16 @@ function ReceivingPackages({ navigation }) {
             <View style={{ marginBottom: '1%' }}>
               <Text style={styles.loctext}>{ data[1].drop_point }</Text>
               <Text style={styles.loctext}>Barakhamba Road</Text>
-              <Text style={styles.loctext}>{ data[1].reach_date ? data[1].reach_date : 'Yet to deliver' }</Text>
+              <Text style={styles.loctext}>{ data[1].reach_date 
+              ? <TouchableOpacity onPress={() =>{
+                dispatch(selectedTrip(data));
+                navigation.navigate('Rating');
+              } }>
+                <Text>Rate your experience</Text>
+                </TouchableOpacity> 
+              : <TouchableOpacity onPress={() => navigation.navigate('Tracking')}>
+                <Text>Track Your delivery</Text>
+              </TouchableOpacity> }</Text>
             </View>
           </View>
         </View>
@@ -194,5 +207,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: '1.1%',
     textDecorationLine: 'underline',
+  },
+  text: {
+    flex:1,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: '5.2%',
+    marginBottom: '5%',
   },
 });
