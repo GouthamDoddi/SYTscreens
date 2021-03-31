@@ -59,7 +59,7 @@ function CustomerTruckAvailable ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Header data={HeaderData}/>
+      <Header openDrawer={() => navigation.openDrawer()} />
       <ScrollView>
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{customerFullName} !</Text></Text>

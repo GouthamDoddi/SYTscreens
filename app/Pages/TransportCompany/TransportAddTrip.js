@@ -117,7 +117,7 @@ function TransportTripRegister ({ navigation }) {
   return (
     <View style={styles.container}>
       {/* <AppStatusBarU /> */}
-      <HeaderT data={ onSubmit }/>
+      <HeaderT openDrawer={ () => navigation.openDrawer() } />
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ CompanyName } !</Text></Text>
         <Text style={styles.ntext}><Text style={{ fontWeight: 'bold' }}>Driver Name : </Text>{ OwnerFullName }</Text>

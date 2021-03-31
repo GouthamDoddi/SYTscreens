@@ -74,7 +74,7 @@ function CustomerTruckBooking ({ navigation }) {
   return (
     <View style={ styles.container}>
       {/* <View style={{ backgroundColor: '#FFFFFF', borderWidth: 0.3, margintop: '2.1%' }}> */}
-      <Header data={ headerData }/>
+      <Header openDrawer={() => navigation.openDrawer()} />
       <View style={styles.search}>
         <Image
           style={styles.img}

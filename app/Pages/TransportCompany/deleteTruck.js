@@ -1,15 +1,18 @@
 import React, {useState} from 'react'
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxiosToken } from '../../utils/axios';
+import { allTruckData } from '../../Redux/actions/transportCompanyInfo';
 
 function deleteTruck({navigation}) {
-  const AllTruckData = useSelector(state => state.AllTruckData);
+  const dispatch = useDispatch();
+  const AllTruckDataSelector = useSelector(state => state.AllTruckData);
+  const [ AllTruckData, setAllTruckData ] = useState(AllTruckDataSelector)
   const OwnerToken = useSelector(state => state.OwnerToken)
   const [ deleted, setDeleted ] = useState(false);
 
@@ -17,19 +20,35 @@ function deleteTruck({navigation}) {
 
     axios(localAxiosToken('/deleteTruck', qs.stringify({truckNo}), OwnerToken))
     .then(res => {
-      if (res.data.statusCode === 200)
-        AllTruckData.splice(index, 1)
-    })
+      if (res.data.statusCode === 200) {
+        console.log(AllTruckData);
+        const newArr = AllTruckData.filter(item => 
+          item !== AllTruckData[index]
+        )
+        console.log(newArr);
+        setAllTruckData(newArr);
+        dispatch(allTruckData(newArr));
+      }
+      })
 
   }
   return (
     <View style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.headLine}> Delete The Truck </Text>
-        <Entypo  style={ styles.cross } name="cross" size={35} color='black' />
+        <Entypo  style={ styles.cross } name="cross" size={35} color='black'
+        onPress={() => navigation.navigate('TransportAddTrip')} />
         <ScrollView style={styles.listContainer}>
-        {
-          AllTruckData.map(( data, index) => 
+        { deleted
+          ? AllTruckData.map(( data, index) => 
+          <View style={ styles.list } key={index}>
+            <AntDesign name="exclamationcircleo" size={20} color='black' />
+            <Text style={ styles.text } >{ data.truck_no }</Text>
+            <AntDesign onPress={() => deleteTruck(data.truck_no, index)} style={styles.delete} name="delete" size={20} color='black' />
+            <View style={ styles.borderBottom }></View>
+          </View>
+            )
+          : AllTruckData.map(( data, index) => 
           <View style={ styles.list } key={index}>
             <AntDesign name="exclamationcircleo" size={20} color='black' />
             <Text style={ styles.text } >{ data.truck_no }</Text>

@@ -121,7 +121,7 @@ const CustomerAddPackage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header data = {HeaderData}/>
+      <Header openDrawer={() => navigation.openDrawer()} />
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CustomerFullName} !</Text></Text>
         <TouchableOpacity>

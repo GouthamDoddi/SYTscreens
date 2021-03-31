@@ -28,7 +28,7 @@ function TransportCheckList ({ navigation }) {
   return (
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
-      <HeaderT data={onClick} />
+      <HeaderT openDrawer={ () => navigation.openDrawer() } />
       <ScrollView>
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ OwnerFullName } !</Text></Text>

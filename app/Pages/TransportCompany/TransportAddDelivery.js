@@ -129,7 +129,7 @@ function TransportAddDelivery ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderT data={onSubmit}/>
+      <HeaderT openDrawer={ () => navigation.openDrawer() } />
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CompanyName} !</Text></Text>
         <View style={styles.delrow}>

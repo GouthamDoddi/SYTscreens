@@ -76,7 +76,7 @@ function OwnerTripRegister ({ navigation }) {
   return (
     <View style={styles.container}>
       {/* <AppStatusBarU /> */}
-      <HeaderU data={ onSubmit }/>
+      <HeaderU openDrawer={ () => navigation.openDrawer() }/>
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>Vehicle Owner Name !</Text></Text>
         <Text style={styles.ntext}><Text style={{ fontWeight: 'bold' }}>Driver Name : </Text>{ OwnerFullName }</Text>

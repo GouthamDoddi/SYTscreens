@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator();
 
 export function MyDrawer () {
   return (
-    <Drawer.Navigator drawerContent={props => <DrawerContent { ...props } />} >
+    <Drawer.Navigator drawerPosition={'right'} drawerContent={props => <DrawerContent { ...props } />} >
       <Drawer.Screen name='addTrip' component={OwnerStack} />
     </Drawer.Navigator>
   );
@@ -25,7 +25,7 @@ export function MyDrawer () {
 
 export function CustomerDrawer () {
   return (
-    <Drawer.Navigator drawerContent={props => <DrawerContentCustomer { ...props } />} >
+    <Drawer.Navigator drawerPosition={'right'} drawerContent={props => <DrawerContentCustomer { ...props } />} >
       <Drawer.Screen name='addTrip' component={CustomerStack} />
     </Drawer.Navigator>
   );
@@ -33,7 +33,7 @@ export function CustomerDrawer () {
 
 export function TransportDrawer () {
   return (
-    <Drawer.Navigator drawerContentOptions={{ labelStyle: { color: 'white' } }} drawerContent={props => <DrawerContentTransport { ...props } />} >
+    <Drawer.Navigator drawerPosition={'right'} drawerContentOptions={{ labelStyle: { color: 'white' } }} drawerContent={props => <DrawerContentTransport { ...props } />} >
       <Drawer.Screen name='addTrip' component={TransportStack} />
     </Drawer.Navigator>
   );

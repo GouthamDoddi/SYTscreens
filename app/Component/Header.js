@@ -2,8 +2,7 @@ import React from 'react';
 import { StatusBar, Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 
-function Header ({ data }) {
-  const { onSubmit } = data;
+function Header ({ openDrawer }) {
 
 
   return (
@@ -17,7 +16,7 @@ function Header ({ data }) {
         <Text style={styles.htext}>ULTIMATE</Text>
         <Text style={styles.htext}>DELIVERY</Text>
       </View>
-      <TouchableOpacity style={styles.side} onPress={onSubmit}>
+      <TouchableOpacity style={styles.side} onPress={() => openDrawer()}>
         <Image
           style={styles.img2}
           source={require('../Images/profile.jpg')}

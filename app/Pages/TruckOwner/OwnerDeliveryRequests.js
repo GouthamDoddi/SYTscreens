@@ -39,7 +39,7 @@ function OwnerDeliveryRequests ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderU data={ onSubmit } />
+      <HeaderU openDrawer={ () => navigation.openDrawer() }/>
       <ScrollView>
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{OwnerFullName} !</Text></Text>

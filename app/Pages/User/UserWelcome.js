@@ -38,7 +38,7 @@ export default function CustomerWelcome ({ navigation }) {
   // loading fonts
   const [ isLoaded ] = useFonts({
     Poppins_400Regular,
-  });
+  }); 
 
   if (!isLoaded)
     return <AppLoading />;
@@ -46,7 +46,7 @@ export default function CustomerWelcome ({ navigation }) {
   return (
   // <View style={styles.responsiveBox}>
     <SafeAreaView style={styles.container}>
-      <Header data={componentData} />
+      <Header openDrawer={() => navigation.openDrawer()} />
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{CustomerFullName}!</Text></Text>
         <TouchableOpacity onPress={onSubmit} >

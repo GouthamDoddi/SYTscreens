@@ -14,7 +14,7 @@ export default function Tracking ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Header data={headerData} />
+      <Header openDrawer={() => navigation.openDrawer()} />
       <MapView style={styles.map}>
       </MapView>
       <View style={styles.but}>

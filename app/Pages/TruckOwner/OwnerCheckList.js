@@ -30,7 +30,7 @@ function OwnerCheckList ({ navigation }) {
   return (
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
-      <HeaderU data={onClick} />
+      <HeaderU openDrawer={ () => navigation.openDrawer() }/>
       <ScrollView>
         <View style={styles.block}>
           <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ OwnerFullName } !</Text></Text>

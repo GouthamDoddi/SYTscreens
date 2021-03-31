@@ -134,7 +134,7 @@ function OwnerAddDelivery ({ navigation }) {
   return (
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
-      <HeaderU data={onSubmit}/>
+      <HeaderU openDrawer={ () => navigation.openDrawer() }/>
       <View style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{OwnerFullName} !</Text></Text>
         <View style={styles.delrow}>
