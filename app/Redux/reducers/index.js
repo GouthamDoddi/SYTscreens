@@ -7,7 +7,7 @@ import { PickUp, Drop, PickUpDate, EntireTruck,
   ReceivingPersonNum, PackageId, DropPersonName, DropPersonNum } from './packageDetails';
 import { NoOfTripsFound, AllTripIdsNTruckNos, AllTruckDetails,
   AllTruckSpaceNWeight, SelectedTruckData, DeliveryRequests, TripDetails, SelectedTrip } from './tripsAvailable';
-import { TruckRegisterFailed, LoginFailed } from './other';
+import { TruckRegisterFailed, LoginFailed, Rating } from './other';
 import { OwnerFullName, OwnerOtp, OwnerToken, OwnerMobileNum, OwnerCheckList } from './TruckOwnerInfo';
 import { TruckNo, TruckModel, TotalWeight, TotalSpace
   , TripHistory } from './ownerTruckInfo';
@@ -40,6 +40,7 @@ const allReducers = combineReducers({
   AllTruckSpaceNWeight,
   SelectedTruckData,
   SelectedTrip,
+  Rating,
   // truck Owner
   TruckNo,
   TruckModel,

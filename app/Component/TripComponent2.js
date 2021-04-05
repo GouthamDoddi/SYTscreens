@@ -147,7 +147,7 @@ function TripComponent2 ({ TripHistory, navigation }) {
                       style={styles.dimg2}
                       source={require('../Images/pin.png')}
                     />
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Tracking')}>
                       <Text style={styles.droptd2}>Track The Truck</Text>
                     </TouchableOpacity>
                   </View>

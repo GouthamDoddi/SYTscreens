@@ -1,7 +1,41 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
+import StarRating from 'react-native-star-rating'; 
+import axios from 'axios';
+import qs from 'querystring';
+import { useSelector } from 'react-redux';
+
+import { localAxiosToken } from '../utils/axios'
 
 function PackageComponent({ packages, track }) {
+  const [ driverInfo,  setDriverInfo] = useState(false);
+  const CustomerToken = useSelector(state => state.CustomerToken)
+
+  // api call
+
+  const getDriverInfo = data => {
+    console.log(data);
+    const details = []
+    axios(localAxiosToken('/getTruckRating', qs.stringify({ truckNo: data.truck_no }), CustomerToken))
+    .then(res => {
+      if (res.data.statusCode === 200) {
+        // console.log(res.data)
+        details.push(res.data.AverageRating)
+      } else {
+        console.log(res.data)
+        details.push(0)
+      }
+      axios(localAxiosToken('/getTrip', qs.stringify({tripId: data.trip_id}), CustomerToken))
+      .then(resp => {
+        console.log(resp.data)
+        if (resp.data.statusCode === 200) {
+          details.push(resp.data.message.tripDetails[0].truck_driver)
+        }
+      })
+      setDriverInfo(details)
+    })
+  }
+
 
   if (packages.length)
   return (
@@ -14,30 +48,53 @@ function PackageComponent({ packages, track }) {
               style={styles.img}
               source={require('../Images/deliverybox.jpg')}
             />
+            <Text style={styles.index}>
+             Package { index+1 }</Text>
             { data[0] === 'unassigned'
             ? 
             <TouchableOpacity>
-              <Text>Draft. Search again?</Text>
+              <Text style={styles.stat}>Draft. Search again?</Text>
             </TouchableOpacity>
             : <View>
-            <Text style={styles.stat}>Status : <Text style={{ color: 'orange' }}>{ data[0].status === null ? 'Request Pending' : data[1].status === 'Accep' ? 'In transist' : 'Delivered' }</Text></Text>
-            <Text style={styles.truckNo}>{ data[0].truck_no }</Text>
+            <Text style={styles.stat}>Status : 
+            <Text style={{ color: 'orange' }}>{ data[0].status === null ? 'Request Pending' : data[1].status === 'Accep' ? 'In transist' : 'Delivered' }</Text>
+            </Text>
             </View>
             }
           </View>
         </View>
         <View style={{ flexDirection: 'row', marginTop: '0.7%', marginHorizontal: '2.7%' }}>
-          <Image
-            style={styles.img4}
-            source={require('../Images/yellowtruck.jpg')}
-          />
-          <View style={styles.but2}>
-            <Text style={styles.availtext}>Driver Info</Text>
-          </View>
+          {/* { driverInfo
+            ? <View>
+              <Text>{ driverInfo[1] }</Text>
+              <View style={styles.stars}>
+                <StarRating
+                  disabled={false}
+                  maxStars={5}
+                  rating={driverInfo[0]}
+                  selectedStar={e =>{
+                    setStarRating(e)
+                    dispatch(rating(e))
+                  }}
+                  fullStarColor={'orange'}
+                />
+              </View>
+            </View> */}
+            <View> 
+                <Image
+                  style={styles.img4}
+                  source={require('../Images/yellowtruck.jpg')}
+                />
+                <View style={styles.but2}>
+                  <TouchableOpacity onPress={() => getDriverInfo(data[0])}>
+                    <Text style={styles.availtext}>{data[0].truck_no}</Text>
+                  </TouchableOpacity>
+                </View>
+            </View>
+            <TouchableOpacity style={styles.but} onPress={track}>
+              <Text style={styles.buttext}>Track Delivery</Text>
+            </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.but} onPress={track}>
-            <Text style={styles.buttext}>Track Delivery</Text>
-        </TouchableOpacity>
         <View style={{ marginBottom: '1.2%', marginHorizontal: '2.7%', flexDirection: 'row' }}>
           <View style={{ width: '60%' }}>
             <View style={{ flexDirection: 'row' }}>
@@ -83,7 +140,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F1F1',
     height: '100%',
     width: '100%',
-    // marginTop: StatusBar.currentHeight,
   },
   block: {
     marginLeft: '6.1%',
@@ -95,8 +151,11 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.4,
   },
-  truckNo: {
-    marginLeft: '50%',
+  index: {
+    marginLeft: '5%',
+    marginRight: '18%',
+    fontSize: 20,
+    padding: '2%',
   },
   add: {
     color: '#000000',
@@ -113,8 +172,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: '2.4%',
   },
   img: {
-    width: 27,
-    height: 27,
+    width: 30,
+    height: 30,
     marginTop: '1.4%',
     marginBottom: '1%',
   },
@@ -123,27 +182,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0,
-    marginTop: '2%',
-    marginBottom: '1.7%',
-    marginLeft: '3.7%',
+    padding: '4%',
+    marginLeft: '1.7%',
   },
   but: {
     backgroundColor: '#FF9F00',
     borderRadius: 1,
     paddingVertical: '0.6%',
     paddingHorizontal: '3.4%',
-    marginTop: '-5%',
-    marginBottom: '1.2%',
-    marginLeft: '70%',
+    marginTop: '2%',
+    marginBottom: '6.2%',
+    marginLeft: '10%',
   },
   but2: {
     backgroundColor: '#FF9F00',
     borderRadius: 1,
     paddingVertical: '0.6%',
     paddingHorizontal: '3.4%',
-    marginTop: '1%',
-    marginBottom: '1.2%',
-    marginRight: '40%',
+    marginTop: '-11.5%',
+    marginBottom: '10.2%',
+    marginRight: '5%',
+    marginLeft: '25%',
   },
   buttext: {
     fontSize: 13,
@@ -152,7 +211,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   img4: {
-    width: 25,
+    width: 30,
     height: 25,
     marginTop: '1.1%',
     marginRight: '2.4%',
@@ -162,6 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 15,
     letterSpacing: 0,
+    alignSelf: 'center'
   },
   img3: {
     width: 15,
@@ -209,4 +269,7 @@ const styles = StyleSheet.create({
     marginBottom: '1.1%',
     textDecorationLine: 'underline',
   },
+  // stars :{
+  //   width: '30%',
+  // }
 });

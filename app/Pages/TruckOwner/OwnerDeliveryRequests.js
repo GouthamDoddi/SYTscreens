@@ -14,6 +14,7 @@ function OwnerDeliveryRequests ({ navigation }) {
   const OwnerFullName = useSelector(state => state.OwnerFullName);
   const TripDetails = useSelector(state => state.TripDetails);
   const OwnerToken = useSelector(state => state.OwnerToken);
+  const SelectedTrip = useSelector(state => state.SelectedTrip);
 
   // functions
 
@@ -36,6 +37,18 @@ function OwnerDeliveryRequests ({ navigation }) {
     axios(localAxiosToken('/updatePackageMapping', params2(mappingId), OwnerToken))
       .then(response => {
         console.log(response.data);
+          const params = qs.stringify({ tripId: SelectedTrip });
+      
+          axios(localAxiosToken('/getTripPackages', params, OwnerToken))
+            .then(res => {
+              console.log(params);
+      
+              console.log(res.data);
+              dispatch(deliveryRequests(res.data.packageDetails[0]));
+            // const checklist = res.data;
+            })
+            .catch(err => console.log(err));
+
       })
       .catch(error => console.log(error));
   };

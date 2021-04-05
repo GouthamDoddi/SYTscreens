@@ -29,8 +29,8 @@ export const localAxiosToken = (url, data, token) => {
   return {
     method: 'post',
     // url: `https://syt-backend.herokuapp.com${url}`,
-    url: `http://192.168.2.6:3000${url}`,
-    // url: `http://sut.basservices.in${url}`,
+    // url: `http://192.168.2.6:3000${url}`,
+    url: `http://sut.basservices.in${url}`,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Bearer ${token}`,
@@ -43,8 +43,8 @@ export const localAxios = (url, data) => ({
   method: 'post',
   // url: `https://syt-backend.herokuapp.com${url}`,
   // url: `http://localhost:3000${url}`,
-  url: `http://192.168.2.6:3000${url}`,
-  // url: `http://sut.basservices.in${url}`,
+  // url: `http://192.168.2.6:3000${url}`,
+  url: `http://sut.basservices.in${url}`,
   headers: {
     // Accept: '*/*',
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -56,8 +56,8 @@ export const localAxiosFormData = (url, data, token) => ({
   method: 'post',
   // url: `https://syt-backend.herokuapp.com${url}`,
   // url: `http://localhost:3000${url}`,
-  url: `http://192.168.2.6:3000${url}`,
-  // url: `http://sut.basservices.in${url}`,
+  // url: `http://192.168.2.6:3000${url}`,
+  url: `http://sut.basservices.in${url}`,
 
   headers: {
     Authorization: `Bearer ${token}`,

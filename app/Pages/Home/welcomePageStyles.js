@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   part1: {
     width: '100%',
     height: '33.33%',
-    backgroundColor: '#FF9F00',
+    backgroundColor: '',
   },
   img: {
     marginTop: '5%',

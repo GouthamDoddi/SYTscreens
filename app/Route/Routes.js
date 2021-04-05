@@ -7,6 +7,7 @@ import Welcome from '../Pages/Home/welcomePage';
 import CustomerRegister from '../Pages/User/UserRegister';
 import CustomerOtp from '../Pages/User/UserOtp';
 import CustomerLogin from '../Pages/User/UserLogin';
+import Tracking from '../Pages/User/Tracking';
 
 import OwnerRegister from '../Pages/TruckOwner/OwnerRegister';
 import OwnerOtp from '../Pages/TruckOwner/OwnerOtp';
@@ -67,12 +68,13 @@ const Routes = () =>
       <Stack.Screen name="TransportAddTrip" component={TransportDrawer}
         options={{ headerShown: false }}/>
       <Stack.Screen name="AddSingleTruck" component={AddSingleTruck}
-        options={{ headerShown: false }}/>
+        options={{ headerShown: true }}/>
       <Stack.Screen name="HeaderT" component={HeaderT}
         options={{ headerShown: false }}/>
       <Stack.Screen name="DeleteTruck" component={deleteTruck}
         options={{ headerShown: false }}/>
-
+      <Stack.Screen name="Tracking" component={Tracking}
+        options={{ headerShown: false }}/>
       {/* <Stack.Screen name="WelcomeScreen" component={WelcomeScreen}
         options={{ headerShown: false }}/>
       <Stack.Screen name="NotificationScreen" component={NotificationScreen}

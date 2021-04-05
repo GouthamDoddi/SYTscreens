@@ -7,7 +7,7 @@ function Header ({ openDrawer }) {
 
   return (
     <View style={styles.header}>
-      <StatusBar backgroundColor='#ff8f00' />
+      <StatusBar backgroundColor='#FF9F00' />
       <Image
         style={styles.img}
         source={require('../Images/logowhite.jpg')}
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 
   header: {
     height: '11.1%',
-    backgroundColor: '#ff8f00',
+    backgroundColor: '#FF9F00',
     flexDirection: 'row',
     width: '100%',
   },

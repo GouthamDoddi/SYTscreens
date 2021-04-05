@@ -1,6 +1,6 @@
 /* eslint-disable no-negated-condition */
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import Input3 from '../../Component/input3';
 import { useSelector, useDispatch } from 'react-redux';
 import AppLoading from 'expo-app-loading';
@@ -159,8 +159,7 @@ function TransportRegister ({ navigation }) {
   return (
   // <View style={styles.responsiveBox}>
     <View style={styles.container}>
-      <AppStatusBarU />
-
+      <StatusBar backgroundColor='#000000' />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Text style={styles.backarrow}>&#x2190;</Text>
@@ -223,10 +222,9 @@ export default TransportRegister;
 
 const styles = StyleSheet.create({
   box: {
-    paddingLeft: '8.8%',
-    paddingRight: '8.5%',
+    paddingLeft: '0.8%',
+    paddingRight: '0.8%',
     backgroundColor: 'white',
-    borderRadius: 9,
   },
   buttonCancel: {
     marginRight: '70%',
@@ -323,18 +321,19 @@ const styles = StyleSheet.create({
   },
   arrow: {
     color: '#FFFFFF',
-    marginTop: '1%',
+    marginTop: '8%',
     alignSelf: 'flex-end',
-    marginRight: '2%',
-    width: 35,
-    height: 30,
+    // marginRight: '2%',
+    marginLeft: '2%',
+    width: 50,
+    height: 50,
   },
   container: {
     flex: 1,
     backgroundColor: '#000000',
     height: '100%',
     width: '100%',
-    paddingHorizontal: '8.8%',
+    paddingHorizontal: '5.8%',
   },
   //   responsiveBox: {
   //     width: wp('100%'),
@@ -344,9 +343,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 40,
     lineHeight: 45,
-    marginTop: '1.6%',
+    marginTop: '4.6%',
     marginBottom: 0,
-    marginLeft: '-2.8%',
+    marginLeft: '2.8%',
     marginRight: 0,
   },
   truck: { marginTop: 30,

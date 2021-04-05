@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar, SafeAreaView, Text, View, Image, StyleSheet,
   TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,7 +7,6 @@ import axios from 'axios';
 
 
 import { customerMobileNum, customerOtp, customerToken, customerFirstName, customerLastName } from '../../Redux/actions/customerInfo';
-import { loginFailed } from '../../Redux/actions/other';
 import { localAxios } from '../../utils/axios';
 import Input from '../../Component/input';
 import AppStatusBar from '../../Component/StatusBar';
@@ -16,7 +15,7 @@ import AppStatusBar from '../../Component/StatusBar';
 function CustomerLogin ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
-
+  const [ loginFailed, setLoginFailed ] = useState(false);
   const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
   const LoginFailed = useSelector(state => state.LoginFailed);
 
@@ -47,9 +46,10 @@ function CustomerLogin ({ navigation }) {
   
           navigation.navigate('CustomerOtp');
 
+        } else {
+          console.log(`failed! = ${JSON.stringify(res.data)}`);
+          setLoginFailed(true);
         }
-        console.log(`failed! = ${JSON.stringify(res.data)}`);
-        dispatch(loginFailed());
       })
       .catch(err => {
         console.log(err);
@@ -69,7 +69,7 @@ function CustomerLogin ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppStatusBar />
+    <StatusBar backgroundColor='#FF9F00' />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image
@@ -97,7 +97,7 @@ function CustomerLogin ({ navigation }) {
               <Text style={styles.arrow}>&#x2794;</Text>
             </TouchableOpacity>
             <View>
-              { LoginFailed
+              { loginFailed
                 ? <Text style={styles.error}>The number you have entered is not registered yet! Please Register first.</Text>
                 : <Text></Text>
               }
@@ -114,7 +114,7 @@ export default CustomerLogin;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ff8200',
+    backgroundColor: '#FF9F00',
     height: '100%',
     width: '100%',
   },

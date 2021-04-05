@@ -22,6 +22,8 @@ function OwnerTripRegister ({ navigation }) {
   const PickUpSelector = useSelector(state => state.PickUp);
   const Drop = useSelector(state => state.Drop);
   const OwnerToken = useSelector(state => state.OwnerToken);
+  const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
+  const TruckModel = useSelector(state => state.TruckModel);
   const dispatch = useDispatch();
   const [ addTripButton, setAddTripButton ] = useState(false);
 
@@ -42,6 +44,9 @@ function OwnerTripRegister ({ navigation }) {
       source: PickUpSelector,
       destination: Drop,
       truckNo: TruckNo,
+      truckDriver: OwnerFullName,
+      truckDriverNum: OwnerMobileNum,
+      truckModel: TruckModel,
     })}&startDate=${PickUpDate}`;
 
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet,
-  TouchableOpacity, ScrollView } from 'react-native';
+  TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,6 @@ import { truckRegisterFailed } from '../../Redux/actions/other';
 
 // import { getImgBlob } from '../../utils/formData';
 import { localAxios, localAxiosFormData, localAxiosToken } from '../../utils/axios';
-import AppStatusBar from '../../Component/StatusBar';
 import Input from '../../Component/input';
 
 function OwnerRegister ({ navigation }) {
@@ -125,6 +124,7 @@ function OwnerRegister ({ navigation }) {
     formdata.append('rc', rc);
     formdata.append('license', lc);
     formdata.append('mobileNum', OwnerMobileNum);
+    formdata.append('truckDriver', OwnerFullName);
 
     // formdata.append('image', rc.base64);
 
@@ -242,7 +242,7 @@ function OwnerRegister ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppStatusBar />
+    <StatusBar backgroundColor='#FF8200' />
       <ScrollView>
         <View style={styles.box}>
           <TouchableOpacity onPress={backPage}>

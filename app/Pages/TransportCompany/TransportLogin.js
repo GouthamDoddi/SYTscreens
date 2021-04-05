@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from '../../Component/input3';
-import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { companyName, contactNumber, allTruckData } from '../../Redux/actions/transportCompanyInfo';
 import { localAxios } from '../../utils/axios';
 
@@ -15,6 +15,7 @@ const TransportLogin = ({ navigation }) => {
   const dispatch = useDispatch();
   const ContactNumber = useSelector(state => state.ContactNumber);
   const OwnerOtp = useSelector(state => state.OwnerOtp);
+  const [ loginFailed, setLoginFailed ] = useState(false);
 
   // functions
   const mobileNumData = {
@@ -34,12 +35,15 @@ const TransportLogin = ({ navigation }) => {
     axios(localAxios('/SMSLogin', params))
       .then(response => {
         console.log(response.data);
-
-        dispatch(ownerOtp(response.data.otp));
-        dispatch(companyName(response.data.transportOwner[0].company_name));
-        dispatch(ownerToken(response.data.token));
-        dispatch(allTruckData(response.data.truckDetails));
-        navigation.navigate('TransportOtp');
+        if ( response.data.transportOwner[0] ) {
+          dispatch(ownerOtp(response.data.otp));
+          dispatch(companyName(response.data.transportOwner[0].company_name));
+          dispatch(ownerToken(response.data.token));
+          dispatch(allTruckData(response.data.truckDetails));
+          navigation.navigate('TransportOtp');
+        } else {
+          setLoginFailed(true);
+        }
       })
       .catch(error => {
         console.log(error);
@@ -48,6 +52,7 @@ const TransportLogin = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor='#000000' />
       <ScrollView>
         <Image
           style={styles.img}
@@ -66,6 +71,11 @@ const TransportLogin = ({ navigation }) => {
             <Text style={styles.arrow}>&#x2794;</Text>
           </TouchableOpacity>
         </View>
+        {
+          loginFailed
+          ? <Text>The number you have entered is not registered!</Text>
+          : <Text></Text>
+        }
       </ScrollView>
     </View>);
 };
@@ -83,7 +93,7 @@ const styles = StyleSheet.create({
   img: {
     width: 73.7,
     height: 94,
-    marginTop: '6.5%',
+    marginTop: '5.5%',
   },
   headText: {
     color: '#FFFFFF',

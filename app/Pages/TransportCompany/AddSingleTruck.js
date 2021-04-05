@@ -6,6 +6,8 @@ import axios from 'axios';
 import { localAxiosToken } from '../../utils/axios';
 import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native';
 import Input3 from '../../Component/input3';
+import { AntDesign } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons'; 
 
 import { ownerMobileNum } from '../../Redux/actions/ownerInfo';
 import { totalSpace, totalWeight, truckM0del, truckN0 } from '../../Redux/actions/ownerTruckInfo';
@@ -134,8 +136,11 @@ function AddSingleTruck ({ navigation }) {
     }
   };
 
+  // console.log(`nofVehicals = ${NoOfVehicals}`)
+  // console.log(`selected truck = ${SelectedTruck}`)
 
-  function registerTruck () {
+
+  function registerTruck ({ navigation }) {
     formdata.append('truckNo', truckNo);
     formdata.append('truckModel', truckModel);
     formdata.append('capacityInKgs', capacityInKgs);
@@ -146,29 +151,31 @@ function AddSingleTruck ({ navigation }) {
     formdata.append('companyMobileNum', ContactNumber);
     formdata.append('companyName', CompanyName);
 
-    dispatch(allTruckData(AllTruckData.push({
-      truckNo,
-      truckModel,
-      capacityInKgs,
-      capacityInSpace,
-      ContactNumber,
-      CompanyName,
-    })));
+    // dispatch(allTruckData(AllTruckData.push({
+    //   truckNo,
+    //   truckModel,
+    //   capacityInKgs,
+    //   capacityInSpace,
+    //   ContactNumber,
+    //   CompanyName,
+    // })));
 
     axios(localAxiosToken('/truckRegister', formdata, OwnerToken))
       .then(res => {
         if (res.data.statusCode === 200) {
+          console.log(res.data);
           setRegistered('Yes');
-          const ind = SelectedTruck - 1;
+          // const ind = SelectedTruck - 1;
 
-          console.log(NoOfVehicals);
-          NoOfVehicals.splice(ind, 1, [ SelectedTruck, true ]);
+          // console.log(NoOfVehicals);
+          // NoOfVehicals.splice(ind, 1, [ SelectedTruck, true ]);
 
-          dispatch(noOfVehicals(NoOfVehicals));
-          console.log(NoOfVehicals);
+          // dispatch(noOfVehicals(NoOfVehicals));
+          // console.log(NoOfVehicals);
+        } else {
+          console.log(res.data);
+          setRegistered('No');
         }
-        console.log(res.data);
-        setRegistered('No');
       })
       .catch(err => {
         console.log(err);
@@ -176,18 +183,15 @@ function AddSingleTruck ({ navigation }) {
       });
   }
 
-  let vehicalNo = 0;
+  // let vehicalNo = 0;
 
-  for (const n in NoOfVehicals) {
-    if (n[1])
-      vehicalNo = ++vehicalNo;
-  }
+  // for (const n in NoOfVehicals) {
+  //   if (n[1])
+  //     vehicalNo = ++vehicalNo;
+  // }
 
   return (
     <View>
-      <TouchableOpacity onPress={goBack}>
-        <Text style={styles.backarrow}>&#x2190;</Text>
-      </TouchableOpacity>
       <View style={styles.box}>
         <Text style={styles.mainText2}>Vehical Information No { SelectedTruck }</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -214,49 +218,46 @@ function AddSingleTruck ({ navigation }) {
         <View>
           <Text style={styles.bar}></Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={ styles.rc }>
               <Text style={styles.attachText}>Attach RC</Text>
               <TouchableOpacity onPress={getRC}>
-                <Image
-                  style={styles.link}
-                  source={require('../../Images/box.png')}
-                />
+                {
+                  rc
+                  ? <Feather style={styles.icon} name="box" size={40} color="black" />
+                  : <Feather style={styles.icon} name="box" size={40} color="#808080" />
+                }
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginLeft: '45%' }}>
+            <View style={ styles.license }>
               <Text style={styles.attachText2}>Licence</Text>
               <TouchableOpacity onPress={getLicence}>
-                <Image
-                  style={styles.link}
-                  source={require('../../Images/box.png')}
-                />
+              {
+                  lc
+                  ?  <Feather style={styles.icon} name="box" size={40} color="black" />
+                  // ? <AntDesign style={styles.licenseIcon} name="check" size={34} color="green" />
+                  : <Feather style={styles.icon} name="box" size={40} color="#808080" />
+                }
               </TouchableOpacity>
             </View>
+          </View>
             <View style={styles.buttons}>
               <View style={styles.buttonCancel}>
                 <Button color='#808080'
                   title='Cancel'
+                  onPress={() => navigation.navigate('TransportAddTrip')}
                 />
               </View>
               <View style={ styles.buttonDone } >
                 <Button color='black'
-                  title='Done'
+                  title='   Done   '
                   onPress={registerTruck}
                 />
+              </View>
             </View>
-            </View>
-            {
-              registered === 'Yes'
-                ? <Text>Truck has been added. If you want to add more, fill the form again and submit.</Text>
-                : registered === 'No'
-                ? <Text>Registration failed.</Text>
-                : <Text></Text>
-            }
-          </View>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <View style={{ width: '50%', height: 100 }}/>
-          <View style={{ width: '50%', height: 100 }}/>
+          <View style={{ width: '50%', height: 70 }}/>
+          <View style={{ width: '50%', height: 70 }}/>
         </View>
         {/* <TouchableOpacity onPress={onSubmit}>
         <Image
@@ -265,6 +266,13 @@ function AddSingleTruck ({ navigation }) {
         />
       </TouchableOpacity> */}
       </View>
+      {
+              registered === 'Yes'
+                ? <Text style={styles.sucessMessage}>Truck has been added. If you want to add more, fill the form again and submit.</Text>
+                : registered === 'No'
+                ? <Text style={styles.errorMessage}>Registration failed.</Text>
+                : <Text></Text>
+            }
     </View>
   );
 }
@@ -277,19 +285,26 @@ const styles = StyleSheet.create({
     paddingRight: '8.5%',
     backgroundColor: 'white',
     borderRadius: 9,
+    marginTop: '10%',
+    marginLeft: '5%',
+    marginRight:'5%',
   },
   buttons: {
-    marginLeft: '-80%',
+    marginTop: '15%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginLeft: '-100%',
+    justifyContent: 'space-around',
   },
   buttonCancel: {
-    marginRight: '80%',
-    marginLeft: '1%',
-    marginTop: '20%',
+    // marginRight: '70%',
+    // marginLeft: '-50%',
+    // marginTop: '11%',
   },
   buttonDone: {
-    marginTop: '-6%',
-    marginLeft: '40%',
-    marginRight: '40%',
+    // marginTop: '-11%',
+    // marginLeft: '-50%',
+    // marginRight: '20%',
   },
   headText: {
     color: '#FFFFFF',
@@ -319,14 +334,22 @@ const styles = StyleSheet.create({
     marginTop: '0.4%',
     marginBottom: '2%',
   },
+  sucessMessage:{
+    fontWeight: "bold",
+    marginLeft: '35%',
+    marginBottom: "-50%",
+    color: 'green',
+  },
+  errorMessage: {
+    fontWeight: "bold",
+    marginLeft: '35%',
+    marginBottom: "-50%",
+    color: 'red',
+  },
   underline: {
     textDecorationLine: 'underline',
   },
   border: {
-    // borderBottomColor:'#FFFFFF',
-    // borderBottomWidth:1,
-    // borderStyle: 'dotted',
-    // height:'1%',
     marginTop: '2.7%',
     fontSize: 4,
     lineHeight: 10,
@@ -338,11 +361,13 @@ const styles = StyleSheet.create({
   mainText2: {
     color: '#000000',
     fontSize: 24,
+    fontWeight: 'bold',
     lineHeight: 28,
     letterSpacing: 0.69,
     fontFamily: 'Poppins_400Regular',
-    marginTop: '1.6%',
+    marginTop: '10.6%',
     marginLeft: '1.5%',
+    marginBottom: '5%',
   },
   bar: {
     borderLeftColor: '#FFFFFF',
@@ -391,10 +416,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: '8.8%',
   },
-  //   responsiveBox: {
-  //     width: wp('100%'),
-  //     height: hp('100%'),
-  //   },
   backarrow: {
     color: '#808080',
     fontSize: 40,
@@ -404,6 +425,21 @@ const styles = StyleSheet.create({
     marginLeft: '2.8%',
     marginRight: 0,
   },
+  license : { 
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: '8%',
+    marginRight: '25%'
+  },
+  icon: {
+    marginTop: '-30%',
+  },
+  rc : {
+    marginLeft: '-13%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: '8%'
+  },
   truck: { marginTop: 30,
     paddingLeft: 10,
     height: 70,
@@ -412,14 +448,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: '#ff8f35' },
-  truckText: { color: 'white',
+  truckText: { 
+    color: 'white',
     // paddingTop: 15,
     paddingLeft: 3,
-    textDecorationLine: 'underline' },
-  truckText2: { color: 'white',
-    paddingLeft: 3 },
-  viewBorder:
-  { marginTop: '7%',
+    textDecorationLine: 'underline' 
+  },
+  truckText2: { 
+    color: 'white',
+    paddingLeft: 3 
+  },
+  viewBorder:{ 
+    marginTop: '7%',
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 5,

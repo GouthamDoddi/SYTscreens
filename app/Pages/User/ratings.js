@@ -1,10 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View,Text, TouchableOpacity,TextInput,StyleSheet,Button} from 'react-native';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
+import qs from 'querystring';
+
 import CustomStarExample from '../../Component/RatingStar';
+import { localAxiosToken } from '../../utils/axios';
+
+
 function Delivery({navigation}){
   const SelectedTrip = useSelector(state => state.SelectedTrip);
+  const CustomerToken = useSelector(state => state.CustomerToken);
+  const CustomerMobileNum = useSelector(state => state.CustomerMobileNum);
+  const Rating = useSelector(state => state.Rating);
+  const [ rated, setRated ] = useState(0);
+  const [ review, setReview ] = useState("");
+
+
+  const addRaing = () => {
+    console.log(`rating = ${Rating}`);
+    axios(localAxiosToken('/getTruck', qs.stringify({ truckNo: SelectedTrip[0].truck_no }), CustomerToken))
+    .then(res => {
+      console.log(res.data);
+      if (res.data.statusCode === 200) {
+
+        const params = qs.stringify({
+          truckNo: SelectedTrip[0].truck_no,
+          truckOwnerMobileNo: res.data.message[0].truckowner_mobile_num === null
+                          ? 0
+                          : res.data.message[0].truckowner_mobile_num,
+          companyMobileNo: res.data.message[0].transport_company_mobile_num === null
+                          ? 0
+                          : res.data.message[0].transport_company_mobile_num,
+          tripId: SelectedTrip[0].trip_id,
+          rating: Rating,
+          mobileNum: SelectedTrip[1].customer_mobile_num,
+          receivingPersonNo: SelectedTrip[1].receiving_person_mobile_no,
+          comment: review,
+          packageId: SelectedTrip[1].package_id,
+        })
+    
+        axios(localAxiosToken('/addRating', params, CustomerToken))
+        .then(res => {
+          console.log(res.data);
+          if (res.data.statusCode === 200) {
+            setRated('done');
+          } else {
+            setRated('failed');
+          }
+        })
+
+      } else {
+        setRated('failed');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
+
     return(
         <View style={styles.container}>
             <Text style={styles.deliverystyle}>Delivery Alert</Text>
@@ -39,11 +95,25 @@ function Delivery({navigation}){
             <Text style={styles.text}>{SelectedTrip[0].truck_no}</Text>
             </View>
             </View>
-            <CustomStarExample></CustomStarExample>
+            <CustomStarExample />
             <View style={styles.comment}>
-            <TextInput > Please let know any comments</TextInput>
-            </View>
-            <Button title="DONE" color="orange" onPress={() => navigation.navigate('CustomerWelcome')}/>
+            <TextInput
+              // style={styles.input}
+              placeholder={'Leave a review'}
+              errorStyle={{ color: 'red' }}
+              onChangeText={ text => setReview(text) }
+              inputStyle={{ color: 'black' }}
+              placeholderTextColor="#000000"
+            />            
+          </View>
+          <Button title="DONE" color="orange" onPress={addRaing}/>
+          {
+            rated === 'done'
+            ? <Text>Your rating has been added</Text>
+            : rated === 'failed'
+            ? <Text>Failed to update your review.</Text>
+            : <Text></Text>
+          }
         </View>     
 
     )

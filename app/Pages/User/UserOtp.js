@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 import axios from 'axios';
@@ -76,7 +76,7 @@ function CustomerOtp ({ navigation }) {
     // <View style={styles.responsiveBox}>
     <View style={styles.container}>
       { fetchPackageData() }
-      <AppStatusBar />
+      <StatusBar backgroundColor='#FF9F00' />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Text style={styles.backarrow}>&#x2190;</Text>
@@ -116,7 +116,7 @@ function CustomerOtp ({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FF8200',
+    backgroundColor: '#FF9F00',
     height: '100%',
     width: '100%',
     paddingHorizontal: '8.8%',

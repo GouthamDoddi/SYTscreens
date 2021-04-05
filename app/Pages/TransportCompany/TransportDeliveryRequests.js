@@ -49,12 +49,23 @@ function TransportDeliveryRequests ({ navigation }) {
   };
 
   const deliveryDone = (mappingId, tripId) => {
-
+    const params = qs.stringify({ tripId });
 
     axios(localAxiosToken('/updatePackageMapping', params3(mappingId), OwnerToken))
       .then(response => {
         console.log(response.data);
+        
+      axios(localAxiosToken('/getTripPackages', params, OwnerToken))
+      .then(res => {
+        console.log(params);
+
+        console.log(res.data);
+        dispatch(deliveryRequests(res.data.packageDetails[0]));
+
+      // const checklist = res.data;
       })
+      .catch(err => console.log(err));
+        })
       .catch(error => console.log(error));
     axios(localAxiosToken('/updateTrip', params4(tripId), OwnerToken))
     .then(response => {

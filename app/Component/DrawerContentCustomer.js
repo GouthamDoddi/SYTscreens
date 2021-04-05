@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Drawer } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import qs from 'querystring';
 
@@ -16,6 +17,7 @@ function DrawerContentCustomer (props) {
   const dispatch = useDispatch();
   const CustomerMobileNum = useSelector(state => state.CustomerMobileNum)
   const CustomerToken = useSelector(state => state.CustomerToken)
+  const Customer = useSelector(state => `${state.CustomerFirstName} ${state.CustomerLastName}`)
   
   const getReceivingPackages = () => {
     axios(localAxiosToken('/getReceivingPackages', qs.stringify({mobileNum: CustomerMobileNum}), CustomerToken))
@@ -32,17 +34,15 @@ function DrawerContentCustomer (props) {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+    <View style={{ flex: 1, backgroundColor: '#FF9F00' }}>
       <DrawerContentScrollView { ...props}>
         <View style={styles.drawerContent}>
           <View style={styles.title}>
-            <Image
-              style={styles.img2}
-              source={require('../Images/profile.jpg')}
-            />
+          <FontAwesome style={styles.user} name="user-circle" size={37} color="white" />
             <Text style={styles.userName}>
-              Welcome,                                               <Text style={styles.userName2}>User Name</Text>
+              Welcome,
             </Text>
+            <Text style={styles.userName2}>{ Customer }</Text>
           </View>
         </View>
       </DrawerContentScrollView>
@@ -99,6 +99,10 @@ export default DrawerContentCustomer;
 const styles = StyleSheet.create({
   img2: {
     marginLeft: '10%',
+  },
+  user: {
+    marginLeft: '8%',
+    marginBottom: '1%',
   },
   drawerContent: {
     flex: 1,

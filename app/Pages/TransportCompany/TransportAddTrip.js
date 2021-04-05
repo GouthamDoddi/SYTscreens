@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import axios from 'axios';
 import qs from 'querystring';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,6 +21,7 @@ function TransportTripRegister ({ navigation }) {
   // variables
   const TripHistory = useSelector(state => state.TripHistory);
   const OwnerFullName = useSelector(state => state.OwnerFullName);
+  const AllTruckData = useSelector(state => state.AllTruckData);
   const TruckNo = useSelector(state => state.TruckNo);
   const SelectedTruck = useSelector(state => state.SelectedTruck);
   const PickUpDate = useSelector(state => state.PickUpDate);
@@ -32,6 +33,7 @@ function TransportTripRegister ({ navigation }) {
   const [ addTripButton, setAddTripButton ] = useState(false);
   const [ truckDriver, setTruckDriver ] = useState(0);
   const [ truckDriverNum, setTruckDriverNum ] = useState(0);
+  // const [ selectedTruckData, setSelectedTruckData ] = useState({});
 
 
   // const PickUpDate = useSelector(state => state.PickUpDate);
@@ -45,11 +47,19 @@ function TransportTripRegister ({ navigation }) {
   const onClick = () => console.log('Submit called');
 
   const tripRegister = () => {
+    // get truck details
+
+    const selectedTruckData = AllTruckData.map( data => {
+      if ( data.truck_no === selectedTruck )
+        return data;
+    })
+
     // get all data
     const formData = `${qs.stringify({
       source: PickUpSelector,
       destination: Drop,
-      truckNo: SelectedTruck,
+      truckNo: selectedTruckData.truck_no,
+      truckModel: selectedTruckData.truckModel,
       truckDriver,
       truckDriverNum,
     })}&startDate=${PickUpDate}`;
@@ -98,7 +108,7 @@ function TransportTripRegister ({ navigation }) {
     label: '',
     placeholder: 'Driver Name',
     onChangeText (e) {
-      dispatch(ownerFullName(e));
+      dispatch(setTruckDriver(e));
     },
     color: '#C0C0C0',
   };
@@ -107,7 +117,7 @@ function TransportTripRegister ({ navigation }) {
     label: '',
     placeholder: 'Mobile number',
     onChangeText (e) {
-      dispatch(ownerMobileNum(e));
+      dispatch(setTruckDriverNum(e));
     },
     color: '#C0C0C0',
   };
@@ -118,7 +128,7 @@ function TransportTripRegister ({ navigation }) {
     <View style={styles.container}>
       {/* <AppStatusBarU /> */}
       <HeaderT openDrawer={ () => navigation.openDrawer() } />
-      <View style={styles.block}>
+      <ScrollView style={styles.block}>
         <Text style={styles.ntext}>Welcome, <Text style={{ fontWeight: 'bold' }}>{ CompanyName } !</Text></Text>
         <Text style={styles.ntext}><Text style={{ fontWeight: 'bold' }}>Driver Name : </Text>{ OwnerFullName }</Text>
         { addTripButton
@@ -166,7 +176,7 @@ function TransportTripRegister ({ navigation }) {
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: '2.2%' }}>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

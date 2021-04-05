@@ -9,7 +9,6 @@ import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxios } from '../../utils/axios';
-import AppStatusBar from '../../Component/StatusBar';
 import { customerFirstName, customerLastName, customerMobileNum,
   customerOtp, customerToken } from '../../Redux/actions/customerInfo';
 
@@ -101,7 +100,7 @@ const CustomerRegister = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppStatusBar />
+    <StatusBar backgroundColor='#FF9F00' />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image
@@ -140,7 +139,7 @@ const CustomerRegister = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ff8200',
+    backgroundColor: '#FF9F00',
     height: '100%',
     width: '100%',
   },

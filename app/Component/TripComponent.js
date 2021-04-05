@@ -7,7 +7,7 @@ import axios from 'axios';
 import qs from 'querystring';
 
 import { localAxiosToken } from '../utils/axios';
-import { allTripIdsNTruckNos, deliveryRequests, tripDetails } from '../Redux/actions/tripsAvailable';
+import { allTripIdsNTruckNos, deliveryRequests, selectedTrip, tripDetails } from '../Redux/actions/tripsAvailable';
 
 
 function TripComponent ({ TripHistory, navigation }) {
@@ -29,6 +29,7 @@ function TripComponent ({ TripHistory, navigation }) {
 
   function tripPacakages (tripId, page) {
     const params = qs.stringify({ tripId });
+    dispatch(selectedTrip(tripId));
 
     axios(localAxiosToken('/getTripPackages', params, OwnerToken))
       .then(res => {

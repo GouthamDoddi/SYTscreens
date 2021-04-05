@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { SafeAreaView, Text, View, Image, StyleSheet,
-  TouchableOpacity, ScrollView } from 'react-native';
+  TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'querystring';
 import axios from 'axios';
@@ -17,11 +17,10 @@ function CustomerLogin ({ navigation }) {
   // vars and selectors
   const dispatch = useDispatch();
 
-  let login = true;
+  const [  loginFailed, setLoginFailed ] = useState(false);
 
   const OwnerMobileNum = useSelector(state => state.OwnerMobileNum);
   // const LoginFailed = useSelector(state => state.LoginFailed);
-  const OwnerToken = useSelector(state => state.OwnerToken);
 
   // functions
 
@@ -51,13 +50,12 @@ function CustomerLogin ({ navigation }) {
             dispatch(ownerFullName(response.data.truckOwner[0].full_name));
             dispatch(truckN0(response.data.truckDetails[0].truck_no));
             // dispatch(loginFailed(false));
-            login = true;
             navigation.navigate('OwnerOtp');
           }
-          login = false;
+          setLoginFailed(false);
         }
         // dispatch(loginFailed('Failed'));
-        login = false;
+        setLoginFailed(false);
 
         return 0;
       })
@@ -108,7 +106,7 @@ function CustomerLogin ({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppStatusBar />
+    <StatusBar backgroundColor='#FF8200' />
       <ScrollView>
         <TouchableOpacity onPress={backPage}>
           <Image
@@ -137,10 +135,9 @@ function CustomerLogin ({ navigation }) {
             </TouchableOpacity>
           </View>
           <View>
-            { login
-              ? <Text></Text>
-
-              : <Text style={styles.error}>The number you have entered is not registered yet! Please Register first.</Text>
+            { loginFailed
+              ? <Text style={styles.error}>The number you have entered is not registered yet! Please Register first.</Text>
+              : <Text></Text>
             }
           </View>
         </View>
